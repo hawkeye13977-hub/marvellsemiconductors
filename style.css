@@ -128,3 +128,21 @@ footer p{
     margin:8px;
     color:#c9d1d9;
 }
+.feature-card{
+    background:#111827;
+    color:white;
+    border:1px solid rgba(56,189,248,.2);
+    border-radius:18px;
+    transition:all .3s ease;
+}
+
+.feature-card:hover{
+    transform:translateY(-8px);
+    box-shadow:0 12px 30px rgba(56,189,248,.2);
+    border-color:#38bdf8;
+}
+
+.feature-card h4{
+    color:#38bdf8;
+    margin-bottom:15px;
+}
