@@ -311,88 +311,26 @@ calculations, store data, and make decisions.
 </section>
 
  <!-- ========================= -->
-<!-- Why RTL? -->
+<!-- ========================= -->
+<!-- Digital Logic Overview -->
 <!-- ========================= -->
 
 <section class="container py-5">
 
-<div class="text-center mb-5">
+<div class="text-center">
 
-<h2 class="fw-bold text-info">
-Why RTL is Important
-</h2>
-
-</div>
-
-<div class="row g-4">
-
-<div class="col-md-4">
-
-<div class="card feature-card h-100">
-
-<div class="card-body">
-
-<h4>⚡ ASIC Design</h4>
-
-<p>
-Every modern ASIC begins as RTL.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-4">
-
-<div class="card feature-card h-100">
-
-<div class="card-body">
-
-<h4>💻 FPGA Design</h4>
-
-<p>
-RTL is synthesized into FPGA logic resources.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-4">
-
-<div class="card feature-card h-100">
-
-<div class="card-body">
-
-<h4>🤖 AI Chips</h4>
-
-<p>
-Processors, NPUs and GPUs are designed using RTL.
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-  <div class="text-center mt-5">
-
-<img src="images/silicon-wafer.png"
+<img src="images/lesson2/digital-logic-overview.png"
 class="img-fluid rounded shadow"
-style="max-width:700px;"
-alt="Silicon Wafer">
+style="max-width:1000px;"
+alt="Digital Logic Overview">
 
 <p class="text-secondary mt-3">
-Figure 2: RTL is ultimately converted into billions of transistors fabricated on a silicon wafer.
+
+Figure 1: Digital information flows from the real world through binary processing to digital systems.
+
 </p>
 
-  </div>
+</div>
 
 </section>
 
@@ -481,84 +419,113 @@ One of the simplest combinational logic circuits used in RTL design.
 <div class="card-body p-4">
 
 <img src="images/and-gate.png"
-class="img-fluid rounded mb-4"
-alt="AND Gate">
-
-<p>
-
-The AND gate is one of the most fundamental combinational logic gates in digital electronics.
-
-It produces a logic HIGH (1) only when every input is HIGH (1). In RTL design,
-AND gates are the building blocks used to create larger digital circuits such as
-adders, multiplexers, ALUs, CPUs, memory controllers, and AI accelerators.
-
-Understanding the AND gate is the first step toward mastering digital logic and RTL design.
-
-</p>
-  <div class="alert alert-info mt-4">
-
-<strong>Key Takeaway:</strong>
-
-Every complex processor contains millions to billions of logic gates. The AND gate is one of the fundamental building blocks used to construct these circuits.
-
-  </div>
-
-</div>
-
-</div>
-
-  </section>
-
-  <!-- ========================= -->
-<!-- First Verilog Example -->
+class="img-fluid rounded mb-4"<!-- ========================= -->
+<!-- Binary Number System -->
 <!-- ========================= -->
 
 <section class="container py-5">
 
-<h2 class="text-info fw-bold text-center mb-4">
-First RTL Example
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Binary Number System
+
+</h2>
+
+<p class="text-secondary">
+
+Computers understand only two values: 0 and 1.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+The Binary Number System is a base-2 numbering system consisting of only two digits:
+<strong>0</strong> and <strong>1</strong>.
+
+Every processor, memory device, FPGA, ASIC, GPU and AI accelerator stores and processes
+information using binary numbers.
+
+Unlike humans, who naturally use the decimal (base-10) system, digital hardware uses
+binary because electronic circuits can reliably distinguish between two voltage levels.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-4">
+
+<div class="text-center">
+
+<img src="images/lesson2/binary-number-system.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Binary Number System">
+
+<p class="text-secondary mt-3">
+
+Figure 2: Binary numbers form the foundation of every digital computer.
+
+</p>
+
+</div>
+
+</section>    
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Decimal vs Binary
+
 </h2>
 
 <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
-module and_gate(
+<div class="table-responsive">
 
-input a,
-input b,
+<table class="table table-dark table-bordered text-center">
 
-output y
+<thead>
 
-);
+<tr>
 
-assign y = a & b;
+<th>Decimal</th>
 
-endmodule
-</pre>
+<th>Binary</th>
 
-<hr class="my-4">
+</tr>
 
-<div class="text-center">
+</thead>
 
-    <h5 class="text-info mb-3">
-        ▶ Try It Yourself
-    </h5>
+<tbody>
 
-    <p class="text-secondary">
-        Run this RTL example directly on EDA Playground with a preloaded design and testbench.
-    </p>
+<tr><td>0</td><td>0000</td></tr>
+<tr><td>1</td><td>0001</td></tr>
+<tr><td>2</td><td>0010</td></tr>
+<tr><td>3</td><td>0011</td></tr>
+<tr><td>4</td><td>0100</td></tr>
+<tr><td>5</td><td>0101</td></tr>
+<tr><td>6</td><td>0110</td></tr>
+<tr><td>7</td><td>0111</td></tr>
+<tr><td>8</td><td>1000</td></tr>
 
-    <a href="https://edaplayground.com/x/pdPi"
-       target="_blank"
-       class="btn btn-info btn-lg">
-       ▶ Run on EDA Playground
-    </a>
+</tbody>
 
-    <p class="text-warning mt-3 mb-0">
-        <strong>Note:</strong> You may need to sign in to your EDA Playground account to run the simulation and view the output. If you don't have an account, you can create one for free.
-    </p>
+</table>
 
 </div>
 
@@ -567,11 +534,622 @@ endmodule
 </div>
 
 </section>
-  
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h3 class="text-info">
+
+Why Computers Use Binary
+
+</h3>
+
+<ul>
+
+<li>Electronic circuits have two stable voltage states: LOW and HIGH.</li>
+
+<li>Binary minimizes errors caused by electrical noise.</li>
+
+<li>Logic gates naturally operate on two input states.</li>
+
+<li>Binary enables reliable storage, processing, and transmission of digital data.</li>
+
+<li>Every modern processor—from smartphones to supercomputers—uses binary internally.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
 <!-- ========================= -->
-<!-- Industry Tip -->
+<!-- Logic Levels -->
 <!-- ========================= -->
 
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Logic Levels
+
+</h2>
+
+<p class="text-secondary">
+
+Digital circuits operate using only two stable voltage levels.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Digital systems represent information using two logic states.
+
+<strong>Logic LOW (0)</strong> represents an OFF state, while
+<strong>Logic HIGH (1)</strong> represents an ON state.
+
+Processors, memories and communication interfaces interpret these voltage levels
+to perform billions of operations every second.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-4">
+
+<div class="text-center">
+
+<img src="images/lesson2/logic-levels.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Logic Levels">
+
+<p class="text-secondary mt-3">
+
+Figure 3: Logic HIGH and Logic LOW voltage representation.
+
+</p>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Basic Logic Gates
+
+</h2>
+
+<p class="text-secondary">
+
+Logic gates are the fundamental building blocks of digital hardware.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Logic gates perform simple logical operations on binary inputs.
+
+Complex processors contain billions of these gates connected together to build
+arithmetic units, memories, control logic, caches, AI accelerators and complete CPUs.
+
+</p>
+
+<ul>
+
+<li>AND Gate</li>
+
+<li>OR Gate</li>
+
+<li>NOT Gate</li>
+
+<li>NAND Gate</li>
+
+<li>NOR Gate</li>
+
+<li>XOR Gate</li>
+
+<li>XNOR Gate</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-4">
+
+<div class="text-center">
+
+<img src="images/lesson2/logic-gates-overview.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Logic Gates Overview">
+
+<p class="text-secondary mt-3">
+
+Figure 4: Overview of the seven fundamental logic gates.
+
+</p>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Boolean Algebra
+
+</h2>
+
+<p class="text-secondary">
+
+The mathematical foundation of digital logic.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Boolean Algebra is used to describe and simplify digital circuits.
+
+Every RTL design, logic gate and combinational circuit follows Boolean rules.
+
+The three basic Boolean operations are:
+
+</p>
+
+<ul>
+
+<li><strong>AND</strong> → A &amp; B</li>
+
+<li><strong>OR</strong> → A | B</li>
+
+<li><strong>NOT</strong> → ~A</li>
+
+</ul>
+
+<p>
+
+RTL designers use Boolean Algebra every day to optimize logic, reduce hardware
+complexity and improve performance.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Multiplexer & Demultiplexer -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Multiplexer & Demultiplexer
+</h2>
+
+<p class="text-secondary">
+Selecting and routing digital signals efficiently.
+</p>
+
+</div>
+
+<div class="text-center mb-4">
+
+<img src="images/lesson2/mux-demux.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="MUX DEMUX">
+
+<p class="text-secondary mt-3">
+
+Figure 5: Multiplexer and Demultiplexer overview.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>Multiplexer (MUX)</strong> selects one input from multiple inputs and forwards it to a single output.
+
+A <strong>Demultiplexer (DEMUX)</strong> performs the opposite operation by routing one input to one of many outputs.
+
+MUXes and DEMUXes are widely used in processors, communication systems and memory controllers.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Decoder & Encoder
+</h2>
+
+</div>
+
+<div class="text-center mb-4">
+
+<img src="images/lesson2/decoder-encoder.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Decoder Encoder">
+
+<p class="text-secondary mt-3">
+
+Figure 6: Binary decoding and encoding.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A decoder converts binary inputs into one active output.
+
+An encoder performs the reverse operation by converting active inputs into binary outputs.
+
+These circuits are fundamental in memories, interrupts, keyboards and address decoding.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Half Adder & Full Adder
+</h2>
+
+</div>
+
+<div class="text-center mb-4">
+
+<img src="images/lesson2/half-full-adder.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Half Full Adder">
+
+<p class="text-secondary mt-3">
+
+Figure 7: Half Adder and Full Adder.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Adders perform binary arithmetic.
+
+Half Adders add two bits.
+
+Full Adders add two bits along with a carry input.
+
+Every ALU inside a processor is built using thousands of adders.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Combinational Circuit Examples
+</h2>
+
+</div>
+
+<div class="text-center mb-4">
+
+<img src="images/lesson2/combinational-circuits.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Combinational Circuits">
+
+<p class="text-secondary mt-3">
+
+Figure 8: Common combinational logic circuits.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Combinational circuits produce outputs based only on present inputs.
+
+Examples include multiplexers, decoders, comparators, arithmetic logic units and priority encoders.
+
+They are extensively used in CPUs, GPUs, AI accelerators and communication hardware.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- CPU Digital Logic -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+CPU Digital Logic
+</h2>
+
+<p class="text-secondary">
+How billions of logic gates work together inside modern processors.
+</p>
+
+</div>
+
+<div class="text-center mb-4">
+
+<img src="images/lesson2/cpu-digital-logic.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="CPU Digital Logic">
+
+<p class="text-secondary mt-3">
+
+Figure 9: Internal digital building blocks of a modern CPU.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Modern processors contain billions of transistors organized into logic gates,
+registers, multiplexers, decoders, arithmetic logic units (ALUs), caches,
+and control units.
+
+All complex operations—from opening an app to running AI models—are performed
+using these basic digital building blocks.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Real-World Applications
+</h2>
+
+</div>
+
+<div class="text-center mb-4">
+
+<img src="images/lesson2/real-world-applications.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Digital Logic Applications">
+
+<p class="text-secondary mt-3">
+
+Figure 10: Digital logic powers modern electronic systems.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>Desktop and Laptop CPUs</li>
+
+<li>Mobile SoCs</li>
+
+<li>AI Accelerators</li>
+
+<li>Graphics Processing Units (GPUs)</li>
+
+<li>Automotive Electronics</li>
+
+<li>Medical Equipment</li>
+
+<li>Networking Hardware</li>
+
+<li>Embedded Systems</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Lesson Summary
+</h2>
+
+</div>
+
+<div class="text-center">
+
+<img src="images/lesson2/lesson2-summary.png"
+class="img-fluid rounded shadow"
+style="max-width:1000px;"
+alt="Lesson Summary">
+
+<p class="text-secondary mt-3">
+
+Figure 11: Digital Logic Basics — complete learning roadmap.
+
+</p>
+
+</div>
+
+</section>
+
+    
+
+<!-- ========================= -->
+<!-- First Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+First Verilog Example - OR Gate
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module or_gate(
+
+input a,
+input b,
+
+output y
+
+);
+
+assign y = a | b;
+
+endmodule
+</pre>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+▶ Try It Yourself
+</h5>
+
+<p class="text-secondary">
+Run this OR gate example directly on EDA Playground with a preloaded design and testbench.
+</p>
+
+<a href="YOUR_EDA_PLAYGROUND_LINK"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Run on EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong> Sign in to your EDA Playground account to run the simulation and observe the waveform.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+    
 <section class="container py-4">
 
 <div class="card feature-card">
@@ -582,17 +1160,11 @@ endmodule
 💡 Industry Tip
 </h4>
 
-<p class="mb-0">
+<p>
 
-Professional RTL engineers spend a significant amount of time writing
-testbenches, running simulations, and debugging waveforms before a design
-is synthesized. Understanding simulation results is one of the most
-important skills in digital design.
+Every processor contains billions of logic gates.
 
-<br><br>
-
-👉 Click <strong>"Run on EDA Playground"</strong> above to simulate this design,
-observe the output, and gain hands-on experience with RTL verification.
+Understanding how basic gates combine into larger digital circuits is the foundation of RTL Design, Verification, FPGA Design and ASIC Development.
 
 </p>
 
@@ -618,23 +1190,31 @@ Interview Questions
 
 <ul>
 
-<li>What is RTL?</li>
+<li>What is Digital Logic?</li>
 
-<li>Difference between RTL and Gate Level?</li>
+<li>Why do computers use binary?</li>
 
-<li>Why is RTL synthesizable?</li>
+<li>Difference between combinational and sequential logic?</li>
 
-<li>Which languages are used for RTL?</li>
+<li>What is Boolean Algebra?</li>
 
-<li>What happens after RTL coding?</li>
+<li>Difference between NAND and NOR?</li>
 
-</ul>
+<li>What is a Multiplexer?</li>
+
+<li>Difference between Decoder and Encoder?</li>
+
+<li>Half Adder vs Full Adder?</li>
+
+</ul>  
 
 </div>
 
 </div>
 
 </section>
+
+  
 
   <!-- ========================= -->
 <!-- Practice -->
@@ -652,7 +1232,13 @@ Hands-on Exercise
 
 <p>
 
-Write a Verilog module for a 2-input OR gate and simulate its output for all input combinations.
+Design a 2-input XOR gate in Verilog.
+
+Simulate it using EDA Playground and verify all possible input combinations.
+
+Bonus:
+
+Implement XOR using only NAND gates.
 
 </p>
 
@@ -678,13 +1264,15 @@ Key Takeaways
 
 <ul>
 
-<li>RTL describes digital hardware behavior.</li>
+<li>Digital systems process only binary values.</li>
 
-<li>RTL is written using Verilog or VHDL.</li>
+<li>Logic gates form the foundation of digital circuits.</li>
 
-<li>RTL is synthesized into logic gates.</li>
+<li>Boolean Algebra simplifies logic design.</li>
 
-<li>RTL is the starting point of ASIC and FPGA design.</li>
+<li>Multiplexers, decoders and adders are built from logic gates.</li>
+
+<li>Every modern processor is built using billions of transistors implementing digital logic.</li>
 
 </ul>
 
