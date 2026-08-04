@@ -278,3 +278,12 @@ h2{
 }
 
 }
+
+@media (max-width:768px){
+
+.feature-card{
+    width:100%;
+    margin:auto;
+}
+
+}
