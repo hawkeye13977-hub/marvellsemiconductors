@@ -250,3 +250,15 @@ h2{
 }
 
 }
+
+/* Better reading experience */
+
+.feature-card p,
+.feature-card li{
+    font-size:1.08rem;
+    line-height:1.9;
+}
+
+.feature-card ul{
+    padding-left:25px;
+}
