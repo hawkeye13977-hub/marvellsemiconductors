@@ -262,3 +262,19 @@ h2{
 .feature-card ul{
     padding-left:25px;
 }
+
+/* Mobile Reading Improvement */
+
+@media (max-width:768px){
+
+.feature-card .card-body{
+    padding:30px !important;
+}
+
+.feature-card p,
+.feature-card li{
+    font-size:18px;
+    line-height:1.8;
+}
+
+}
