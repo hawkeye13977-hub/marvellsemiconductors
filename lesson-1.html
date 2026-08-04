@@ -210,6 +210,291 @@ After completing this lesson you will be able to:
 
 </section>
 
+  <!-- ========================= -->
+<!-- What is RTL? -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+What is RTL?
+</h2>
+
+<p class="text-secondary">
+Understanding Register Transfer Level Design.
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body p-4">
+
+<p>
+
+Register Transfer Level (RTL) is a hardware design abstraction used to describe
+how digital circuits transfer data between registers and perform logical
+operations during each clock cycle.
+
+</p>
+
+<p>
+
+RTL is usually written using Hardware Description Languages (HDLs) such as
+Verilog and VHDL.
+
+Engineers use RTL to describe digital systems before synthesis converts the
+design into logic gates.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Why RTL? -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Why RTL is Important
+</h2>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>⚡ ASIC Design</h4>
+
+<p>
+Every modern ASIC begins as RTL.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>💻 FPGA Design</h4>
+
+<p>
+RTL is synthesized into FPGA logic resources.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>🤖 AI Chips</h4>
+
+<p>
+Processors, NPUs and GPUs are designed using RTL.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- RTL Flow -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center">
+
+<h2 class="text-info fw-bold">
+RTL Design Flow
+</h2>
+
+<p class="text-secondary">
+
+Specification → RTL Coding → Simulation → Synthesis → Gate-Level Netlist → Physical Design → Silicon
+
+</p>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- First Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+First RTL Example
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module and_gate(
+
+input a,
+input b,
+
+output y
+
+);
+
+assign y = a & b;
+
+endmodule
+</pre>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+Interview Questions
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>What is RTL?</li>
+
+<li>Difference between RTL and Gate Level?</li>
+
+<li>Why is RTL synthesizable?</li>
+
+<li>Which languages are used for RTL?</li>
+
+<li>What happens after RTL coding?</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- Practice -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+Practice Exercise
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Write a Verilog module for a 2-input OR gate and simulate its output for all input combinations.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+Key Takeaways
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>RTL describes digital hardware behavior.</li>
+
+<li>RTL is written using Verilog or VHDL.</li>
+
+<li>RTL is synthesized into logic gates.</li>
+
+<li>RTL is the starting point of ASIC and FPGA design.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+  <section class="container py-5">
+
+<div class="d-flex justify-content-between">
+
+<a href="rtl-design.html" class="btn btn-outline-light">
+← Course Home
+</a>
+
+<a href="lesson-2.html" class="btn btn-info">
+Next Lesson →
+</a>
+
+</div>
+
+  </section>
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
