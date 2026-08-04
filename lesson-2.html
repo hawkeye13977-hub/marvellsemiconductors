@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Lesson 2 - Digital Logic Basics | SemiCore</title>
+<meta name="description"
+content="Learn the fundamentals of Register Transfer Level (RTL) Design with practical examples and industry concepts.">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold text-info" href="index.html">
+⚡ SemiCore
+</a>
+
+<button class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="index.html">Home</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="tutorials.html">Tutorials</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="news.html">News</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="about.html">About</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="contact.html">Contact</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- ========================= -->
+<!-- Breadcrumb -->
+<!-- ========================= -->
+
+<section class="container pt-5 mt-5">
+
+<nav aria-label="breadcrumb">
+
+<ol class="breadcrumb">
+
+<li class="breadcrumb-item">
+<a href="index.html" class="text-info text-decoration-none">Home</a>
+</li>
+
+<li class="breadcrumb-item">
+<a href="tutorials.html" class="text-info text-decoration-none">Tutorials</a>
+</li>
+
+<li class="breadcrumb-item">
+<a href="rtl-design.html" class="text-info text-decoration-none">RTL Design</a>
+</li>
+
+<li class="breadcrumb-item active text-light">
+Lesson 2
+</li>
+
+</ol>
+
+</nav>
+
+</section>
+
+<!-- ========================= -->
+<!-- Hero -->
+<!-- ========================= -->
+
+<section class="course-hero">
+
+<div class="container text-center">
+
+<span class="badge bg-success fs-6 mb-3">
+
+Lesson 2
+
+</span>
+
+<h1>
+
+Digital Logic Basics
+
+</h1>
+
+<p>
+
+Learn the fundamental concepts of digital logic, binary numbers, and logic gates that power every modern processor.
+</p>
+
+<div class="mt-4">
+
+    <div class="progress" style="height:10px;">
+
+        <div class="progress-bar bg-info"
+             role="progressbar"
+             style="width:2%;">
+
+        </div>
+
+    </div>
+
+    <small class="text-secondary">
+        Course Progress: Lesson 1 of 40 (2%)
+    </small>
+
+</div>  
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Lesson Information -->
+<!-- ========================= -->
+
+<section class="container py-4">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="row text-center">
+
+<div class="col-md-3">
+<h5 class="text-info">📖 Lesson</h5>
+<p>2 of 40</p>
+</div>
+
+<div class="col-md-3">
+<h5 class="text-info">⏱ Duration</h5>
+<p>20 Minutes</p>
+</div>
+
+<div class="col-md-3">
+<h5 class="text-info">🎯 Level</h5>
+<p>Beginner</p>
+</div>
+
+<div class="col-md-3">
+<h5 class="text-info">📘 Prerequisite</h5>
+<p>Lesson 1</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- Learning Objectives -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Learning Objectives
+
+</h2>
+
+<p class="text-secondary">
+
+After completing this lesson you will be able to:
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<ul>
+
+<li>Understand what RTL means.</li>
+
+<li>Explain why RTL is important.</li>
+
+<li>Identify where RTL is used.</li>
+
+<li>Understand the RTL development flow.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<ul>
+
+<li>Understand ASIC vs FPGA development.</li>
+
+<li>Read simple RTL examples.</li>
+
+<li>Prepare for beginner interview questions.</li>
+
+<li>Get ready for the next lesson.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- What is RTL? -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+What is RTL?
+</h2>
+
+<p class="text-secondary">
+Understanding Register Transfer Level Design.
+</p>
+
+</div>
+  <div class="text-center mb-4">
+
+<img src="images/rtl-engineer.png"
+class="img-fluid rounded shadow"
+style="max-width:700px;"
+alt="RTL Design Engineer">
+
+<p class="text-secondary mt-3">
+Figure 1: RTL engineers describe digital hardware using Verilog or VHDL before silicon manufacturing.
+</p>
+
+  </div>
+
+<div class="card feature-card">
+
+<div class="card-body p-4">
+
+<p>
+
+Register Transfer Level (RTL) is a hardware design abstraction used to describe
+how digital circuits transfer data between registers and perform logical
+operations during each clock cycle.
+
+</p>
+
+<p>
+
+RTL is usually written using Hardware Description Languages (HDLs) such as
+Verilog and VHDL.
+
+Engineers use RTL to describe digital systems before synthesis converts the
+design into logic gates.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Why RTL? -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+Why RTL is Important
+</h2>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>⚡ ASIC Design</h4>
+
+<p>
+Every modern ASIC begins as RTL.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>💻 FPGA Design</h4>
+
+<p>
+RTL is synthesized into FPGA logic resources.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>🤖 AI Chips</h4>
+
+<p>
+Processors, NPUs and GPUs are designed using RTL.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+  <div class="text-center mt-5">
+
+<img src="images/silicon-wafer.png"
+class="img-fluid rounded shadow"
+style="max-width:700px;"
+alt="Silicon Wafer">
+
+<p class="text-secondary mt-3">
+Figure 2: RTL is ultimately converted into billions of transistors fabricated on a silicon wafer.
+</p>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- ========================= -->
+<!-- RTL Design Flow -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+RTL Design Flow
+</h2>
+
+<p class="text-secondary">
+The RTL design process transforms an idea into a real silicon chip. Every modern
+processor from AMD, Intel, NVIDIA, Apple, Qualcomm, and other semiconductor
+companies follows a similar development flow.
+</p>
+
+</div>
+
+<div class="text-center">
+
+<img src="images/rtl-flow.png"
+     class="img-fluid rounded shadow"
+     style="max-width:1000px;"
+     alt="RTL Design Flow">
+
+<p class="text-secondary mt-3">
+Figure 1: RTL Design Flow from Specification to Silicon.
+</p>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+Explanation
+</h4>
+
+<ul>
+
+<li><strong>Specification</strong> – Define the functionality and requirements of the design.</li>
+
+<li><strong>RTL Coding</strong> – Implement the hardware behavior using Verilog or VHDL.</li>
+
+<li><strong>Simulation</strong> – Verify the RTL using testbenches and waveform analysis.</li>
+
+<li><strong>Synthesis</strong> – Convert RTL into a gate-level netlist.</li>
+
+<li><strong>Place & Route</strong> – Physically place standard cells and route interconnections.</li>
+
+<li><strong>Fabrication</strong> – Manufacture the integrated circuit in a semiconductor fabrication facility.</li>
+
+<li><strong>Silicon Chip</strong> – Test, validate, and package the final chip for production.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+  <section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="text-info fw-bold">
+AND Gate Example
+</h2>
+
+<p class="text-secondary">
+One of the simplest combinational logic circuits used in RTL design.
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body p-4">
+
+<img src="images/and-gate.png"
+class="img-fluid rounded mb-4"
+alt="AND Gate">
+
+<p>
+
+The AND gate is one of the most fundamental combinational logic gates in digital electronics.
+
+It produces a logic HIGH (1) only when every input is HIGH (1). In RTL design,
+AND gates are the building blocks used to create larger digital circuits such as
+adders, multiplexers, ALUs, CPUs, memory controllers, and AI accelerators.
+
+Understanding the AND gate is the first step toward mastering digital logic and RTL design.
+
+</p>
+  <div class="alert alert-info mt-4">
+
+<strong>Key Takeaway:</strong>
+
+Every complex processor contains millions to billions of logic gates. The AND gate is one of the fundamental building blocks used to construct these circuits.
+
+  </div>
+
+</div>
+
+</div>
+
+  </section>
+
+  <!-- ========================= -->
+<!-- First Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+First RTL Example
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module and_gate(
+
+input a,
+input b,
+
+output y
+
+);
+
+assign y = a & b;
+
+endmodule
+</pre>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+    <h5 class="text-info mb-3">
+        ▶ Try It Yourself
+    </h5>
+
+    <p class="text-secondary">
+        Run this RTL example directly on EDA Playground with a preloaded design and testbench.
+    </p>
+
+    <a href="https://edaplayground.com/x/pdPi"
+       target="_blank"
+       class="btn btn-info btn-lg">
+       ▶ Run on EDA Playground
+    </a>
+
+    <p class="text-warning mt-3 mb-0">
+        <strong>Note:</strong> You may need to sign in to your EDA Playground account to run the simulation and view the output. If you don't have an account, you can create one for free.
+    </p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+  
+<!-- ========================= -->
+<!-- Industry Tip -->
+<!-- ========================= -->
+
+<section class="container py-4">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+💡 Industry Tip
+</h4>
+
+<p class="mb-0">
+
+Professional RTL engineers spend a significant amount of time writing
+testbenches, running simulations, and debugging waveforms before a design
+is synthesized. Understanding simulation results is one of the most
+important skills in digital design.
+
+<br><br>
+
+👉 Click <strong>"Run on EDA Playground"</strong> above to simulate this design,
+observe the output, and gain hands-on experience with RTL verification.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+  
+ <!-- ========================= -->
+<!-- Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+Interview Questions
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>What is RTL?</li>
+
+<li>Difference between RTL and Gate Level?</li>
+
+<li>Why is RTL synthesizable?</li>
+
+<li>Which languages are used for RTL?</li>
+
+<li>What happens after RTL coding?</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- Practice -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+Hands-on Exercise 
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Write a Verilog module for a 2-input OR gate and simulate its output for all input combinations.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+  <!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+Key Takeaways
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>RTL describes digital hardware behavior.</li>
+
+<li>RTL is written using Verilog or VHDL.</li>
+
+<li>RTL is synthesized into logic gates.</li>
+
+<li>RTL is the starting point of ASIC and FPGA design.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+  <section class="container py-5">
+
+<div class="d-flex justify-content-between">
+
+<a href="lesson-1.html" class="btn btn-outline-light">
+← Previous Lesson
+</a>
+
+<a href="lesson-3.html" class="btn btn-info">
+Next Lesson →
+</a>
+
+</div>
+
+  </section>
+
+<footer class="py-4 text-center">
+
+    <p class="text-secondary mb-0">
+        © 2026 SemiCore. All Rights Reserved.
+    </p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+  </html>
