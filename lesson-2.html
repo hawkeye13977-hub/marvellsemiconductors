@@ -156,7 +156,7 @@ Learn the fundamental concepts of digital logic, binary numbers, and logic gates
 
 <section class="container py-4">
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -186,6 +186,9 @@ Learn the fundamental concepts of digital logic, binary numbers, and logic gates
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>  
@@ -280,7 +283,7 @@ The foundation of all modern digital electronic systems.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body p-4">
 
@@ -306,6 +309,9 @@ calculations, store data, and make decisions.
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -356,7 +362,7 @@ Computers understand only two values: 0 and 1.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -375,6 +381,9 @@ binary because electronic circuits can reliably distinguish between two voltage 
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -406,7 +415,7 @@ Decimal vs Binary
 
 </h2>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -448,11 +457,14 @@ Decimal vs Binary
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <section class="container py-5">
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -480,6 +492,9 @@ Why Computers Use Binary
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <!-- ========================= -->
@@ -504,7 +519,7 @@ Digital circuits operate using only two stable voltage levels.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -522,6 +537,9 @@ to perform billions of operations every second.
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -563,7 +581,7 @@ Logic gates are the fundamental building blocks of digital hardware.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -596,6 +614,9 @@ arithmetic units, memories, control logic, caches, AI accelerators and complete 
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -637,7 +658,7 @@ The mathematical foundation of digital logic.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -670,6 +691,9 @@ complexity and improve performance.
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -726,7 +750,7 @@ Figure 6: Multiplexer and Demultiplexer overview.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -744,6 +768,9 @@ MUXes and DEMUXes are widely used in processors, communication systems and memor
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <!-- ========================= -->
@@ -758,11 +785,17 @@ MUXes and DEMUXes are widely used in processors, communication systems and memor
 
 </h3>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<h4 class="text-info text-center mb-4">
+
+💻 Verilog Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
 module mux2to1(
 
 input a,
@@ -776,9 +809,9 @@ output y
 assign y = sel ? b : a;
 
 endmodule
-</pre>
-
-<hr>
+</code></pre>
+    
+<hr class="my-4">
 
 <div class="text-center">
 
@@ -790,10 +823,17 @@ class="btn btn-info">
 
 </a>
 
+<p class="text-warning mt-3 mb-0">
+<strong>Note:</strong> Click the link to open the design and run the simulation directly on EDA Playground.
+</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
 </div>
 
 </section>
@@ -810,11 +850,17 @@ class="btn btn-info">
 
 </h3>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<h4 class="text-info text-center mb-4">
+
+💻 Verilog Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
 module demux1to2 (
 
     input wire d,
@@ -829,9 +875,9 @@ assign y0 = (~sel) & d;
 assign y1 = sel & d;
 
 endmodule
-</pre>
-
-<hr>
+</code></pre>
+    
+<hr class="my-4">
 
 <div class="text-center">
 
@@ -843,10 +889,17 @@ class="btn btn-info">
 
 </a>
 
+<p class="text-warning mt-3 mb-0">
+<strong>Note:</strong> Click the link to open the design and run the simulation directly on EDA Playground.
+</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
 </div>
 
 </section>
@@ -876,7 +929,7 @@ Figure 7: Binary decoding and encoding.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -894,6 +947,9 @@ These circuits are fundamental in memories, interrupts, keyboards and address de
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <!-- ========================= -->
@@ -908,11 +964,17 @@ These circuits are fundamental in memories, interrupts, keyboards and address de
 
 </h3>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<h4 class="text-info text-center mb-4">
+
+💻 Verilog Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
 module decoder2to4(
 
 input [1:0] a,
@@ -924,9 +986,9 @@ output [3:0] y
 assign y = 4'b0001 << a;
 
 endmodule
-</pre>
+</code></pre>
 
-<hr>
+<hr class="my-4">
 
 <div class="text-center">
 
@@ -938,10 +1000,17 @@ class="btn btn-info">
 
 </a>
 
+<p class="text-warning mt-3 mb-0">
+<strong>Note:</strong> Click the link to open the design and run the simulation directly on EDA Playground.
+</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
 </div>
 
 </section>
@@ -958,11 +1027,17 @@ class="btn btn-info">
 
 </h3>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<h4 class="text-info text-center mb-4">
+
+💻 Verilog Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
 module encoder4to2(
 
 input [3:0] d,
@@ -990,9 +1065,9 @@ endcase
 end
 
 endmodule
-</pre>
+</code></pre>
 
-<hr>
+<hr class="my-4">
 
 <div class="text-center">
 
@@ -1004,10 +1079,17 @@ class="btn btn-info">
 
 </a>
 
+<p class="text-warning mt-3 mb-0">
+<strong>Note:</strong> Click the link to open the design and run the simulation directly on EDA Playground.
+</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
 </div>
 
 </section>
@@ -1037,7 +1119,7 @@ Figure 8: Half Adder and Full Adder.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1057,6 +1139,9 @@ Every ALU inside a processor is built using thousands of adders.
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <!-- ========================= -->
@@ -1071,11 +1156,17 @@ Half Adder Verilog Example
 
 </h3>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<h4 class="text-info text-center mb-4">
+
+💻 Verilog Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
 module half_adder(
 
 input a,
@@ -1090,9 +1181,9 @@ assign sum = a ^ b;
 assign carry = a & b;
 
 endmodule
-</pre>
+</code></pre>
 
-<hr>
+<hr class="my-4">
 
 <div class="text-center">
 
@@ -1104,10 +1195,17 @@ class="btn btn-info">
 
 </a>
 
+<p class="text-warning mt-3 mb-0">
+<strong>Note:</strong> Click the link to open the design and run the simulation directly on EDA Playground.
+</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
 </div>
 
 </section>
@@ -1124,11 +1222,17 @@ Full Adder Verilog Example
 
 </h3>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<h4 class="text-info text-center mb-4">
+
+💻 Verilog Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
 module full_adder(
 
 input a,
@@ -1147,9 +1251,9 @@ assign carry = (a & b) |
                (a & cin);
 
 endmodule
-</pre>
+</code></pre>
 
-<hr>
+<hr class="my-4">
 
 <div class="text-center">
 
@@ -1161,10 +1265,17 @@ class="btn btn-info">
 
 </a>
 
+<p class="text-warning mt-3 mb-0">
+<strong>Note:</strong> Click the link to open the design and run the simulation directly on EDA Playground.
+</p>
+
+</div>
+
 </div>
 
 </div>
 
+</div>
 </div>
 
 </section>
@@ -1194,7 +1305,7 @@ Figure 9: Common combinational logic circuits.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1210,6 +1321,9 @@ They are extensively used in CPUs, GPUs, AI accelerators and communication hardw
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -1247,7 +1361,7 @@ Figure 10: Internal digital building blocks of a modern CPU.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1264,6 +1378,9 @@ using these basic digital building blocks.
 
 </div>
 
+</div>
+
+</div>
 </div>
 
 </section>
@@ -1293,7 +1410,7 @@ Figure 11: Digital logic powers modern electronic systems.
 
 </div>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1321,6 +1438,9 @@ Figure 11: Digital logic powers modern electronic systems.
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <section class="container py-5">
@@ -1328,7 +1448,7 @@ Figure 11: Digital logic powers modern electronic systems.
 <div class="text-center mb-5">
 
 <h2 class="fw-bold text-info">
-Lesson Summary
+📌 Lesson Summary
 </h2>
 
 </div>
@@ -1391,7 +1511,7 @@ Lesson Summary
 Basic Verilog Example – 2-Input OR Gate 
 </h2>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1477,7 +1597,7 @@ OR Gate Truth Table
 
 </h4>
 
-<pre class="text-light"><code>
+<pre class="text-light p-3 rounded"><code>
 module or_gate(
 
 input a,
@@ -1500,10 +1620,6 @@ endmodule
 ▶ Try It Yourself
 </h5>
 
-<p class="text-secondary">
-Run this OR gate example directly on EDA Playground with a preloaded design and testbench.
-</p>
-
 <a href="https://edaplayground.com/x/jHM8"
 target="_blank"
 class="btn btn-info btn-lg">
@@ -1524,11 +1640,14 @@ class="btn btn-info btn-lg">
 
 </div>
 
+</div>
+</div>
+
 </section>
     
 <section class="container py-4">
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1546,6 +1665,9 @@ Modern processors contain billions of transistors organized into logic gates, mu
 
 </div>
 
+</div>
+</div>
+
 </section>
   
  <!-- ========================= -->
@@ -1558,7 +1680,7 @@ Modern processors contain billions of transistors organized into logic gates, mu
 Interview Questions
 </h2>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1590,6 +1712,9 @@ Interview Questions
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <!-- ========================= -->
@@ -1602,7 +1727,7 @@ Interview Questions
 Hands-on Exercise 
 </h2>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1627,6 +1752,9 @@ Simulate it using EDA Playground and verify all possible input combinations.
 
 </div>
 
+</div>
+</div>
+
 </section>
 
   <!-- ========================= -->
@@ -1639,7 +1767,7 @@ Simulate it using EDA Playground and verify all possible input combinations.
 Key Takeaways
 </h2>
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body">
 
@@ -1661,12 +1789,18 @@ Key Takeaways
 
 </div>
 
+</div>
+</div>
+
 </section>
 
 <section class="container py-5">
 
-<div class="alert alert-success text-center">
+<div class="row justify-content-center">
 
+<div class="col-lg-10">
+
+<div class="alert alert-success text-center">
 <h3>🎉 Congratulations!</h3>
 
 <p class="mb-0">
@@ -1679,11 +1813,15 @@ You now understand binary numbers, logic gates, Boolean algebra, and the most co
 
 </div>
 
+</div>
+
+</div>
+
 </section>
 
 <section class="container py-5">
 
-<div class="card feature-card">
+<div class="row justify-content-center">  <div class="col-lg-10">  <div class="card feature-card">
 
 <div class="card-body text-center">
 
@@ -1703,9 +1841,16 @@ In Lesson 3, you'll learn Combinational Logic Design, including continuous assig
 
 </div>
 
+</div>
+</div>
+
 </section>    
 
   <section class="container py-5">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
 
 <div class="d-flex justify-content-between">
 
@@ -1716,6 +1861,10 @@ In Lesson 3, you'll learn Combinational Logic Design, including continuous assig
 <a href="lesson-3.html" class="btn btn-info">
 Next Lesson →
 </a>
+
+</div>
+
+</div>
 
 </div>
 
