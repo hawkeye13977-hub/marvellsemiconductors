@@ -90,12 +90,18 @@ button{
 }
 
 .card{
+
+    width:100%;
+
     background:#161b22;
-    width:300px;
+
     padding:30px;
+
     border-radius:12px;
+
     transition:.3s;
 }
+
 
 .card:hover{
     transform:translateY(-10px);
@@ -175,9 +181,17 @@ footer p{
 }
 
 .feature-card{
-    padding:12px;
+
+    width:100%;
     border-radius:18px;
 }
+
+.feature-card .card-body{
+
+    padding:30px;
+}
+
+
 
 .feature-card p,
 .feature-card li{
