@@ -1,0 +1,1084 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Multiplexer (MUX) & Demultiplexer (DEMUX) Verilog Examples | SemiCore</title>
+
+<meta name="description"
+content="Learn Multiplexer (MUX) and Demultiplexer (DEMUX) using diagrams, truth tables, Verilog HDL examples and EDA Playground simulations.">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="../style.css">
+
+</head>
+
+<body>
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold text-info" href="../index.html">
+⚡ SemiCore
+</a>
+
+<button class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="../index.html">Home</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="../tutorials.html">Tutorials</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="../about.html">About</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="../contact.html">Contact</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- ========================= -->
+<!-- Hero -->
+<!-- ========================= -->
+
+<section class="course-hero">
+
+<div class="container text-center">
+
+<span class="badge bg-success fs-6 mb-3">
+
+Verilog Example
+
+</span>
+
+<h1>
+
+Multiplexer (MUX) & Demultiplexer (DEMUX)
+
+</h1>
+
+<p>
+
+Learn Multiplexers and Demultiplexers with diagrams, truth tables, Verilog HDL examples and interactive EDA Playground simulations.
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Example Information -->
+<!-- ========================= -->
+
+<section class="container py-4">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="row text-center">
+
+<div class="col-md-3">
+
+<h5 class="text-info">📘 Example</h5>
+
+<p>MUX & DEMUX</p>
+
+</div>
+
+<div class="col-md-3">
+
+<h5 class="text-info">🎯 Difficulty</h5>
+
+<p>Beginner</p>
+
+</div>
+
+<div class="col-md-3">
+
+<h5 class="text-info">💻 Language</h5>
+
+<p>Verilog HDL</p>
+
+</div>
+
+<div class="col-md-3">
+
+<h5 class="text-info">▶ Simulator</h5>
+
+<p>EDA Playground</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Introduction -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Introduction
+
+</h2>
+
+<p class="text-secondary">
+
+Multiplexers and Demultiplexers are fundamental combinational circuits used in digital systems for selecting and routing data efficiently.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>Multiplexer (MUX)</strong> selects one input from multiple inputs and forwards it to a single output.
+
+A <strong>Demultiplexer (DEMUX)</strong> performs the opposite function by routing a single input to one of multiple outputs.
+
+</p>
+
+<p>
+
+These circuits are widely used in processors, memory controllers, communication systems, FPGAs, and ASIC designs.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- MUX vs DEMUX -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+
+MUX vs DEMUX
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Multiplexer (MUX)</th>
+
+<th>Demultiplexer (DEMUX)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Function</td>
+
+<td>Selects one input</td>
+
+<td>Routes one input</td>
+
+</tr>
+
+<tr>
+
+<td>Inputs</td>
+
+<td>Multiple</td>
+
+<td>One</td>
+
+</tr>
+
+<tr>
+
+<td>Outputs</td>
+
+<td>One</td>
+
+<td>Multiple</td>
+
+</tr>
+
+<tr>
+
+<td>Common Name</td>
+
+<td>Data Selector</td>
+
+<td>Data Distributor</td>
+
+</tr>
+
+<tr>
+
+<td>Applications</td>
+
+<td>Processors, SoCs, Buses</td>
+
+<td>Communication, Address Decoding</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- MUX & DEMUX Block Diagram -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+MUX & DEMUX Block Diagram
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how Multiplexers and Demultiplexers route digital signals.
+
+</p>
+
+</div>
+
+<div class="text-center">
+
+<img src="../images/examples/mux-demux.png"
+class="img-fluid rounded shadow"
+style="max-width:900px;"
+alt="MUX and DEMUX Block Diagram">
+
+<p class="text-secondary mt-3">
+
+Figure 1: A Multiplexer selects one of many inputs, while a Demultiplexer routes one input to one of many outputs.
+
+</p>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- 2:1 Multiplexer -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+2:1 Multiplexer (MUX)
+
+</h2>
+
+<p class="text-secondary">
+
+A data selector that forwards one of two inputs to a single output.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>2:1 Multiplexer (MUX)</strong> has two data inputs (<strong>A</strong> and <strong>B</strong>), one select line (<strong>SEL</strong>), and one output (<strong>Y</strong>).
+
+</p>
+
+<p>
+
+The select line determines which input is connected to the output.
+
+</p>
+
+<ul>
+
+<li><strong>SEL = 0</strong> → Output = A</li>
+
+<li><strong>SEL = 1</strong> → Output = B</li>
+
+</ul>
+
+<p>
+
+Multiplexers are widely used in CPUs, memory controllers, ALUs, communication systems, and System-on-Chip (SoC) designs.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- MUX Truth Table -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+
+MUX Truth Table
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>SEL</th>
+
+<th>Output (Y)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>A</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>B</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- MUX Boolean Equation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h2 class="text-info">
+
+Boolean Equation
+
+</h2>
+
+<p>
+
+The output equation for a 2:1 Multiplexer is:
+
+</p>
+
+<pre class="text-light">
+
+Y = (~SEL & A) | (SEL & B)
+
+</pre>
+
+<p>
+
+This equation means:
+
+</p>
+
+<ul>
+
+<li><strong>SEL = 0</strong> → Output = A</li>
+
+<li><strong>SEL = 1</strong> → Output = B</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- MUX Verilog Design -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+
+Verilog Design Code – 2:1 Multiplexer
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module mux2to1 (
+
+input a,
+input b,
+input sel,
+
+output y
+
+);
+
+assign y = sel ? b : a;
+
+endmodule
+</pre>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Run MUX on EDA Playground -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-info">
+
+▶ Try It Yourself – Multiplexer
+
+</h2>
+
+<p>
+
+Run this complete example directly in EDA Playground. The design and testbench are already provided.
+
+</p>
+
+<a href="YOUR_MUX_EDA_LINK"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Run MUX on EDA Playground
+
+</a>
+
+<p class="text-warning mt-3">
+
+<strong>Note:</strong> Please sign in to your EDA Playground account to run the simulation and view the waveform.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- 1:2 DEMUX -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+1:2 Demultiplexer (DEMUX)
+
+</h2>
+
+<p class="text-secondary">
+
+A data distributor that routes one input to one of two outputs.
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>1:2 Demultiplexer (DEMUX)</strong> has one data input (<strong>IN</strong>), one select line (<strong>SEL</strong>), and two outputs (<strong>Y0</strong> and <strong>Y1</strong>).
+
+</p>
+
+<p>
+
+The select line determines which output receives the input signal.
+
+</p>
+
+<ul>
+
+<li><strong>SEL = 0</strong> → Input is routed to Y0</li>
+
+<li><strong>SEL = 1</strong> → Input is routed to Y1</li>
+
+</ul>
+
+<p>
+
+Demultiplexers are widely used in communication systems, memory address decoding, data routing, and digital control applications.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DEMUX Truth Table -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+
+DEMUX Truth Table
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>IN</th>
+
+<th>SEL</th>
+
+<th>Y0</th>
+
+<th>Y1</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>1</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>1</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DEMUX Boolean Equation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h2 class="text-info">
+
+Boolean Equations
+
+</h2>
+
+<pre class="text-light">
+
+Y0 = IN & ~SEL
+
+Y1 = IN & SEL
+
+</pre>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DEMUX Verilog Design -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+
+Verilog Design Code – 1:2 Demultiplexer
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module demux1to2(
+
+input in,
+input sel,
+
+output y0,
+output y1
+
+);
+
+assign y0 = ~sel & in;
+assign y1 =  sel & in;
+
+endmodule
+</pre>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Run DEMUX on EDA Playground -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-info">
+
+▶ Try It Yourself – Demultiplexer
+
+</h2>
+
+<p>
+
+Run the complete DEMUX example directly in EDA Playground.
+
+</p>
+
+<a href="YOUR_DEMUX_EDA_LINK"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Run DEMUX on EDA Playground
+
+</a>
+
+<p class="text-warning mt-3">
+
+<strong>Note:</strong> Please sign in to your EDA Playground account to run the simulation and view the waveform.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Industry Tip -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h2 class="text-info">
+
+💡 Industry Tip
+
+</h2>
+
+<p>
+
+Multiplexers and Demultiplexers are among the most commonly used combinational circuits in modern digital systems.
+
+</p>
+
+<ul>
+
+<li>Multiplexers are widely used in CPUs, ALUs, memory controllers, and bus architectures for selecting one signal from multiple inputs.</li>
+
+<li>Demultiplexers are commonly used for address decoding, data distribution, communication interfaces, and memory selection.</li>
+
+<li>RTL Design and Verification Engineers frequently encounter MUX and DEMUX logic in ASIC and FPGA projects.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Interview Questions
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ol>
+
+<li>What is a Multiplexer?</li>
+
+<li>What is a Demultiplexer?</li>
+
+<li>Explain the difference between a MUX and a DEMUX.</li>
+
+<li>Why is a Multiplexer called a Data Selector?</li>
+
+<li>Write the Boolean equation of a 2:1 Multiplexer.</li>
+
+<li>Write Verilog code for a 2:1 Multiplexer.</li>
+
+<li>Write Verilog code for a 1:2 Demultiplexer.</li>
+
+<li>Where are MUXes and DEMUXes used in modern processors?</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Practice Exercise -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Hands-on Exercise
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ol>
+
+<li>Design a 4:1 Multiplexer in Verilog.</li>
+
+<li>Design a 1:4 Demultiplexer in Verilog.</li>
+
+<li>Simulate both designs using EDA Playground.</li>
+
+<li>Modify the 2:1 Multiplexer to use behavioral and dataflow modeling.</li>
+
+<li>Compare the hardware generated by different coding styles.</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Key Takeaways
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>Multiplexers select one input from multiple inputs.</li>
+
+<li>Demultiplexers route one input to one of multiple outputs.</li>
+
+<li>MUX is commonly called a Data Selector.</li>
+
+<li>DEMUX is commonly called a Data Distributor.</li>
+
+<li>Both are essential combinational circuits used in CPUs, SoCs, ASICs, and FPGA designs.</li>
+
+<li>Verilog provides a simple and efficient way to implement both circuits.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Related Examples -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Continue Learning
+
+</h2>
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4>Encoder & Decoder</h4>
+
+<p>Learn how binary data is encoded and decoded.</p>
+
+<a href="encoder-decoder.html" class="btn btn-info">
+
+Open
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4>Half & Full Adder</h4>
+
+<p>Understand binary addition and arithmetic circuits.</p>
+
+<a href="half-full-adder.html" class="btn btn-info">
+
+Open
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4>Flip-Flops</h4>
+
+<p>Learn sequential logic and storage elements.</p>
+
+<a href="flip-flops.html" class="btn btn-info">
+
+Open
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="d-flex justify-content-between">
+
+<a href="../lesson-2.html" class="btn btn-outline-light">
+
+← Back to Lesson 2
+
+</a>
+
+<a href="encoder-decoder.html" class="btn btn-info">
+
+Next: Encoder & Decoder →
+
+</a>
+
+</div>
+
+</section>
+
