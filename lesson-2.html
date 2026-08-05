@@ -746,6 +746,111 @@ MUXes and DEMUXes are widely used in processors, communication systems and memor
 
 </section>
 
+<!-- ========================= -->
+<!-- MUX Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h3 class="text-info fw-bold text-center mb-4">
+
+2:1 Multiplexer Verilog Example
+
+</h3>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module mux2to1(
+
+input a,
+input b,
+input sel,
+
+output y
+
+);
+
+assign y = sel ? b : a;
+
+endmodule
+</pre>
+
+<hr>
+
+<div class="text-center">
+
+<a href="https://www.edaplayground.com/x/aDGS"
+target="_blank"
+class="btn btn-info">
+
+▶ Run MUX on EDA Playground
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- DEMUX Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h3 class="text-info fw-bold text-center mb-4">
+
+1:2 Demultiplexer Verilog Example
+
+</h3>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module demux1to2 (
+
+    input wire d,
+    input wire sel,
+
+    output wire y0,
+    output wire y1
+
+);
+
+assign y0 = (~sel) & d;
+assign y1 = sel & d;
+
+endmodule
+</pre>
+
+<hr>
+
+<div class="text-center">
+
+<a href="https://www.edaplayground.com/x/sQd2"
+target="_blank"
+class="btn btn-info">
+
+▶ Run DEMUX on EDA Playground
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
 <section class="container py-5">
 
 <div class="text-center mb-5">
@@ -784,6 +889,122 @@ An encoder performs the reverse operation by converting active inputs into binar
 These circuits are fundamental in memories, interrupts, keyboards and address decoding.
 
 </p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Decoder Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h3 class="text-info fw-bold text-center mb-4">
+
+2:4 Decoder Verilog Example
+
+</h3>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module decoder2to4(
+
+input [1:0] a,
+
+output [3:0] y
+
+);
+
+assign y = 4'b0001 << a;
+
+endmodule
+</pre>
+
+<hr>
+
+<div class="text-center">
+
+<a href="https://www.edaplayground.com/x/sxQQ"
+target="_blank"
+class="btn btn-info">
+
+▶ Run Decoder on EDA Playground
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Encoder Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h3 class="text-info fw-bold text-center mb-4">
+
+4:2 Encoder Verilog Example
+
+</h3>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module encoder4to2(
+
+input [3:0] d,
+
+output reg [1:0] y
+
+);
+
+always @(*) begin
+
+case(d)
+
+4'b0001 : y = 2'b00;
+
+4'b0010 : y = 2'b01;
+
+4'b0100 : y = 2'b10;
+
+4'b1000 : y = 2'b11;
+
+default : y = 2'b00;
+
+endcase
+
+end
+
+endmodule
+</pre>
+
+<hr>
+
+<div class="text-center">
+
+<a href="https://www.edaplayground.com/x/n6Pw"
+target="_blank"
+class="btn btn-info">
+
+▶ Run Encoder on EDA Playground
+
+</a>
+
+</div>
 
 </div>
 
@@ -838,12 +1059,122 @@ Every ALU inside a processor is built using thousands of adders.
 
 </section>
 
+<!-- ========================= -->
+<!-- Half Adder Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h3 class="text-info fw-bold text-center mb-4">
+
+Half Adder Verilog Example
+
+</h3>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module half_adder(
+
+input a,
+input b,
+
+output sum,
+output carry
+
+);
+
+assign sum = a ^ b;
+assign carry = a & b;
+
+endmodule
+</pre>
+
+<hr>
+
+<div class="text-center">
+
+<a href="https://www.edaplayground.com/x/u2yB"
+target="_blank"
+class="btn btn-info">
+
+▶ Run Half Adder on EDA Playground
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Full Adder Verilog Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h3 class="text-info fw-bold text-center mb-4">
+
+Full Adder Verilog Example
+
+</h3>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module full_adder(
+
+input a,
+input b,
+input cin,
+
+output sum,
+output carry
+
+);
+
+assign sum = a ^ b ^ cin;
+
+assign carry = (a & b) |
+               (b & cin) |
+               (a & cin);
+
+endmodule
+</pre>
+
+<hr>
+
+<div class="text-center">
+
+<a href="https://www.edaplayground.com/x/hmAr"
+target="_blank"
+class="btn btn-info">
+
+▶ Run Full Adder on EDA Playground
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
 <section class="container py-5">
 
 <div class="text-center mb-5">
 
 <h2 class="fw-bold text-info">
-Combinational Circuit Examples
+Common Combinational Circuits
 </h2>
 
 </div>
@@ -1057,14 +1388,96 @@ Lesson Summary
 <section class="container py-5">
 
 <h2 class="text-info fw-bold text-center mb-4">
-First Verilog Example - OR Gate
+Basic Verilog Example – 2-Input OR Gate 
 </h2>
 
 <div class="card feature-card">
 
 <div class="card-body">
 
-<pre class="text-light">
+<!-- ========================= -->
+<!-- OR Gate Truth Table -->
+<!-- ========================= -->
+
+<h4 class="text-info text-center mb-4">
+
+OR Gate Truth Table
+
+</h4>
+
+<div class="table-responsive mb-4">
+
+<table class="table table-dark table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>A</th>
+
+<th>B</th>
+
+<th>Y = A | B</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>0</td>
+
+<td>1</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>1</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info text-center mb-4">
+
+Verilog Design Code
+
+</h4>
+
+<pre class="text-light"><code>
 module or_gate(
 
 input a,
@@ -1077,7 +1490,7 @@ output y
 assign y = a | b;
 
 endmodule
-</pre>
+</code></pre>
 
 <hr class="my-4">
 
@@ -1112,99 +1525,6 @@ class="btn btn-info btn-lg">
 </div>
 
 </section>
-
-<!-- ========================= -->
-<!-- Continue Learning -->
-<!-- ========================= -->
-
-<section class="container py-5">
-
-<h2 class="text-info fw-bold text-center">
-
-Continue Learning with Verilog Examples
-
-</h2>
-
-<p class="text-center text-secondary mb-4">
-
-Now that you've learned the basics of digital logic, practice these concepts with complete Verilog examples.
-
-</p>
-
-<div class="row g-4">
-
-<div class="col-md-4">
-
-<div class="card feature-card h-100">
-
-<div class="card-body text-center">
-
-<h4>Multiplexer & Demultiplexer</h4>
-
-<p>Learn data selection and routing using Verilog.</p>
-
-<a href="examples/mux-demux.html"
-class="btn btn-info">
-
-Open Example
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-4">
-
-<div class="card feature-card h-100">
-
-<div class="card-body text-center">
-
-<h4>Encoder & Decoder</h4>
-
-<p>Understand binary encoding and decoding circuits.</p>
-
-<a href="examples/encoder-decoder.html"
-class="btn btn-info">
-
-Open Example
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="col-md-4">
-
-<div class="card feature-card h-100">
-
-<div class="card-body text-center">
-
-<h4>Half & Full Adder</h4>
-
-<p>Explore binary addition using Verilog HDL.</p>
-
-<a href="examples/half-full-adder.html"
-class="btn btn-info">
-
-Open Example
-
-</a>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</section>
     
 <section class="container py-4">
 
@@ -1218,9 +1538,7 @@ Open Example
 
 <p>
 
-Every processor contains billions of logic gates.
-
-Understanding how basic gates combine into larger digital circuits is the foundation of RTL Design, Verification, FPGA Design and ASIC Development.
+Modern processors contain billions of transistors organized into logic gates, multiplexers, decoders, adders, registers, and control logic. Mastering these basic building blocks is the first step toward becoming an RTL Design, FPGA, ASIC, or Design Verification Engineer.
 
 </p>
 
@@ -1261,6 +1579,10 @@ Interview Questions
 <li>Difference between Decoder and Encoder?</li>
 
 <li>Half Adder vs Full Adder?</li>
+
+<li>What is the difference between an Encoder and a Priority Encoder?</li>
+
+<li>Why is a Full Adder preferred over a Half Adder in multi-bit addition?</li>
 
 </ul>  
 
