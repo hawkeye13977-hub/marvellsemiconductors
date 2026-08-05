@@ -221,7 +221,7 @@ Multiplexers are widely used in CPUs, memory systems, communication hardware, an
 </section>
 
 <!-- ========================= -->
-<!-- 2:1 MUX Block Diagram -->
+<!-- MUX & DEMUX Diagram -->
 <!-- ========================= -->
 
 <section class="container py-5">
@@ -230,7 +230,7 @@ Multiplexers are widely used in CPUs, memory systems, communication hardware, an
 
 <h2 class="fw-bold text-info">
 
-2:1 Multiplexer Block Diagram
+Multiplexer & Demultiplexer
 
 </h2>
 
@@ -238,17 +238,437 @@ Multiplexers are widely used in CPUs, memory systems, communication hardware, an
 
 <div class="text-center">
 
-<img src="../images/examples/mux-2to1.png"
+<img src="../images/examples/mux-demux.png"
 class="img-fluid rounded shadow"
-style="max-width:700px;"
-alt="2 to 1 Multiplexer Block Diagram">
+style="max-width:900px;"
+alt="Multiplexer and Demultiplexer Diagram">
 
 <p class="text-secondary mt-3">
 
-Figure 1: A 2:1 Multiplexer selects one of two inputs based on the select signal.
+Figure 1: Comparison of a 2:1 Multiplexer and a 1:2 Demultiplexer. A Multiplexer selects one of many inputs, while a Demultiplexer routes one input to one of many outputs.
 
 </p>
 
 </div>
 
 </section>
+
+<!-- ========================= -->
+<!-- Truth Table -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Truth Table
+
+</h2>
+
+<p class="text-secondary">
+
+The output depends on the value of the select signal (SEL).
+
+</p>
+
+</div>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>SEL</th>
+
+<th>Output (Y)</th>
+
+<th>Description</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>A</td>
+
+<td>Output follows Input A</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>B</td>
+
+<td>Output follows Input B</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Boolean Equation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h2 class="text-info">
+
+Boolean Equation
+
+</h2>
+
+<p>
+
+The Boolean equation for a 2:1 Multiplexer is:
+
+</p>
+
+<pre class="text-light">
+
+Y = (~SEL & A) | (SEL & B)
+
+</pre>
+
+<p>
+
+This equation means:
+
+</p>
+
+<ul>
+
+<li><strong>SEL = 0</strong> → Output = A</li>
+
+<li><strong>SEL = 1</strong> → Output = B</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Verilog Design -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center mb-4">
+
+Verilog Design Code
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<pre class="text-light">
+module mux2to1(
+
+input a,
+input b,
+input sel,
+
+output y
+
+);
+
+assign y = sel ? b : a;
+
+endmodule
+</pre>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Run on EDA Playground -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h2 class="text-info">
+
+▶ Try It Yourself
+
+</h2>
+
+<p>
+
+Run this example directly on EDA Playground. The testbench is already included—simply click <strong>Run</strong> to simulate the design.
+
+</p>
+
+<a href="YOUR_EDA_PLAYGROUND_LINK"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Run on EDA Playground
+
+</a>
+
+<p class="text-warning mt-3">
+
+<strong>Note:</strong> You may need to sign in to your EDA Playground account to run the simulation and view the waveform.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Industry Tip -->
+<!-- ========================= -->
+
+<section class="container py-4">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+💡 Industry Tip
+
+</h4>
+
+<p>
+
+Multiplexers are one of the most frequently used combinational circuits in digital design. They are widely used in CPUs, SoCs, memory controllers, buses, and communication hardware to efficiently select one signal from multiple inputs.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Interview Questions
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>What is a Multiplexer?</li>
+
+<li>Why is it called a Data Selector?</li>
+
+<li>Difference between MUX and DEMUX?</li>
+
+<li>Write Verilog code for a 2:1 Multiplexer.</li>
+
+<li>Can a Multiplexer be implemented using logic gates?</li>
+
+<li>Where are Multiplexers used in modern processors?</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Practice Exercise -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Practice Exercise
+
+</h2>
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ol>
+
+<li>Design a 4:1 Multiplexer using behavioral Verilog.</li>
+
+<li>Implement a 4:1 Multiplexer using only 2:1 Multiplexers.</li>
+
+<li>Simulate both designs using EDA Playground.</li>
+
+<li>Compare the outputs for all select line combinations.</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Related Examples -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<h2 class="text-info fw-bold text-center">
+
+Related Examples
+
+</h2>
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4>1:2 DEMUX</h4>
+
+<a href="demux-1to2.html" class="btn btn-info">
+
+Learn More
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4>2:4 Decoder</h4>
+
+<a href="decoder-2to4.html" class="btn btn-info">
+
+Learn More
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4>4:2 Encoder</h4>
+
+<a href="encoder-4to2.html" class="btn btn-info">
+
+Learn More
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<section class="container py-5">
+
+<div class="d-flex justify-content-between">
+
+<a href="../lesson-2.html" class="btn btn-outline-light">
+
+← Back to Lesson 2
+
+</a>
+
+<a href="demux-1to2.html" class="btn btn-info">
+
+Next Example →
+
+</a>
+
+</div>
+
+</section>
+
+<footer class="py-4 text-center">
+
+<p class="text-secondary mb-0">
+
+© 2026 SemiCore. All Rights Reserved.
+
+</p>
+
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>
