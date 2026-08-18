@@ -3383,3 +3383,973 @@ transitions and output behavior.
 </div>
 
 </section>
+
+<!-- ========================= -->
+<!-- Hands-on FSM Exercise -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Hands-on FSM Exercise
+
+</h2>
+
+<p class="text-secondary">
+
+Design an FSM yourself using the concepts learned in this lesson.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Exercise: Sequence Detector
+
+</h4>
+
+<p>
+
+Design a synchronous FSM that detects the input sequence
+<strong>101</strong>.
+
+The FSM should monitor a serial input called
+<strong>din</strong> and generate an output called
+<strong>detected</strong> when the sequence <strong>101</strong> is
+recognized.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Requirements
+
+</h4>
+
+<ul>
+
+<li>Create a module named <strong>sequence_detector</strong>.</li>
+
+<li>Use inputs <strong>clk</strong>, <strong>reset</strong> and <strong>din</strong>.</li>
+
+<li>Create a 1-bit output named <strong>detected</strong>.</li>
+
+<li>Use a synchronous active-high reset.</li>
+
+<li>The FSM should detect the sequence <strong>101</strong>.</li>
+
+<li>The FSM should process one input bit on every rising clock edge.</li>
+
+<li>Generate <strong>detected = 1</strong> when the complete sequence is detected.</li>
+
+<li>Return to an appropriate state so another sequence can be detected.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Think Before Coding
+
+</h4>
+
+<p>
+
+Before writing Verilog, determine the states required to remember the
+progress of the sequence.
+
+For example, you may need states representing:
+
+</p>
+
+<ul>
+
+<li>No matching bits received.</li>
+
+<li>The first <strong>1</strong> has been received.</li>
+
+<li>The sequence <strong>10</strong> has been received.</li>
+
+<li>The complete <strong>101</strong> sequence has been detected.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Your Tasks
+
+</h4>
+
+<ol>
+
+<li>Draw the FSM state diagram.</li>
+
+<li>Create the state transition table.</li>
+
+<li>Choose a state encoding.</li>
+
+<li>Write the Verilog state register.</li>
+
+<li>Write the next-state logic.</li>
+
+<li>Write the output logic.</li>
+
+<li>Simulate the design.</li>
+
+<li>Verify the waveform for different input sequences.</li>
+
+</ol>
+
+<h4 class="text-info mt-4">
+
+Example Input Stream
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+din:
+
+1  0  1  1  0  1
+│  │  │
+└──┴──┴── 101 detected
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Expected Behavior
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Input Sequence</th>
+
+<th>Expected Result</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>101</td>
+
+<td>Sequence detected</td>
+
+</tr>
+
+<tr>
+
+<td>100</td>
+
+<td>Not detected</td>
+
+</tr>
+
+<tr>
+
+<td>111</td>
+
+<td>Not detected</td>
+
+</tr>
+
+<tr>
+
+<td>0101</td>
+
+<td>Sequence detected</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Challenge
+
+</h4>
+
+<p class="mb-0">
+
+Try to design the complete FSM without looking at the previous
+examples.
+
+Draw the state diagram first, then convert it into a transition table
+and finally write the Verilog RTL.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Lesson Summary -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Lesson 6 Summary
+
+</h2>
+
+<p class="text-secondary">
+
+Key concepts covered in this lesson.
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>🧠 FSM Fundamentals</h4>
+
+<ul>
+
+<li>Finite State Machine concept</li>
+
+<li>States and transitions</li>
+
+<li>State diagrams</li>
+
+<li>Transition tables</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>⚡ Moore & Mealy FSMs</h4>
+
+<ul>
+
+<li>Moore FSM output behavior</li>
+
+<li>Mealy FSM output behavior</li>
+
+<li>Differences between Moore and Mealy</li>
+
+<li>Practical FSM implementation</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>💻 RTL Implementation</h4>
+
+<ul>
+
+<li>State registers</li>
+
+<li>Next-state logic</li>
+
+<li>Output logic</li>
+
+<li>Reset and default states</li>
+
+<li>State encoding</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>🔍 Verification</h4>
+
+<ul>
+
+<li>FSM simulation</li>
+
+<li>Console output</li>
+
+<li>Waveform analysis</li>
+
+<li>EDA Playground</li>
+
+<li>Hands-on sequence detector exercise</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FSM Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM Interview Questions
+
+</h2>
+
+<p class="text-secondary">
+
+Test your understanding of Finite State Machines.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="accordion" id="fsmInterview">
+
+<!-- Question 1 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ1">
+
+1. What is a Finite State Machine?
+
+</button>
+
+</h2>
+
+<div id="fsmQ1"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+An FSM is a sequential digital design model that represents a system
+using a finite number of states and transitions between those states.
+
+The next state depends on the current state and, depending on the
+FSM type, the input conditions.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 2 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ2">
+
+2. What is the difference between Moore and Mealy FSM?
+
+</button>
+
+</h2>
+
+<div id="fsmQ2"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+<strong>Moore FSM:</strong> Output depends only on the current state.
+
+<br><br>
+
+<strong>Mealy FSM:</strong> Output depends on the current state and
+input.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 3 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ3">
+
+3. What are the main components of an FSM RTL implementation?
+
+</button>
+
+</h2>
+
+<div id="fsmQ3"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+A typical FSM implementation contains:
+
+<ul>
+
+<li>State register</li>
+
+<li>Next-state logic</li>
+
+<li>Output logic</li>
+
+</ul>
+
+The state register stores the current state, while the combinational
+logic determines the next state and outputs.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 4 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ4">
+
+4. Why is reset used in an FSM?
+
+</button>
+
+</h2>
+
+<div id="fsmQ4"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+Reset places the FSM into a known initial state.
+
+For example, a controller may be reset into the
+<strong>IDLE</strong> state before normal operation begins.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 5 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ5">
+
+5. Why should an FSM have a default case?
+
+</button>
+
+</h2>
+
+<div id="fsmQ5"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+A default case provides defined behavior when the current state does
+not match any of the explicitly defined states.
+
+A common approach is to return the FSM to a safe state such as
+<strong>IDLE</strong>.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 6 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ6">
+
+6. What is state encoding?
+
+</button>
+
+</h2>
+
+<div id="fsmQ6"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+State encoding is the method used to represent FSM states using binary
+values.
+
+Common encoding approaches include:
+
+<ul>
+
+<li>Binary encoding</li>
+
+<li>One-hot encoding</li>
+
+<li>Gray encoding</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 7 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ7">
+
+7. What is the difference between current state and next state?
+
+</button>
+
+</h2>
+
+<div id="fsmQ7"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+The <strong>current state</strong> represents the state in which the
+FSM is currently operating.
+
+The <strong>next state</strong> represents the state that the FSM will
+enter on the next active clock edge.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 8 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ8">
+
+8. How do you design an FSM from a specification?
+
+</button>
+
+</h2>
+
+<div id="fsmQ8"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+A common design flow is:
+
+<ol>
+
+<li>Understand the specification.</li>
+
+<li>Identify inputs and outputs.</li>
+
+<li>Identify the required states.</li>
+
+<li>Define state transitions.</li>
+
+<li>Create the state diagram.</li>
+
+<li>Create the transition table.</li>
+
+<li>Choose state encoding.</li>
+
+<li>Implement the RTL.</li>
+
+<li>Simulate and verify the design.</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 9 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ9">
+
+9. What happens if an FSM reaches an invalid state?
+
+</button>
+
+</h2>
+
+<div id="fsmQ9"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+The RTL should provide defined recovery behavior.
+
+A default branch can direct the FSM to a known safe state, such as
+<strong>IDLE</strong>.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 10 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#fsmQ10">
+
+10. How do you verify an FSM?
+
+</button>
+
+</h2>
+
+<div id="fsmQ10"
+class="accordion-collapse collapse"
+data-bs-parent="#fsmInterview">
+
+<div class="accordion-body">
+
+Verify the reset behavior, every state transition, input condition,
+output behavior and invalid-state recovery.
+
+Simulation and waveform analysis can be used to compare the actual
+behavior against the expected state transitions.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Key Takeaways
+
+</h2>
+
+<p class="text-secondary">
+
+The most important concepts to remember from Lesson 6.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>
+An <strong>FSM (Finite State Machine)</strong> represents a system using
+a finite number of states and transitions.
+</li>
+
+<li>
+A <strong>state</strong> represents a particular operating condition
+of the system.
+</li>
+
+<li>
+A <strong>state transition</strong> moves the FSM from one state to
+another based on defined conditions.
+</li>
+
+<li>
+A <strong>Moore FSM</strong> produces outputs based only on the current
+state.
+</li>
+
+<li>
+A <strong>Mealy FSM</strong> produces outputs based on the current state
+and inputs.
+</li>
+
+<li>
+A typical FSM RTL implementation contains a
+<strong>state register, next-state logic and output logic</strong>.
+</li>
+
+<li>
+State encoding can use approaches such as
+<strong>binary, one-hot and Gray encoding</strong>.
+</li>
+
+<li>
+Reset places the FSM into a known initial state.
+</li>
+
+<li>
+A <strong>default case</strong> provides defined behavior for unexpected
+or invalid states.
+</li>
+
+<li>
+FSMs should be designed systematically using a
+<strong>specification → state diagram → transition table → RTL →
+verification</strong> flow.
+</li>
+
+<li>
+Simulation and waveform analysis are important for verifying FSM
+behavior.
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Coming Next -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h3 class="text-info">
+
+Coming Next
+
+</h3>
+
+<p class="mb-0">
+
+In <strong>Lesson 7</strong>, you'll learn
+<strong>Datapath Design</strong>, including how registers, arithmetic
+units, multiplexers and control logic work together to perform
+multi-step operations.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Lesson Navigation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<a href="lesson-5.html"
+class="btn btn-outline-light">
+
+← Previous Lesson
+
+</a>
+
+<a href="lesson-7.html"
+class="btn btn-info">
+
+Next Lesson →
+
+</a>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Bootstrap JS -->
+<!-- ========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>  
