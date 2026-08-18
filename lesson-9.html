@@ -15459,6 +15459,2945 @@ I3: R6 = R4 + R1
 </section>     
 
 <!-- ========================= -->
+<!-- Step 26 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      26. Control Hazards &amp; Branch Handling
+    </h2>
+
+    <p class="text-secondary">
+      Understand how branches affect pipeline flow and how prediction,
+      flushing and recovery are used to handle control hazards.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Is a Control Hazard?
+          </h4>
+
+          <p>
+            A control hazard occurs when the next instruction to
+            execute depends on a control-flow decision such as a
+            branch or jump.
+          </p>
+
+
+          <pre><code>
+Branch Instruction
+        ↓
+Which instruction executes next?
+        ↓
+Branch Decision
+        ↓
+Next PC
+          </code></pre>
+
+
+          <p>
+            While the branch decision is being determined, the
+            pipeline may already contain instructions from a predicted
+            or sequential path.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Sequential Flow -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Sequential Instruction Flow
+          </h4>
+
+          <p>
+            Without a branch, the processor normally continues to the
+            next sequential instruction.
+          </p>
+
+
+          <pre><code>
+PC
+ ↓
+Instruction 1
+ ↓
+Instruction 2
+ ↓
+Instruction 3
+ ↓
+Instruction 4
+          </code></pre>
+
+
+          <p>
+            The pipeline can continue fetching instructions while
+            earlier instructions are being processed.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Branch Instruction
+          </h4>
+
+          <p>
+            A branch can change the normal sequential flow.
+          </p>
+
+
+          <pre><code>
+          Branch
+          /    \
+     Not Taken  Taken
+        |          |
+        v          v
+ Sequential     Target
+    Path          Path
+          </code></pre>
+
+
+          <p>
+            The processor must determine which path is correct.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Decision -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Branch Decision
+          </h4>
+
+          <p>
+            A branch decision may depend on a comparison or condition.
+          </p>
+
+
+          <pre><code>
+Condition
+    ↓
+Evaluate
+    ↓
++-----------+
+|           |
+Taken     Not Taken
+|           |
+v           v
+Target    Sequential
+          </code></pre>
+
+
+          <p>
+            If the decision is known early, the pipeline can reduce the
+            amount of potentially incorrect work.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Branch Prediction
+          </h4>
+
+          <p>
+            Branch prediction attempts to predict whether a branch will
+            be taken and, when applicable, where execution will
+            continue.
+          </p>
+
+
+          <pre><code>
+Branch
+  ↓
+Prediction
+  ↓
++-------------+
+|             |
+Taken     Not Taken
+  |           |
+  v           v
+Target    Sequential
+          </code></pre>
+
+
+          <p>
+            Prediction allows the pipeline to continue fetching
+            instructions instead of always waiting for the final
+            branch decision.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Correct Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Correct Branch Prediction
+          </h4>
+
+          <p>
+            If the prediction matches the actual branch result, the
+            instructions being fetched are on the correct path.
+          </p>
+
+
+          <pre><code>
+Prediction
+    ↓
+Actual Result
+    ↓
+Correct
+    ↓
+Continue Pipeline
+          </code></pre>
+
+
+          <p>
+            Correct prediction helps minimize the performance impact
+            of control hazards.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Misprediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Branch Misprediction
+          </h4>
+
+          <p>
+            If the prediction is incorrect, instructions from the wrong
+            path may already be present in the pipeline.
+          </p>
+
+
+          <pre><code>
+Prediction
+    ↓
+Wrong Path
+    ↓
+Branch Resolution
+    ↓
+Misprediction
+          </code></pre>
+
+
+          <p>
+            Those incorrect-path instructions must not be allowed to
+            update the architectural state.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Flush -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Pipeline Flush
+          </h4>
+
+          <p>
+            A pipeline flush removes or invalidates instructions that
+            entered the pipeline from the incorrect branch path.
+          </p>
+
+
+          <pre><code>
+Wrong Path
+    ↓
+Misprediction
+    ↓
+FLUSH
+    ↓
+Correct Target
+    ↓
+Resume Execution
+          </code></pre>
+
+
+          <p>
+            Flush control is therefore a critical part of branch
+            recovery.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Penalty -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Branch Penalty
+          </h4>
+
+          <p>
+            A misprediction can introduce additional cycles because
+            incorrect pipeline work must be discarded and the correct
+            path must be fetched.
+          </p>
+
+
+          <pre><code>
+Misprediction
+     ↓
+Flush
+     ↓
+Refetch Correct Path
+     ↓
+Additional Cycles
+     ↓
+Performance Penalty
+          </code></pre>
+
+
+          <p>
+            Deeper pipelines can potentially have a larger
+            misprediction penalty because more instructions may be
+            in flight before the branch is resolved.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Taken vs Not Taken -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Taken vs Not-Taken Branch
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Prediction</th>
+                  <th>Actual Result</th>
+                  <th>Action</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Taken</td>
+                  <td>Taken</td>
+                  <td>Continue predicted path</td>
+                </tr>
+
+                <tr>
+                  <td>Not Taken</td>
+                  <td>Not Taken</td>
+                  <td>Continue predicted path</td>
+                </tr>
+
+                <tr>
+                  <td>Taken</td>
+                  <td>Not Taken</td>
+                  <td>Flush and recover</td>
+                </tr>
+
+                <tr>
+                  <td>Not Taken</td>
+                  <td>Taken</td>
+                  <td>Flush and recover</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Branch Target -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Branch Target
+          </h4>
+
+          <p>
+            A taken branch generally changes the program counter to a
+            target address.
+          </p>
+
+
+          <pre><code>
+Current PC
+    +
+Branch Offset
+    ↓
+Target PC
+          </code></pre>
+
+
+          <p>
+            The target calculation and branch decision are both
+            important for correct control-flow handling.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Recovery -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Branch Recovery
+          </h4>
+
+
+          <pre><code>
+Branch Prediction
+        ↓
+Fetch Instructions
+        ↓
+Resolve Branch
+        ↓
++------------------+
+|                  |
+Correct          Incorrect
+|                  |
+v                  v
+Continue          Flush
+                   ↓
+              Correct Target
+                   ↓
+                 Resume
+          </code></pre>
+
+
+          <p>
+            Recovery must ensure that wrong-path instructions do not
+            produce visible architectural effects.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Performance -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Performance Impact
+          </h4>
+
+          <pre><code>
+Branch
+  ↓
+Prediction
+  ↓
+Correct? ── Yes ──→ Continue
+  |
+  No
+  ↓
+Flush
+  ↓
+Extra Cycles
+  ↓
+Higher CPI
+  ↓
+Lower Performance
+          </code></pre>
+
+
+          <p>
+            Good branch handling reduces the frequency and cost of
+            these penalties.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            13. Design Verification Perspective
+          </h4>
+
+          <p>
+            Branch handling requires verification of both the predicted
+            and actual control-flow behavior.
+          </p>
+
+
+          <ul>
+
+            <li>Branch taken</li>
+
+            <li>Branch not taken</li>
+
+            <li>Correct prediction</li>
+
+            <li>Incorrect prediction</li>
+
+            <li>Target address calculation</li>
+
+            <li>Pipeline flush</li>
+
+            <li>Pipeline recovery</li>
+
+            <li>Sequential execution after not-taken branch</li>
+
+            <li>Target execution after taken branch</li>
+
+            <li>No wrong-path architectural updates</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            14. Verification Example
+          </h4>
+
+
+          <pre><code>
+Branch predicted: NOT TAKEN
+
+Actual result: TAKEN
+
+Expected:
+
+1. Detect misprediction
+2. Flush wrong-path instructions
+3. Calculate/select target
+4. Fetch target instruction
+5. Resume correct execution
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Review -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            15. Quick Review
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Concept</th>
+                  <th>Remember</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Control Hazard</td>
+                  <td>
+                    Next instruction depends on control flow.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Branch Prediction</td>
+                  <td>
+                    Predicts the likely execution path.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Correct Prediction</td>
+                  <td>
+                    Pipeline continues on the correct path.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Misprediction</td>
+                  <td>
+                    Predicted path differs from actual path.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Flush</td>
+                  <td>
+                    Removes invalid wrong-path pipeline work.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Branch Penalty</td>
+                  <td>
+                    Additional cycles caused by branch recovery.
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            16. EDA Playground — Control Hazards &amp; Branch Handling
+          </h4>
+
+          <p>
+            Now verify branch prediction, misprediction and pipeline
+            flush behavior using an RTL simulation.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Run the Design and Testbench in EDA Playground and
+                observe the branch decision, prediction, flush and
+                recovery signals.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/Lg5Y"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>branch</li>
+
+            <li>branch_taken</li>
+
+            <li>prediction</li>
+
+            <li>mispredict</li>
+
+            <li>flush</li>
+
+            <li>program counter</li>
+
+            <li>target address</li>
+
+            <li>pipeline valid signals</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Taken branch should redirect execution to the target.
+            </li>
+
+            <li>
+              Not-taken branch should continue sequential execution.
+            </li>
+
+            <li>
+              Correct prediction should not cause an unnecessary flush.
+            </li>
+
+            <li>
+              Misprediction should generate a flush.
+            </li>
+
+            <li>
+              Wrong-path instructions should be invalidated.
+            </li>
+
+            <li>
+              Correct target instruction should execute after recovery.
+            </li>
+
+            <li>
+              No wrong-path transaction should update the final result.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Control hazards occur when the next instruction
+                  depends on a branch decision. Branch prediction allows
+                  the pipeline to continue speculatively, while a
+                  misprediction requires wrong-path instructions to be
+                  flushed and execution to recover at the correct
+                  target.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                From a DV perspective, both correct predictions and
+                mispredictions must be verified, with special attention
+                to flush, recovery and prevention of wrong-path
+                architectural updates.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>   
+
+<!-- ========================= -->
+<!-- Step 27 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      27. Branch Prediction &amp; Misprediction Penalty
+    </h2>
+
+    <p class="text-secondary">
+      Understand how branch prediction improves pipeline performance
+      and how mispredictions introduce a performance penalty.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Is Branch Prediction?
+          </h4>
+
+          <p>
+            Branch prediction is a technique used to predict the
+            outcome of a branch before the actual branch condition has
+            been completely resolved.
+          </p>
+
+
+          <pre><code>
+Branch Instruction
+        ↓
+   Prediction
+        ↓
++---------------+
+|               |
+Taken       Not Taken
+|               |
+v               v
+Target       Sequential
+Path           Path
+          </code></pre>
+
+
+          <p>
+            The goal is to keep the pipeline busy instead of waiting
+            for every branch decision.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Why Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Why Is Branch Prediction Needed?
+          </h4>
+
+          <p>
+            A pipeline fetches instructions before earlier instructions
+            have completely finished execution. When the current
+            instruction is a branch, the processor may not immediately
+            know which instruction should be fetched next.
+          </p>
+
+
+          <pre><code>
+Without Prediction:
+
+Branch
+  ↓
+Wait for Decision
+  ↓
+Fetch Next Instruction
+
+
+With Prediction:
+
+Branch
+  ↓
+Predict
+  ↓
+Continue Fetching
+          </code></pre>
+
+
+          <p>
+            Prediction allows instruction fetching to continue and can
+            reduce control-hazard stalls.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Correct Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Correct Prediction
+          </h4>
+
+          <p>
+            If the predicted branch direction matches the actual
+            result, the processor can continue execution without
+            discarding the predicted-path instructions.
+          </p>
+
+
+          <pre><code>
+Prediction
+    ↓
+Actual Result
+    ↓
+  Match
+    ↓
+Continue
+          </code></pre>
+
+
+          <p>
+            Correct predictions help maintain high pipeline
+            utilization.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Misprediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Branch Misprediction
+          </h4>
+
+          <p>
+            A branch misprediction occurs when the predicted branch
+            direction differs from the actual branch result.
+          </p>
+
+
+          <pre><code>
+Prediction
+    ↓
+Actual Result
+    ↓
+Mismatch
+    ↓
+Misprediction
+          </code></pre>
+
+
+          <p>
+            Instructions fetched using the incorrect prediction are
+            no longer valid and must be removed from the pipeline.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Misprediction Flow -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Misprediction Handling
+          </h4>
+
+
+          <pre><code>
+Branch
+  ↓
+Prediction
+  ↓
+Wrong Path
+  ↓
+Branch Resolution
+  ↓
+Misprediction
+  ↓
+Flush
+  ↓
+Correct Target
+  ↓
+Resume Execution
+          </code></pre>
+
+
+          <p>
+            The flush prevents wrong-path instructions from producing
+            incorrect architectural effects.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Penalty -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Misprediction Penalty
+          </h4>
+
+          <p>
+            A misprediction introduces additional cycles because the
+            incorrect instructions must be discarded and the correct
+            path must be fetched.
+          </p>
+
+
+          <pre><code>
+Misprediction
+      ↓
+Flush Wrong Path
+      ↓
+Fetch Correct Path
+      ↓
+Pipeline Recovery
+      ↓
+Extra Cycles
+          </code></pre>
+
+
+          <p>
+            These additional cycles are called the
+            <strong>misprediction penalty</strong>.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Pipeline Depth -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Pipeline Depth and Penalty
+          </h4>
+
+          <p>
+            Pipeline depth can affect the cost of a branch
+            misprediction.
+          </p>
+
+
+          <pre><code>
+Shallow Pipeline
+      ↓
+Fewer Instructions In Flight
+      ↓
+Potentially Smaller Penalty
+
+
+Deep Pipeline
+      ↓
+More Instructions In Flight
+      ↓
+Potentially Larger Penalty
+          </code></pre>
+
+
+          <p>
+            The exact penalty depends on where the branch is resolved
+            and the architecture of the processor.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Example of Misprediction
+          </h4>
+
+
+          <pre><code>
+Prediction: NOT TAKEN
+
+Actual: TAKEN
+
+Predicted path:
+I1 → I2 → I3
+
+Actual path:
+        Target → I4
+          </code></pre>
+
+
+          <p>
+            If I1, I2 and I3 entered the pipeline because of the
+            incorrect prediction, those instructions must be
+            invalidated when the branch is resolved.
+          </p>
+
+
+          <pre><code>
+I1 → I2 → I3
+     ↓
+   FLUSH
+     ↓
+Target → I4
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- CPI Impact -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Impact on CPI
+          </h4>
+
+          <p>
+            Branch mispredictions add extra cycles and therefore can
+            increase the effective CPI.
+          </p>
+
+
+          <pre><code>
+Branch Misprediction
+        ↓
+Penalty Cycles
+        ↓
+More Cycles / Instruction
+        ↓
+Higher CPI
+        ↓
+Lower Performance
+          </code></pre>
+
+
+          <p>
+            Therefore, improving prediction accuracy can have a
+            significant performance benefit in branch-heavy workloads.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Prediction Accuracy -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Prediction Accuracy
+          </h4>
+
+
+          <p>
+            Prediction accuracy represents how often the branch
+            prediction matches the actual branch outcome.
+          </p>
+
+
+          <pre><code>
+Correct Predictions
+-------------------
+Total Predictions
+
+        ↓
+
+Prediction Accuracy
+          </code></pre>
+
+
+          <p>
+            Higher prediction accuracy generally means fewer
+            misprediction penalties.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Static vs Dynamic -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Static vs Dynamic Prediction
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Type</th>
+                  <th>Basic Idea</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Static</td>
+                  <td>
+                    Prediction follows a fixed rule.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Dynamic</td>
+                  <td>
+                    Prediction uses runtime branch behavior.
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- DV -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Design Verification Perspective
+          </h4>
+
+          <p>
+            Verification should cover both correct predictions and
+            incorrect predictions.
+          </p>
+
+
+          <ul>
+
+            <li>Predicted taken / actually taken</li>
+
+            <li>Predicted not taken / actually not taken</li>
+
+            <li>Predicted taken / actually not taken</li>
+
+            <li>Predicted not taken / actually taken</li>
+
+            <li>Flush generation</li>
+
+            <li>Correct target selection</li>
+
+            <li>Pipeline recovery</li>
+
+            <li>Wrong-path instruction invalidation</li>
+
+            <li>Repeated branches</li>
+
+            <li>Back-to-back branches</li>
+
+            <li>Correct CPI/penalty behavior</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Scenario -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Verification Scenario
+          </h4>
+
+
+          <pre><code>
+Prediction = NOT TAKEN
+Actual     = TAKEN
+
+Expected:
+
+mispredict = 1
+flush      = 1
+
+Next PC = Branch Target
+          </code></pre>
+
+
+          <p>
+            The verification environment should ensure that
+            instructions from the wrong path do not reach the
+            architectural result.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Performance Trade-off -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            13. Performance Trade-off
+          </h4>
+
+
+          <pre><code>
+Better Prediction
+       ↓
+Fewer Mispredictions
+       ↓
+Fewer Flushes
+       ↓
+Fewer Penalty Cycles
+       ↓
+Lower CPI
+       ↓
+Better Performance
+          </code></pre>
+
+
+          <p>
+            Branch prediction is therefore an important part of
+            modern high-performance pipeline design.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Review Table -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            14. Quick Review
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Concept</th>
+                  <th>Remember</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Prediction</td>
+                  <td>
+                    Guess the branch path before resolution.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Correct Prediction</td>
+                  <td>
+                    Continue predicted path.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Misprediction</td>
+                  <td>
+                    Prediction differs from actual result.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Flush</td>
+                  <td>
+                    Remove wrong-path pipeline work.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Misprediction Penalty</td>
+                  <td>
+                    Extra cycles required for recovery.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Accuracy</td>
+                  <td>
+                    Fraction of predictions that are correct.
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            15. EDA Playground — Branch Prediction
+          </h4>
+
+          <p>
+            Now verify branch prediction accuracy and misprediction
+            penalty using an RTL simulation.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Run the Design and Testbench in EDA Playground and
+                observe prediction, misprediction, flush and penalty
+                behavior.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/Ay4b"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>branch</li>
+
+            <li>prediction</li>
+
+            <li>actual_taken</li>
+
+            <li>mispredict</li>
+
+            <li>flush</li>
+
+            <li>penalty_counter</li>
+
+            <li>prediction_count</li>
+
+            <li>correct_prediction_count</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Correct predictions should not generate a flush.
+            </li>
+
+            <li>
+              Mispredictions should generate a flush.
+            </li>
+
+            <li>
+              Taken misprediction should redirect to the branch target.
+            </li>
+
+            <li>
+              Not-taken misprediction should redirect to the sequential
+              path.
+            </li>
+
+            <li>
+              Penalty cycles should be counted correctly.
+            </li>
+
+            <li>
+              Prediction statistics should match the applied test
+              sequence.
+            </li>
+
+            <li>
+              Wrong-path instructions should not affect the result.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Branch prediction keeps the pipeline moving by
+                  predicting the likely control-flow path. A correct
+                  prediction avoids a major pipeline disruption, while
+                  a misprediction requires a flush and recovery,
+                  introducing additional penalty cycles.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                For DV, verify both prediction correctness and the
+                complete recovery path after a misprediction.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+     </section>
+
+     <!-- ========================= -->
+<!-- Step 28 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      28. Branch Prediction Strategies
+    </h2>
+
+    <p class="text-secondary">
+      Understand different branch prediction approaches and compare
+      their behavior for different branch patterns.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Is a Branch Prediction Strategy?
+          </h4>
+
+          <p>
+            A branch prediction strategy determines whether a branch
+            should be predicted as taken or not taken before the actual
+            branch result is known.
+          </p>
+
+
+          <pre><code>
+Branch
+  |
+  v
+Prediction Strategy
+  |
+  +----------+
+  |          |
+Taken    Not Taken
+          </code></pre>
+
+
+          <p>
+            Different strategies provide different prediction accuracy
+            depending on the behavior of the program.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Static Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Static Branch Prediction
+          </h4>
+
+          <p>
+            A static predictor follows a fixed rule and does not change
+            its prediction based on previous runtime branch results.
+          </p>
+
+
+          <pre><code>
+Branch
+  |
+  v
+Fixed Rule
+  |
+  +------------+
+  |            |
+Taken      Not Taken
+          </code></pre>
+
+
+          <p>
+            Static prediction is simple and has low hardware
+            complexity.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Always Not Taken -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Always Not-Taken Prediction
+          </h4>
+
+          <p>
+            The predictor always predicts that the branch will not be
+            taken.
+          </p>
+
+
+          <pre><code>
+Every Branch
+     |
+     v
+NOT TAKEN
+          </code></pre>
+
+
+          <p>
+            If the actual branch is not taken, the prediction is
+            correct. If the branch is taken, a misprediction occurs.
+          </p>
+
+
+          <pre><code>
+Prediction = 0
+
+Actual = 0
+   ↓
+Correct
+
+Actual = 1
+   ↓
+Misprediction
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Always Taken -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Always-Taken Prediction
+          </h4>
+
+          <p>
+            The predictor always predicts that the branch will be
+            taken.
+          </p>
+
+
+          <pre><code>
+Every Branch
+     |
+     v
+TAKEN
+          </code></pre>
+
+
+          <p>
+            This strategy is simple and can work well for branch
+            patterns where branches are frequently taken.
+          </p>
+
+
+          <pre><code>
+Prediction = 1
+
+Actual = 1
+   ↓
+Correct
+
+Actual = 0
+   ↓
+Misprediction
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Dynamic -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Dynamic Branch Prediction
+          </h4>
+
+          <p>
+            A dynamic predictor uses information from previous branch
+            behavior to make future predictions.
+          </p>
+
+
+          <pre><code>
+Previous Branch Behavior
+          |
+          v
+Prediction State
+          |
+          v
+Next Prediction
+          |
+          v
+Actual Result
+          |
+          +------→ Update State
+          </code></pre>
+
+
+          <p>
+            Dynamic prediction can adapt to changing branch behavior.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Last Outcome -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Last-Outcome Predictor
+          </h4>
+
+          <p>
+            A simple dynamic predictor can remember the result of the
+            previous branch and use that result as the prediction for
+            the next branch.
+          </p>
+
+
+          <pre><code>
+Previous Result
+      |
+      v
+Remember Result
+      |
+      v
+Predict Next Branch
+      |
+      v
+Actual Result
+      |
+      v
+Update Remembered Result
+          </code></pre>
+
+
+          <p>
+            For example, if the previous branch was taken, the next
+            branch is predicted as taken.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Example Pattern -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Branch Pattern Example
+          </h4>
+
+
+          <p>
+            Consider this branch sequence:
+          </p>
+
+
+          <pre><code>
+Actual:
+
+N N N N T T T T
+          </code></pre>
+
+
+          <p>
+            An always-not-taken predictor will perform well during the
+            initial not-taken sequence but will mispredict when the
+            branch changes to taken.
+          </p>
+
+
+          <p>
+            A last-outcome predictor can adapt after observing the
+            change in behavior.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Comparison -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Prediction Strategy Comparison
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Strategy</th>
+                  <th>Prediction</th>
+                  <th>Adapts to History?</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Always Not Taken</td>
+                  <td>Not Taken</td>
+                  <td>No</td>
+                </tr>
+
+                <tr>
+                  <td>Always Taken</td>
+                  <td>Taken</td>
+                  <td>No</td>
+                </tr>
+
+                <tr>
+                  <td>Last Outcome</td>
+                  <td>Previous Result</td>
+                  <td>Yes</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Accuracy -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Prediction Accuracy
+          </h4>
+
+          <p>
+            Prediction accuracy measures how often the prediction
+            matches the actual branch result.
+          </p>
+
+
+          <pre><code>
+Correct Predictions
+-------------------
+Total Branches
+
+        ↓
+
+Prediction Accuracy
+          </code></pre>
+
+
+          <p>
+            Higher prediction accuracy generally means fewer
+            misprediction penalties.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Misprediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Misprediction Handling
+          </h4>
+
+
+          <pre><code>
+Prediction
+    ↓
+Actual Result
+    ↓
+Mismatch
+    ↓
+Misprediction
+    ↓
+Flush
+    ↓
+Correct Path
+          </code></pre>
+
+
+          <p>
+            The processor must invalidate instructions that were
+            fetched using the incorrect prediction.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Performance -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Performance Impact
+          </h4>
+
+
+          <pre><code>
+Better Prediction
+       ↓
+Fewer Mispredictions
+       ↓
+Fewer Flushes
+       ↓
+Fewer Penalty Cycles
+       ↓
+Better Pipeline Performance
+          </code></pre>
+
+
+          <p>
+            Therefore, branch prediction strategy can have a direct
+            impact on pipeline performance.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Patterns -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Different Branch Patterns
+          </h4>
+
+
+          <p>
+            A prediction strategy may perform differently depending on
+            the branch pattern.
+          </p>
+
+
+          <pre><code>
+Pattern A:
+
+N N N N N N
+
+
+Pattern B:
+
+T T T T T T
+
+
+Pattern C:
+
+N T N T N T
+
+
+Pattern D:
+
+N N N T N N N T
+          </code></pre>
+
+
+          <p>
+            This is why verification should not rely on only one branch
+            sequence.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Design Verification Perspective
+          </h4>
+
+          <p>
+            A DV environment should test different branch prediction
+            strategies against different branch patterns.
+          </p>
+
+
+          <ul>
+
+            <li>Always taken prediction</li>
+
+            <li>Always not-taken prediction</li>
+
+            <li>Last-outcome prediction</li>
+
+            <li>Repeated taken branches</li>
+
+            <li>Repeated not-taken branches</li>
+
+            <li>Alternating branches</li>
+
+            <li>Changing branch behavior</li>
+
+            <li>Correct prediction</li>
+
+            <li>Misprediction</li>
+
+            <li>Prediction statistics</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            13. Verification Example
+          </h4>
+
+
+          <pre><code>
+Strategy:
+
+Always Not Taken
+
+
+Actual:
+
+N N T N T
+
+
+Expected:
+
+N → Correct
+N → Correct
+T → Mispredict
+N → Correct
+T → Mispredict
+          </code></pre>
+
+
+          <p>
+            The testbench should compare the actual branch sequence
+            against the predicted sequence and verify the number of
+            correct predictions and mispredictions.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Statistics -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            14. Prediction Statistics
+          </h4>
+
+
+          <pre><code>
+Total Branches
+      |
+      +---- Correct Predictions
+      |
+      +---- Mispredictions
+          </code></pre>
+
+
+          <p>
+            These statistics can be used to compare different
+            prediction strategies.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            15. EDA Playground — Branch Prediction Strategies
+          </h4>
+
+          <p>
+            Now compare multiple prediction strategies using RTL
+            simulation.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Run the Design and Testbench in EDA Playground and
+                observe prediction, misprediction and prediction
+                statistics for different strategies.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/gm_J"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>branch</li>
+
+            <li>actual_taken</li>
+
+            <li>strategy</li>
+
+            <li>prediction</li>
+
+            <li>mispredict</li>
+
+            <li>last_outcome</li>
+
+            <li>total_branches</li>
+
+            <li>correct_predictions</li>
+
+            <li>mispredictions</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Always-not-taken should always predict 0.
+            </li>
+
+            <li>
+              Always-taken should always predict 1.
+            </li>
+
+            <li>
+              Last-outcome should use the previous actual result.
+            </li>
+
+            <li>
+              Correct predictions should increment the correct counter.
+            </li>
+
+            <li>
+              Mispredictions should increment the misprediction counter.
+            </li>
+
+            <li>
+              Total branch count should match the number of branch
+              transactions.
+            </li>
+
+            <li>
+              Different branch patterns should produce different
+              prediction behavior.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Branch prediction strategies determine how the
+                  processor predicts future control flow. Simple static
+                  strategies use fixed rules, while dynamic strategies
+                  can adapt using previous branch behavior.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                The best strategy depends on the branch behavior, and
+                DV should verify prediction accuracy across many
+                different branch patterns.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 29 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      29. Branch Target &amp; PC Redirection
+    </h2>
+
+    <p class="text-secondary">
+      Understand how a branch target is calculated and how the program
+      counter is redirected to the correct execution path.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Is PC Redirection?
+          </h4>
+
+          <p>
+            The program counter (PC) normally points to the next
+            sequential instruction. A branch instruction can change
+            this flow by redirecting the PC to a branch target address.
+          </p>
+
+
+          <pre><code>
+Normal Flow:
+
+PC
+ ↓
+PC + 4
+ ↓
+PC + 8
+ ↓
+PC + 12
+
+
+Branch Taken:
+
+PC
+ ↓
+Branch
+ ↓
+Target Address
+ ↓
+Target Instruction
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Sequential PC -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Sequential PC
+          </h4>
+
+          <p>
+            When there is no taken branch, the processor normally
+            continues with the sequential next PC.
+          </p>
+
+
+          <pre><code>
+Next PC = PC + Instruction Size
+          </code></pre>
+
+
+          <p>
+            For a fixed 32-bit instruction width, the instruction size
+            is commonly 4 bytes.
+          </p>
+
+
+          <pre><code>
+PC = 100
+
+Next PC = 104
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Branch Target -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Branch Target Address
+          </h4>
+
+          <p>
+            A branch target is the address to which execution moves
+            when a branch is taken.
+          </p>
+
+
+          <pre><code>
+Branch PC
+    +
+Branch Offset
+    ↓
+Target Address
+          </code></pre>
+
+
+          <p>
+            The exact target-address calculation depends on the
+            instruction-set architecture and branch encoding.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- PC Relative -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. PC-Relative Branch
+          </h4>
+
+          <p>
+            Many architectures use a PC-relative branch where an
+            encoded offset is added to a reference PC.
+          </p>
+
+
+          <pre><code>
+Target PC = Reference PC + Branch Offset
+          </code></pre>
+
+
+          <p>
+            The offset may require sign extension and, depending on the
+            ISA, alignment or scaling before it is added to the PC.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Taken -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Taken Branch
+          </h4>
+
+
+          <pre><code>
+Branch Condition
+       ↓
+   Condition True
+       ↓
+  Branch Taken
+       ↓
+Target Address
+       ↓
+   Redirect PC
+          </code></pre>
+
+
+          <p>
+            When the branch is taken, the PC must be redirected to the
+            calculated target rather than continuing sequentially.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Not Taken -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Not-Taken Branch
+          </h4>
+
+
+          <pre><code>
+Branch Condition
+       ↓
+   Condition False
+       ↓
+ Branch Not Taken
+       ↓
+Sequential Next PC
+          </code></pre>
+
+
+          <p>
+            A not-taken branch continues along the sequential execution
+            path.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- PC Selection -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Next-PC Selection
+          </h4>
+
+
+          <pre><code>
+                 +----------------+
+                 |                |
+Sequential PC ---|                |
+                 |   PC MUX       |----> Next PC
+Branch Target ---|                |
+                 |                |
+                 +----------------+
+                         ↑
+                         |
+                    Branch Taken
+          </code></pre>
+
+
+          <p>
+            A PC multiplexer can select between the sequential PC and
+            the branch target.
+          </p>
+
+
+          <pre><code>
+Branch Taken = 0
+    ↓
+Next PC = Sequential PC
+
+Branch Taken = 1
+    ↓
+Next PC = Branch Target
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Misprediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. PC Redirection After Misprediction
+          </h4>
+
+
+          <pre><code>
+Predicted Path
+      ↓
+Branch Resolution
+      ↓
+Misprediction
+      ↓
+Calculate Correct Target
+      ↓
+Redirect PC
+      ↓
+Flush Wrong Path
+      ↓
+Fetch Correct Instruction
+          </code></pre>
+
+
+          <p>
+            Correct PC redirection is essential for recovering from a
+            branch misprediction.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Example
+          </h4>
+
+
+          <pre><code>
+Current PC = 100
+
+Branch Offset = 40
+
+Target:
+
+100 + 40 = 140
+          </code></pre>
+
+
+          <p>
+            If the branch is taken, execution redirects to address 140.
+            If it is not taken, execution continues at the sequential
+            address.
+          </p>
+
+
+          <pre><code>
+Taken:
+
+100 → Branch → 140
+
+
+Not Taken:
+
+100 → Branch → Sequential PC
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Alignment -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Target Alignment
+          </h4>
+
+          <p>
+            Branch targets may have alignment requirements defined by
+            the architecture.
+          </p>
+
+
+          <pre><code>
+Encoded Offset
+      ↓
+Sign Extension / Scaling
+      ↓
+Alignment
+      ↓
+Target Address
+          </code></pre>
+
+
+          <p>
+            Verification should therefore include aligned and
+            architecture-defined boundary cases.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Pipeline Interaction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Interaction With the Pipeline
+          </h4>
+
+
+          <pre><code>
+Fetch
+  ↓
+Decode
+  ↓
+Branch
+  ↓
+Resolve Target
+  ↓
+Redirect PC
+  ↓
+Flush if Required
+  ↓
+Fetch Target
+          </code></pre>
+
+
+          <p>
+            The stage at which the branch is resolved determines how
+            many instructions may need to be discarded when the PC is
+            redirected.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Design Verification Perspective
+          </h4>
+
+          <p>
+            Branch-target and PC-redirection verification should cover
+            both normal execution and corner cases.
+          </p>
+
+
+          <ul>
+
+            <li>Correct sequential PC</li>
+
+            <li>Taken branch</li>
+
+            <li>Not-taken branch</li>
+
+            <li>Positive branch offset</li>
+
+            <li>Negative branch offset</li>
+
+            <li>Target-address calculation</li>
+
+            <li>Target alignment</li>
+
+            <li>Back-to-back branches</li>
+
+            <li>Branch after a misprediction</li>
+
+            <li>PC redirection after flush</li>
+
+            <li>No wrong-path instruction execution</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Verification Example
+          </h4>
+
+
+          <pre><code>
+Current PC = 200
+Offset     = 20
+
+Branch Taken
+
+Expected Target:
+
+200 + 20 = 220
+
+Expected Next PC = 220
+          </code></pre>
+
+
+          <p>
+            The testbench should compare the calculated target and
+            selected next PC against the expected value.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Review Table -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            13. Quick Review
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Condition</th>
+                  <th>Next PC</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>No Branch</td>
+                  <td>Sequential PC</td>
+                </tr>
+
+                <tr>
+                  <td>Branch Not Taken</td>
+                  <td>Sequential PC</td>
+                </tr>
+
+                <tr>
+                  <td>Branch Taken</td>
+                  <td>Branch Target</td>
+                </tr>
+
+                <tr>
+                  <td>Mispredicted Taken</td>
+                  <td>Correct Branch Target</td>
+                </tr>
+
+                <tr>
+                  <td>Mispredicted Not Taken</td>
+                  <td>Correct Sequential PC</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            14. EDA Playground — Branch Target &amp; PC Redirection
+          </h4>
+
+          <p>
+            Now verify branch-target calculation and next-PC selection
+            using an RTL simulation.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Run the Design and Testbench in EDA Playground and
+                observe the sequential PC, branch target and redirected
+                next PC.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/m3CM"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>current_pc</li>
+
+            <li>sequential_pc</li>
+
+            <li>branch</li>
+
+            <li>branch_taken</li>
+
+            <li>branch_offset</li>
+
+            <li>branch_target</li>
+
+            <li>next_pc</li>
+
+            <li>flush</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Sequential execution should select the sequential PC.
+            </li>
+
+            <li>
+              A taken branch should select the branch target.
+            </li>
+
+            <li>
+              A not-taken branch should select the sequential PC.
+            </li>
+
+            <li>
+              Positive offsets should produce the correct target.
+            </li>
+
+            <li>
+              Negative offsets should produce the correct target.
+            </li>
+
+            <li>
+              Target-address calculation should be correct.
+            </li>
+
+            <li>
+              PC redirection should occur correctly after a
+              misprediction.
+            </li>
+
+            <li>
+              Wrong-path instructions should be flushed when required.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Branch handling requires the processor to calculate
+                  the correct target address and select the appropriate
+                  next PC. A taken branch redirects execution to its
+                  target, while a not-taken branch continues sequentially.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                Accurate PC redirection and target calculation are
+                essential for correct control flow and reliable
+                pipeline verification.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>     
+
+<!-- ========================= -->
 <!-- Bootstrap JS -->
 <!-- ========================= -->
 
