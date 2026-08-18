@@ -622,6 +622,278 @@ always @(posedge clk) → clocked sequential behavior
 </section>
 
 <!-- ========================= -->
+<!-- Sensitivity Lists -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Sensitivity Lists
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding when an always block is triggered.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>sensitivity list</strong> specifies the signals or events
+that cause an <strong>always</strong> block to execute.
+
+</p>
+
+<p>
+
+When a signal in the sensitivity list changes, the procedural block
+is triggered.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Explicit Sensitivity List
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(a or b) begin
+
+    y = a &amp; b;
+
+end</code></pre>
+
+<p>
+
+Here, the block is triggered whenever <strong>a</strong> or
+<strong>b</strong> changes.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Combinational Sensitivity List
+
+</h4>
+
+<p>
+
+For combinational logic, <strong>always @(*)</strong> is commonly
+used.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y = a &amp; b;
+
+end</code></pre>
+
+<p>
+
+The <strong>*</strong> tells the simulator to automatically include
+the signals referenced by the procedural block.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Why is always @(*) Useful?
+
+</h4>
+
+<p>
+
+Consider a combinational block containing several input signals:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel)
+        y = a &amp; b;
+    else
+        y = c | d;
+
+end</code></pre>
+
+<p>
+
+Using <strong>always @(*)</strong> avoids manually listing every
+signal used by the block.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Sequential Sensitivity List
+
+</h4>
+
+<p>
+
+Clocked sequential logic can use an edge in the sensitivity list.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<p>
+
+The block executes when <strong>clk</strong> changes from
+<strong>0 → 1</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Negative-Edge Triggering
+
+</h4>
+
+<p>
+
+A sequential block can also respond to the falling edge of a clock.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(negedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<p>
+
+Here, the block executes when the clock changes from
+<strong>1 → 0</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Sensitivity List Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Construct</th>
+
+<th>Triggered When</th>
+
+<th>Typical Use</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><code>always @(a or b)</code></td>
+
+<td>a or b changes</td>
+
+<td>Combinational logic</td>
+
+</tr>
+
+<tr>
+
+<td><code>always @(*)</code></td>
+
+<td>Referenced input changes</td>
+
+<td>Combinational logic</td>
+
+</tr>
+
+<tr>
+
+<td><code>always @(posedge clk)</code></td>
+
+<td>Clock rising edge</td>
+
+<td>Positive-edge sequential logic</td>
+
+</tr>
+
+<tr>
+
+<td><code>always @(negedge clk)</code></td>
+
+<td>Clock falling edge</td>
+
+<td>Negative-edge sequential logic</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+For combinational procedural logic, use
+<strong>always @(*)</strong> so that changes to the signals referenced
+by the block trigger its execution.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+    
+<!-- ========================= -->
 <!-- Blocking Assignment -->
 <!-- ========================= -->
 
