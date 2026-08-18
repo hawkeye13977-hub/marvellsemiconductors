@@ -486,6 +486,2670 @@ After completing this lesson you will be able to:
 
 </section>
 
+<!-- ========================= -->
+<!-- Clock in Sequential Logic -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+The Role of the Clock
+
+</h2>
+
+<p class="text-secondary">
+
+The clock provides the timing reference for synchronous sequential circuits.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>clock</strong> is a periodic digital signal used to control
+when sequential circuits update their stored state.
+
+</p>
+
+<p>
+
+A clock continuously switches between two logic levels:
+
+<strong>0</strong> and <strong>1</strong>.
+
+The transition from one level to another is called an
+<strong>edge</strong>.
+
+</p>
+
+<div class="row g-4 text-center mt-3">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Rising Edge
+
+</h4>
+
+<p>
+
+A transition from
+
+<strong>0 → 1</strong>
+
+</p>
+
+<p class="mb-0">
+
+Often written as:
+
+<strong>posedge</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Falling Edge
+
+</h4>
+
+<p>
+
+A transition from
+
+<strong>1 → 0</strong>
+
+</p>
+
+<p class="mb-0">
+
+Often written as:
+
+<strong>negedge</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important RTL Concept
+
+</h4>
+
+<p class="mb-0">
+
+A flip-flop can update its stored value only at a specified clock edge.
+For example, a positive-edge-triggered flip-flop updates its output on
+the rising edge of the clock.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- D Flip-Flop -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+D Flip-Flop
+
+</h2>
+
+<p class="text-secondary">
+
+A D flip-flop stores one bit of information on a clock edge.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+How a D Flip-Flop Works
+
+</h4>
+
+<p>
+
+A <strong>D flip-flop</strong> has a data input
+<strong>D</strong>, a clock input <strong>CLK</strong>, and an output
+<strong>Q</strong>.
+
+On the active clock edge, the value present at <strong>D</strong> is
+captured and stored in the flip-flop.
+
+</p>
+
+<div class="table-responsive mt-4">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Event</th>
+
+<th>D</th>
+
+<th>Q</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Rising Edge</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Rising Edge</td>
+
+<td>1</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>No Active Edge</td>
+
+<td>Changes</td>
+
+<td>Holds Previous Value</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+Key Relationship
+
+</h4>
+
+<p class="mb-0">
+
+At the active clock edge:
+
+<strong>Q ← D</strong>
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Important Concept
+
+</h4>
+
+<p>
+
+The output <strong>Q</strong> does not continuously follow
+<strong>D</strong>.
+
+Instead, the flip-flop samples <strong>D</strong> at the active clock
+edge and stores that value until the next active edge.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- D Flip-Flop Verilog -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+D Flip-Flop in Verilog
+
+</h2>
+
+<p class="text-secondary">
+
+Describing a clocked D flip-flop using an edge-triggered always block.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A positive-edge-triggered D flip-flop can be described in Verilog
+using an <strong>always @(posedge clk)</strong> block.
+
+The block executes whenever the clock changes from
+<strong>0 → 1</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Verilog Design
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module d_flip_flop(
+
+input clk,
+input d,
+
+output reg q
+
+);
+
+always @(posedge clk) begin
+
+    q &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Understanding the Code
+
+</h4>
+
+<ul>
+
+<li><strong>clk</strong> is the clock input.</li>
+
+<li><strong>d</strong> is the data input.</li>
+
+<li><strong>q</strong> stores the captured value.</li>
+
+<li><strong>posedge clk</strong> means the block executes on the rising edge of the clock.</li>
+
+<li><strong>&lt;=</strong> is the non-blocking assignment operator commonly used for sequential logic.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+For clocked sequential logic, use
+<strong>non-blocking assignments (&lt;=)</strong> to model state updates.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Reset in Sequential Logic -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Reset in Sequential Logic
+
+</h2>
+
+<p class="text-secondary">
+
+Reset initializes sequential circuits to a known state.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Synchronous Reset
+
+</h4>
+
+<p>
+
+A synchronous reset is checked only at the active clock edge.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    if (reset)
+        q &lt;= 1'b0;
+    else
+        q &lt;= d;
+
+end</code></pre>
+
+<p class="mb-0">
+
+The reset takes effect when the clock edge occurs.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Asynchronous Reset
+
+</h4>
+
+<p>
+
+An asynchronous reset can change the output independently of the clock.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk or posedge reset) begin
+
+    if (reset)
+        q &lt;= 1'b0;
+    else
+        q &lt;= d;
+
+end</code></pre>
+
+<p class="mb-0">
+
+The reset takes effect immediately when the reset signal becomes active.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row justify-content-center mt-4">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Difference
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Synchronous Reset</th>
+
+<th>Asynchronous Reset</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Depends on clock</td>
+
+<td>Yes</td>
+
+<td>No</td>
+
+</tr>
+
+<tr>
+
+<td>Reset action</td>
+
+<td>At active clock edge</td>
+
+<td>Immediately when reset is active</td>
+
+</tr>
+
+<tr>
+
+<td>Typical sensitivity</td>
+
+<td><code>posedge clk</code></td>
+
+<td><code>posedge clk or posedge reset</code></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Tip
+
+</h4>
+
+<p class="mb-0">
+
+Always follow the reset convention specified by the design
+requirements. Reset polarity and whether the reset is synchronous or
+asynchronous are architectural decisions.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Registers -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Registers
+
+</h2>
+
+<p class="text-secondary">
+
+A register is a group of flip-flops used to store multiple bits of data.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Register?
+
+</h4>
+
+<p>
+
+A <strong>register</strong> is a collection of flip-flops that stores
+multiple bits of information.
+
+Since one D flip-flop stores one bit, a group of flip-flops can be used
+to store a multi-bit value.
+
+</p>
+
+<div class="row g-3 text-center mt-3">
+
+<div class="col-md-3">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h5 class="text-info">
+
+1-bit
+
+</h5>
+
+<p class="mb-0">
+
+1 Flip-Flop
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h5 class="text-info">
+
+4-bit
+
+</h5>
+
+<p class="mb-0">
+
+4 Flip-Flops
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h5 class="text-info">
+
+8-bit
+
+</h5>
+
+<p class="mb-0">
+
+8 Flip-Flops
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h5 class="text-info">
+
+32-bit
+
+</h5>
+
+<p class="mb-0">
+
+32 Flip-Flops
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+4-bit Register Example
+
+</h4>
+
+<p>
+
+A 4-bit register can store a 4-bit value such as
+<strong>1010</strong>. On the active clock edge, the input value is
+captured and stored.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>module register_4bit(
+
+input clk,
+input [3:0] d,
+
+output reg [3:0] q
+
+);
+
+always @(posedge clk) begin
+
+    q &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Understanding the Code
+
+</h4>
+
+<ul>
+
+<li><strong>[3:0]</strong> represents a 4-bit signal.</li>
+
+<li>The register captures the input <strong>d</strong> on the rising edge of <strong>clk</strong>.</li>
+
+<li>The stored value appears at output <strong>q</strong>.</li>
+
+<li>The non-blocking assignment <strong>&lt;=</strong> is used for sequential logic.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Point
+
+</h4>
+
+<p class="mb-0">
+
+<strong>Flip-flop → stores one bit</strong><br>
+<strong>Register → stores multiple bits</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Sequential Logic Flow -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Sequential Logic Flow
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how input data is captured and stored using a clock.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<div class="row align-items-center g-4">
+
+<div class="col-md-3">
+
+<h4 class="text-info">
+
+Input
+
+</h4>
+
+<p class="mb-0">
+
+D
+
+</p>
+
+</div>
+
+<div class="col-md-1 d-none d-md-block">
+
+<h2 class="text-info">
+
+→
+
+</h2>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Flip-Flop
+
+</h4>
+
+<p class="mb-2">
+
+Stores the input value
+
+</p>
+
+<p class="mb-0">
+
+CLK controls when it updates
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-1 d-none d-md-block">
+
+<h2 class="text-info">
+
+→
+
+</h2>
+
+</div>
+
+<div class="col-md-3">
+
+<h4 class="text-info">
+
+Output
+
+</h4>
+
+<p class="mb-0">
+
+Q
+
+</p>
+
+</div>
+
+</div>
+
+<hr class="my-4">
+
+<p class="mb-0">
+
+<strong>
+
+Input → Clock Edge → Storage → Output
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Counters -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Counters
+
+</h2>
+
+<p class="text-secondary">
+
+A counter is a sequential circuit that changes its stored value on clock events.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Counter?
+
+</h4>
+
+<p>
+
+A <strong>counter</strong> is a sequential circuit that keeps track of
+the number of clock events that have occurred.
+
+A counter uses flip-flops to store its current value and updates that
+value based on the clock.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Simple 4-bit Up Counter
+
+</h4>
+
+<p>
+
+A 4-bit up counter starts at zero and increments by one on every rising
+edge of the clock.
+
+</p>
+
+<div class="table-responsive mt-4">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Edge</th>
+
+<th>Counter Value</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>1st Rising Edge</td>
+
+<td>0001</td>
+
+</tr>
+
+<tr>
+
+<td>2nd Rising Edge</td>
+
+<td>0010</td>
+
+</tr>
+
+<tr>
+
+<td>3rd Rising Edge</td>
+
+<td>0011</td>
+
+</tr>
+
+<tr>
+
+<td>4th Rising Edge</td>
+
+<td>0100</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Verilog Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module counter_4bit(
+
+input clk,
+input reset,
+
+output reg [3:0] count
+
+);
+
+always @(posedge clk) begin
+
+    if (reset)
+        count &lt;= 4'b0000;
+    else
+        count &lt;= count + 1'b1;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Understanding the Code
+
+</h4>
+
+<ul>
+
+<li><strong>count</strong> stores the current counter value.</li>
+
+<li>The counter updates on every rising edge of <strong>clk</strong>.</li>
+
+<li>When <strong>reset</strong> is active, the counter returns to zero.</li>
+
+<li>Otherwise, the counter increments by one.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Concept
+
+</h4>
+
+<p class="mb-0">
+
+Because a counter stores its previous value and uses that value to
+calculate the next value, it is a <strong>sequential circuit</strong>.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Sequential Timing -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Sequential Logic Timing
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding when a sequential circuit captures and updates data.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Clock Edge Controls the Update
+
+</h4>
+
+<p>
+
+In a clocked sequential circuit, the stored state normally changes only
+at the specified active clock edge.
+
+For a positive-edge-triggered circuit, the active edge is the
+<strong>rising edge</strong> of the clock.
+
+</p>
+
+<div class="table-responsive mt-4">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Event</th>
+
+<th>D</th>
+
+<th>CLK</th>
+
+<th>Q</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>D changes</td>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>Rising edge</td>
+
+<td>1</td>
+
+<td>↑</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>D changes again</td>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>Next rising edge</td>
+
+<td>0</td>
+
+<td>↑</td>
+
+<td>0</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>D can change between clock edges, but Q changes only when the
+active clock edge causes the flip-flop to capture the input.</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- D Flip-Flop Simulation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+D Flip-Flop Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Run the design and observe how Q follows D only at the rising edge of the clock.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Try It Yourself
+
+</h4>
+
+<p>
+
+Open the preloaded EDA Playground project and simulate the D flip-flop.
+
+Change the value of <strong>D</strong> between clock edges and observe
+when <strong>Q</strong> changes.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+What to Observe
+
+</h5>
+
+<ul>
+
+<li>Q changes on the rising edge of the clock.</li>
+
+<li>Changing D between clock edges does not immediately change Q.</li>
+
+<li>Q stores the value of D captured at the active clock edge.</li>
+
+</ul>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Run the Simulation
+
+</h5>
+
+<a href="https://edaplayground.com/"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Open EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+The simulation demonstrates positive-edge-triggered D flip-flop behavior.
+You can modify the testbench and experiment with different input values.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section> 
+
+<!-- ========================= -->
+<!-- Registers -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Registers
+
+</h2>
+
+<p class="text-secondary">
+
+A register is a group of flip-flops used to store multiple bits of data.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Register?
+
+</h4>
+
+<p>
+
+A <strong>register</strong> is a collection of flip-flops that stores
+multiple bits of information.
+
+For example, a 4-bit register uses four flip-flops to store four bits:
+
+</p>
+
+<div class="text-center my-4">
+
+<pre class="text-light p-3 rounded"><code>
+D[3:0]  →  [ Flip-Flops ]  →  Q[3:0]
+
+          4 bits stored
+</code></pre>
+
+</div>
+
+<p>
+
+All flip-flops in a synchronous register typically share the same clock.
+Therefore, the entire register updates on the active clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+4-bit Register Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module register_4bit(
+
+input clk,
+input reset,
+
+input [3:0] d,
+
+output reg [3:0] q
+
+);
+
+always @(posedge clk) begin
+
+    if (reset)
+        q &lt;= 4'b0000;
+    else
+        q &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ul>
+
+<li><strong>d[3:0]</strong> represents the 4-bit input data.</li>
+
+<li><strong>q[3:0]</strong> stores the registered value.</li>
+
+<li>The register captures D on the rising edge of the clock.</li>
+
+<li>When reset is active, Q is cleared to zero.</li>
+
+<li>Between clock edges, Q retains its previous value.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Concept
+
+</h4>
+
+<p class="mb-0">
+
+A register is essentially a group of flip-flops operating together.
+Each flip-flop stores one bit, allowing the register to store a
+multi-bit value.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Register Timing -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Register Timing
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding when a register captures and stores data.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Example
+
+</h4>
+
+<p>
+
+Consider a 4-bit register with the following input:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>D = 1010</code></pre>
+
+<p>
+
+When the rising edge of the clock occurs, the register captures the
+input value.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+Before rising edge:
+
+D = 1010
+Q = 0000
+
+        ↑ CLK
+        │
+        │ Capture D
+        ↓
+
+After rising edge:
+
+D = 1010
+Q = 1010
+</code></pre>
+
+<p>
+
+If <strong>D</strong> changes after the clock edge, the stored value
+<strong>Q</strong> does not immediately change.
+
+It remains <strong>1010</strong> until the next active clock edge.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>A register captures the input data at the active clock edge and
+holds that value until the next active edge.</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Reset in Sequential Logic -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Reset in Sequential Logic
+
+</h2>
+
+<p class="text-secondary">
+
+Reset initializes sequential elements to a known state.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Why Do We Need Reset?
+
+</h4>
+
+<p>
+
+When a digital system starts operating, registers and flip-flops need
+to begin from a known state.
+
+A <strong>reset</strong> signal is commonly used to initialize these
+sequential elements.
+
+For example, a 4-bit register can be reset to:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>Q = 0000</code></pre>
+
+<p>
+
+After reset is released, the register can begin capturing new data on
+the active clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Synchronous Reset Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    if (reset)
+        q &lt;= 4'b0000;
+    else
+        q &lt;= d;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ul>
+
+<li>At the rising clock edge, the reset signal is checked.</li>
+
+<li>If <strong>reset = 1</strong>, the register is cleared.</li>
+
+<li>If <strong>reset = 0</strong>, the register captures D.</li>
+
+<li>The register retains its value between clock edges.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Point
+
+</h4>
+
+<p class="mb-0">
+
+This example uses a <strong>synchronous reset</strong> because the reset
+is evaluated only at the active clock edge.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Synchronous vs Asynchronous Reset -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Synchronous vs Asynchronous Reset
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding when a reset signal affects sequential logic.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Synchronous Reset
+
+</h4>
+
+<p>
+
+A synchronous reset is checked only at the active clock edge.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    if (reset)
+        q &lt;= 0;
+    else
+        q &lt;= d;
+
+end</code></pre>
+
+<ul>
+
+<li>Reset is evaluated with the clock.</li>
+
+<li>Q changes because of reset only at the active clock edge.</li>
+
+<li>Often easier to control within a synchronous design.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Asynchronous Reset
+
+</h4>
+
+<p>
+
+An asynchronous reset can reset the sequential element independently
+of the clock.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk or posedge reset) begin
+
+    if (reset)
+        q &lt;= 0;
+    else
+        q &lt;= d;
+
+end</code></pre>
+
+<ul>
+
+<li>Reset can take effect without waiting for a clock edge.</li>
+
+<li>The reset signal appears in the sensitivity list.</li>
+
+<li>Commonly used when immediate initialization or recovery is required.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row justify-content-center mt-4">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Quick Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Synchronous Reset</th>
+
+<th>Asynchronous Reset</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Depends on clock</td>
+
+<td>Yes</td>
+
+<td>No</td>
+
+</tr>
+
+<tr>
+
+<td>Reset action</td>
+
+<td>At active clock edge</td>
+
+<td>Can occur immediately</td>
+
+</tr>
+
+<tr>
+
+<td>Sensitivity list</td>
+
+<td><code>posedge clk</code></td>
+
+<td><code>posedge clk or posedge reset</code></td>
+
+</tr>
+
+<tr>
+
+<td>Typical use</td>
+
+<td>Synchronous control</td>
+
+<td>Initialization / immediate reset</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Interview Tip
+
+</h4>
+
+<p class="mb-0">
+
+A simple way to remember the difference is:
+
+<strong>synchronous reset waits for the clock edge, while asynchronous
+reset does not need to wait for the clock edge.</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Practical Register Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Practical 4-bit Register Example
+
+</h2>
+
+<p class="text-secondary">
+
+Putting clock, reset, and data storage together in one RTL design.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Design
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module register_4bit (
+
+    input        clk,
+    input        reset,
+    input  [3:0] d,
+    output reg [3:0] q
+
+);
+
+always @(posedge clk) begin
+
+    if (reset)
+        q &lt;= 4'b0000;
+    else
+        q &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Step-by-Step Operation
+
+</h4>
+
+<ol>
+
+<li>
+The circuit waits for the <strong>rising edge</strong> of the clock.
+</li>
+
+<li>
+If <strong>reset = 1</strong>, the register stores
+<strong>0000</strong>.
+</li>
+
+<li>
+If <strong>reset = 0</strong>, the register captures the value of
+<strong>d</strong>.
+</li>
+
+<li>
+The value stored in <strong>q</strong> remains unchanged until the next
+active clock edge.
+</li>
+
+</ol>
+
+<h4 class="text-info mt-4">
+
+Example Sequence
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Edge</th>
+
+<th>Reset</th>
+
+<th>D</th>
+
+<th>Q</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>1</td>
+
+<td>1010</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>1</td>
+
+<td>1010</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>0</td>
+
+<td>1010</td>
+
+<td>1010</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>0</td>
+
+<td>0110</td>
+
+<td>0110</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>1</td>
+
+<td>1111</td>
+
+<td>0000</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Insight
+
+</h4>
+
+<p class="mb-0">
+
+The register does not continuously follow <strong>D</strong>.
+It stores the value of <strong>D</strong> only at the active clock edge,
+which is what makes it a sequential storage element.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Counter -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Counters
+
+</h2>
+
+<p class="text-secondary">
+
+A counter is a sequential circuit that changes its stored value according to a defined counting sequence.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Counter?
+
+</h4>
+
+<p>
+
+A <strong>counter</strong> is a sequential circuit that uses flip-flops
+to store a numeric value and update that value on clock events.
+
+A simple 4-bit binary counter follows this sequence:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+0000
+0001
+0010
+0011
+0100
+0101
+0110
+0111
+...
+1111
+0000
+</code></pre>
+
+<p>
+
+After reaching the maximum value, the counter wraps around to zero.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+4-bit Counter Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module counter_4bit (
+
+    input        clk,
+    input        reset,
+    output reg [3:0] count
+
+);
+
+always @(posedge clk) begin
+
+    if (reset)
+        count &lt;= 4'b0000;
+    else
+        count &lt;= count + 1'b1;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ul>
+
+<li>The counter waits for the rising edge of <strong>clk</strong>.</li>
+
+<li>If <strong>reset = 1</strong>, the counter becomes <strong>0000</strong>.</li>
+
+<li>If <strong>reset = 0</strong>, the counter increments by one.</li>
+
+<li>The counter stores its current value between clock edges.</li>
+
+<li>A 4-bit counter naturally wraps from <strong>1111</strong> back to <strong>0000</strong>.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Insight
+
+</h4>
+
+<p class="mb-0">
+
+A counter is simply sequential state that is updated according to a
+defined rule at each active clock edge.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Counter Timing -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Counter Timing
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how the counter state changes on each clock edge.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+4-bit Counter Sequence
+
+</h4>
+
+<p>
+
+Assume the counter starts at <strong>0000</strong> and reset is
+inactive. The counter increments once at every rising edge of the
+clock.
+
+</p>
+
+<div class="table-responsive mt-4">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Edge</th>
+
+<th>Previous Count</th>
+
+<th>New Count</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>—</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 1</td>
+
+<td>0000</td>
+
+<td>0001</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 2</td>
+
+<td>0001</td>
+
+<td>0010</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 3</td>
+
+<td>0010</td>
+
+<td>0011</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 4</td>
+
+<td>0011</td>
+
+<td>0100</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 5</td>
+
+<td>0100</td>
+
+<td>0101</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+The counter does not continuously change between clock edges.
+
+Instead, its stored state updates at each active clock edge.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+Clock:   ↑     ↑     ↑     ↑     ↑
+
+Count:  0000  0001  0010  0011  0100
+          │     │     │     │     │
+          └─────┴─────┴─────┴─────┘
+             State updates
+             at clock edges
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>Sequential circuits update their stored state in response to
+clock events, while combinational logic responds to input changes.</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Counter Simulation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Counter Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Run the counter and observe how its value changes on every rising clock edge.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Try It Yourself
+
+</h4>
+
+<p>
+
+Open the EDA Playground simulation and observe the 4-bit counter
+incrementing with every rising edge of the clock.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+What to Observe
+
+</h5>
+
+<ul>
+
+<li>The counter starts at <strong>0000</strong> after reset.</li>
+
+<li>The counter increments by one at every rising clock edge.</li>
+
+<li>The counter retains its value between clock edges.</li>
+
+<li>After <strong>1111</strong>, the 4-bit counter wraps back to <strong>0000</strong>.</li>
+
+</ul>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Run the Simulation
+
+</h5>
+
+<p class="text-secondary">
+
+Experiment with the reset signal and observe how it affects the counter.
+
+</p>
+
+<a href="https://edaplayground.com/"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Open EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+Open the project, run the simulation, and inspect the waveform to see
+the counter state changing with the clock.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
   
 
 </body>
