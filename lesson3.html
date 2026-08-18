@@ -773,7 +773,7 @@ expression <strong>A AND B</strong>.
 
 </section>  
 
-  <!-- ========================= -->
+<!-- ========================= -->
 <!-- AND Gate Example -->
 <!-- ========================= -->
 
@@ -943,3 +943,173 @@ Click the button above to open the project in EDA Playground. Modify the code, r
 </div>
 
 </section>
+
+<!-- ========================= -->
+<!-- 2:1 Multiplexer Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+2:1 Multiplexer
+
+</h2>
+
+<p class="text-secondary">
+
+A multiplexer selects one of two inputs and sends it to a single output.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+How a 2:1 MUX Works
+
+</h4>
+
+<p>
+
+A 2:1 multiplexer has two data inputs,
+<strong>A</strong> and <strong>B</strong>, one select signal
+<strong>SEL</strong>, and one output <strong>Y</strong>.
+
+The select signal determines which input appears at the output.
+
+</p>
+
+<div class="table-responsive mt-4">
+
+<table class="table table-dark table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>SEL</th>
+
+<th>Output Y</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>A</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>B</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Boolean Equation
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>Y = (~SEL &amp; A) | (SEL &amp; B)</code></pre>
+
+<h4 class="text-info mt-4">
+
+Verilog Design
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module mux2to1(
+
+input a,
+input b,
+input sel,
+
+output y
+
+);
+
+assign y = sel ? b : a;
+
+endmodule</code></pre>
+
+<p class="mt-4">
+
+The conditional operator <strong>?</strong> selects between
+<strong>A</strong> and <strong>B</strong> based on the value of
+<strong>SEL</strong>.
+
+When <strong>SEL = 0</strong>, the output follows A.
+
+When <strong>SEL = 1</strong>, the output follows B.
+
+</p>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Try It Yourself
+
+</h5>
+
+<p class="text-secondary">
+
+Run the MUX design and verify both select conditions.
+
+</p>
+
+<a href = "https://edaplayground.com/x/VjY9"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Run on EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+Open the EDA Playground project, run the simulation, and verify that
+Y follows A when SEL = 0 and B when SEL = 1.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
