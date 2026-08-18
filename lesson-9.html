@@ -13154,7 +13154,7 @@ Correct Result
               </p>
 
 
-              <a href="https://edaplayground.com/home"
+              <a href="https://edaplayground.com/x/w7H3"
                  target="_blank"
                  rel="noopener noreferrer"
                  class="btn btn-info btn-lg">
@@ -13282,6 +13282,2181 @@ Correct Result
   </div>
 
 </section>    
+
+<!-- ========================= -->
+<!-- Step 23 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      23. Hazard Detection &amp; Forwarding
+    </h2>
+
+    <p class="text-secondary">
+      Learn how a pipeline detects data dependencies and uses
+      forwarding or stalls to maintain correct execution.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            Why Do We Need Hazard Detection?
+          </h4>
+
+          <p>
+            A pipeline can have multiple instructions in different
+            stages at the same time. Because instructions can depend
+            on each other's results, the processor must detect these
+            dependencies and handle them correctly.
+          </p>
+
+          <p>
+            The hazard detection and forwarding logic helps determine
+            whether a result can be used immediately or whether the
+            pipeline must wait.
+          </p>
+
+
+          <pre><code>
+Instruction Dependency
+        ↓
+Hazard Detection
+        ↓
+   +----+----+
+   |         |
+Forward    Stall
+   |         |
+   ↓         ↓
+Continue   Wait
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- RAW -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. RAW Dependency
+          </h4>
+
+          <p>
+            The most common data hazard is a
+            <strong>RAW — Read After Write</strong> dependency.
+          </p>
+
+          <p>
+            Consider:
+          </p>
+
+
+          <pre><code>
+Instruction 1:
+
+R1 = R2 + R3
+
+
+Instruction 2:
+
+R4 = R1 + R5
+          </code></pre>
+
+
+          <p>
+            Instruction 2 needs the value of
+            <strong>R1</strong> produced by Instruction 1.
+          </p>
+
+
+          <pre><code>
+Instruction 1
+      ↓
+Produces R1
+      ↓
+Instruction 2
+      ↓
+Needs R1
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Forwarding
+          </h4>
+
+          <p>
+            Instead of waiting for the producer to write its result
+            back to the register file, the result can sometimes be
+            forwarded directly to the dependent operation.
+          </p>
+
+
+          <pre><code>
+Producer
+   ↓
+Result
+   ↓
+Forwarding Path
+   ↓
+Consumer
+          </code></pre>
+
+
+          <p>
+            Forwarding reduces unnecessary stalls and allows dependent
+            instructions to continue sooner.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding Unit -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Forwarding Unit
+          </h4>
+
+          <p>
+            A forwarding unit compares the source registers of the
+            current instruction with destination registers of older
+            instructions that are still in the pipeline.
+          </p>
+
+
+          <pre><code>
+Current Instruction
+        |
+     RS1 / RS2
+        |
+        v
++-------------------+
+| Forwarding Unit   |
++-------------------+
+        ^
+        |
+RD values from
+older pipeline stages
+          </code></pre>
+
+
+          <p>
+            If a matching destination register is found and the
+            result is available, the forwarding unit selects the
+            appropriate forwarding path.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding Paths -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Common Forwarding Paths
+          </h4>
+
+          <p>
+            A simplified pipeline may have forwarding paths from
+            later stages back to the execution stage.
+          </p>
+
+
+          <pre><code>
+EX/MEM ─────────────→ EX
+
+
+MEM/WB ─────────────→ EX
+          </code></pre>
+
+
+          <p>
+            A typical simplified encoding can be:
+          </p>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Forward Signal</th>
+                  <th>Meaning</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>00</td>
+                  <td>No forwarding</td>
+                </tr>
+
+                <tr>
+                  <td>01</td>
+                  <td>Forward from MEM/WB</td>
+                </tr>
+
+                <tr>
+                  <td>10</td>
+                  <td>Forward from EX/MEM</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Priority -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Forwarding Priority
+          </h4>
+
+          <p>
+            Sometimes more than one older instruction can contain a
+            result for the same destination register.
+          </p>
+
+
+          <pre><code>
+Instruction 1 → R1
+Instruction 2 → R1
+Instruction 3 → uses R1
+          </code></pre>
+
+
+          <p>
+            The forwarding logic must select the
+            <strong>newest valid result</strong>.
+          </p>
+
+
+          <pre><code>
+EX/MEM
+  ↓
+Higher Priority
+
+
+MEM/WB
+  ↓
+Lower Priority
+          </code></pre>
+
+
+          <p>
+            This prevents an older value from being incorrectly
+            selected when a newer value is already available.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Load Use -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Load-Use Hazard
+          </h4>
+
+          <p>
+            Forwarding cannot always eliminate every data hazard.
+            A common example is the load-use dependency.
+          </p>
+
+
+          <pre><code>
+LOAD R1, [address]
+
+ADD R2, R1, R3
+          </code></pre>
+
+
+          <p>
+            The load data may not be available early enough for the
+            immediately following instruction.
+          </p>
+
+
+          <pre><code>
+LOAD
+  ↓
+Load-Use Dependency
+  ↓
+STALL
+  ↓
+Data Becomes Available
+  ↓
+Forward
+  ↓
+Continue
+          </code></pre>
+
+
+          <p>
+            Therefore, a load-use dependency commonly requires a
+            stall even when forwarding is implemented.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Hazard Detection -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Hazard Detection Unit
+          </h4>
+
+          <p>
+            The hazard detection unit checks whether the current
+            instruction depends on data that is not yet safely
+            available.
+          </p>
+
+
+          <pre><code>
+Source Registers
+      |
+      v
++----------------------+
+| Hazard Detection     |
+| Unit                  |
++----------------------+
+      |
+      +----------+
+      |          |
+      v          v
+   Forward     Stall
+          </code></pre>
+
+
+          <p>
+            The exact logic depends on the processor architecture,
+            pipeline stages and timing of when results become
+            available.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Forward vs Stall -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Forwarding vs Stalling
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Situation</th>
+                  <th>Typical Action</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>No dependency</td>
+                  <td>Continue normally</td>
+                </tr>
+
+                <tr>
+                  <td>Result available early</td>
+                  <td>Forward</td>
+                </tr>
+
+                <tr>
+                  <td>Result not yet available</td>
+                  <td>Stall</td>
+                </tr>
+
+                <tr>
+                  <td>Load-use dependency</td>
+                  <td>Usually stall</td>
+                </tr>
+
+                <tr>
+                  <td>Branch misprediction</td>
+                  <td>Flush</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Dependency Example
+          </h4>
+
+
+          <pre><code>
+I1: R1 = R2 + R3
+
+I2: R4 = R1 + R5
+          </code></pre>
+
+
+          <p>
+            The second instruction depends on the result of the first
+            instruction.
+          </p>
+
+
+          <p>
+            If the result is available from a later pipeline stage,
+            forwarding can be used.
+          </p>
+
+
+          <pre><code>
+I1
+ ↓
+Result
+ ↓
+Forward
+ ↓
+I2
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Load Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Load-Use Example
+          </h4>
+
+
+          <pre><code>
+I1: LOAD R1, [ADDR]
+
+I2: ADD R2, R1, R3
+          </code></pre>
+
+
+          <p>
+            If the loaded data is not available soon enough, the
+            processor must delay the dependent instruction.
+          </p>
+
+
+          <pre><code>
+I1: LOAD
+I2: STALL
+I2: Continue
+          </code></pre>
+
+
+          <p>
+            This is one of the most important hazard scenarios to
+            verify in a pipelined processor.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Design Verification Perspective
+          </h4>
+
+          <p>
+            A Design Verification engineer should test many dependency
+            combinations rather than checking only one example.
+          </p>
+
+
+          <ul>
+
+            <li>No dependency</li>
+
+            <li>EX/MEM dependency on RS1</li>
+
+            <li>EX/MEM dependency on RS2</li>
+
+            <li>MEM/WB dependency on RS1</li>
+
+            <li>MEM/WB dependency on RS2</li>
+
+            <li>Both operands forwarded</li>
+
+            <li>Multiple producers for the same register</li>
+
+            <li>Load-use dependency</li>
+
+            <li>Stall generation</li>
+
+            <li>Pipeline recovery after the stall</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Flow -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Verification Flow
+          </h4>
+
+
+          <pre><code>
+Instruction Dependency
+        ↓
+Detect Hazard
+        ↓
+Determine Data Availability
+        ↓
++----------------------+
+|                      |
+v                      v
+Forward Available    Stall Required
+|                      |
+v                      v
+Continue             Insert Delay
+        \              /
+         \            /
+          v          v
+          Correct Execution
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Important Rule -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h5 class="text-info">
+                Important Rule
+              </h5>
+
+              <p class="mb-0">
+                <strong>
+                  Forward whenever the required result is safely
+                  available. Stall whenever forwarding cannot provide
+                  the required value in time.
+                </strong>
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            13. EDA Playground — Hazard Detection &amp; Forwarding
+          </h4>
+
+          <p>
+            Now verify the hazard detection and forwarding logic using
+            an RTL simulation.
+          </p>
+
+          <p>
+            The simulation tests register dependencies, forwarding
+            priority and load-use stall detection.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Paste the Design and Testbench code into EDA Playground,
+                run the simulation and verify the forwarding and stall
+                outputs.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/Te88"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>id_ex_rs1</li>
+
+            <li>id_ex_rs2</li>
+
+            <li>ex_mem_rd</li>
+
+            <li>ex_mem_regwrite</li>
+
+            <li>mem_wb_rd</li>
+
+            <li>mem_wb_regwrite</li>
+
+            <li>id_ex_memread</li>
+
+            <li>forward_a</li>
+
+            <li>forward_b</li>
+
+            <li>stall</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Expected Encoding -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Expected Forwarding Encoding
+          </h5>
+
+
+          <pre><code>
+00 → No forwarding
+
+01 → MEM/WB forwarding
+
+10 → EX/MEM forwarding
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              No dependency should produce no forwarding.
+            </li>
+
+            <li>
+              EX/MEM dependency should select EX/MEM forwarding.
+            </li>
+
+            <li>
+              MEM/WB dependency should select MEM/WB forwarding.
+            </li>
+
+            <li>
+              EX/MEM should have priority when both stages match.
+            </li>
+
+            <li>
+              Load-use dependency should generate a stall.
+            </li>
+
+            <li>
+              Register zero should not create a false dependency.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Hazard detection identifies dependencies, forwarding
+                  resolves dependencies when the required result is
+                  available, and stalling handles dependencies that
+                  cannot yet be resolved safely.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                The load-use hazard is especially important because the
+                required data may not be available early enough for
+                forwarding alone to eliminate the stall.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>   
+
+<!-- ========================= -->
+<!-- Step 24 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      24. Load-Use Hazard &amp; Stall
+    </h2>
+
+    <p class="text-secondary">
+      Understand why a load-use dependency can require a pipeline
+      stall even when forwarding is available.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Is a Load-Use Hazard?
+          </h4>
+
+          <p>
+            A load-use hazard occurs when an instruction immediately
+            following a load instruction needs the data produced by
+            that load.
+          </p>
+
+
+          <pre><code>
+Instruction 1:
+
+LOAD R1, [Address]
+
+
+Instruction 2:
+
+ADD R2, R1, R3
+          </code></pre>
+
+
+          <p>
+            The second instruction needs the value of
+            <strong>R1</strong>, but the load data may not be available
+            early enough for the dependent instruction to use it in
+            the same pipeline flow.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Why Forwarding Is Not Enough -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Why Forwarding Alone May Not Be Enough
+          </h4>
+
+          <p>
+            Forwarding can provide results from later pipeline stages
+            to earlier stages. However, a load instruction may produce
+            its data only after the dependent instruction needs it.
+          </p>
+
+
+          <pre><code>
+LOAD
+  |
+  | Data not ready yet
+  v
+ADD needs R1
+          </code></pre>
+
+
+          <p>
+            Therefore, the dependent instruction must be delayed.
+          </p>
+
+
+          <pre><code>
+LOAD
+  ↓
+STALL
+  ↓
+ADD
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Pipeline Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Pipeline Example
+          </h4>
+
+
+          <pre><code>
+Cycle 1:
+
+LOAD → IF
+
+
+Cycle 2:
+
+LOAD → ID
+ADD  → IF
+
+
+Cycle 3:
+
+LOAD → EX
+ADD  → ID
+
+
+Cycle 4:
+
+LOAD → MEM
+ADD  → STALL
+
+
+Cycle 5:
+
+LOAD → WB
+ADD  → EX
+          </code></pre>
+
+
+          <p>
+            The exact timing depends on the processor architecture,
+            but the key idea is that the load result becomes available
+            too late for the immediately dependent operation.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Bubble -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Bubble Insertion
+          </h4>
+
+          <p>
+            A stall is commonly implemented by preventing the
+            dependent instruction from advancing and inserting a
+            bubble into the pipeline.
+          </p>
+
+
+          <pre><code>
+Before:
+
+LOAD → ADD → SUB
+
+
+After Hazard Detection:
+
+LOAD → STALL → ADD → SUB
+          </code></pre>
+
+
+          <p>
+            The bubble provides the additional cycle required for the
+            load data to become available.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Hazard Detection -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Detecting a Load-Use Hazard
+          </h4>
+
+          <p>
+            A simplified hazard detector compares the destination
+            register of the load instruction with the source registers
+            of the following instruction.
+          </p>
+
+
+          <pre><code>
+Load Destination
+       |
+       v
+     R1
+       |
+       +----------+
+                  |
+                  v
+          Compare with
+          RS1 / RS2
+                  |
+                  v
+          Dependency?
+             /       \
+           Yes        No
+            |          |
+          Stall      Continue
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Simplified Condition -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Simplified Detection Condition
+          </h4>
+
+          <p>
+            Conceptually, the hazard detector checks:
+          </p>
+
+
+          <pre><code>
+Load is active
+      AND
+Load destination != 0
+      AND
+Load destination == Current RS1
+      OR
+Load destination == Current RS2
+      ↓
+STALL
+          </code></pre>
+
+
+          <p>
+            The exact implementation depends on the processor's
+            pipeline structure and instruction format.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Stall Control -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. What Happens During a Stall?
+          </h4>
+
+
+          <p>
+            During a stall, the pipeline control logic typically
+            prevents certain pipeline registers from advancing while
+            inserting a bubble where required.
+          </p>
+
+
+          <pre><code>
+Hazard Detected
+      ↓
+PC Hold
+      ↓
+Instruction Hold
+      ↓
+Insert Bubble
+      ↓
+Continue Pipeline
+          </code></pre>
+
+
+          <p>
+            The goal is to delay only what is necessary while
+            preserving the correct instruction ordering.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- After Stall -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Pipeline Recovery
+          </h4>
+
+          <p>
+            Once the load data becomes available, the dependent
+            instruction can continue.
+          </p>
+
+
+          <pre><code>
+LOAD
+  ↓
+STALL
+  ↓
+Data Available
+  ↓
+Forward
+  ↓
+Dependent Instruction
+  ↓
+Continue
+          </code></pre>
+
+
+          <p>
+            Correct recovery is critical because an incorrectly
+            released stall can cause the dependent instruction to use
+            invalid or stale data.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Performance -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Performance Impact
+          </h4>
+
+          <p>
+            A load-use stall introduces an additional cycle or cycles
+            into execution.
+          </p>
+
+
+          <pre><code>
+Load-Use Hazard
+      ↓
+Stall
+      ↓
+Extra Cycle
+      ↓
+Higher CPI
+      ↓
+Lower Effective Throughput
+          </code></pre>
+
+
+          <p>
+            Therefore, load-use hazards are both a correctness and
+            performance consideration.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Example With Independent Instruction
+          </h4>
+
+          <p>
+            Not every instruction after a load creates a load-use
+            hazard.
+          </p>
+
+
+          <pre><code>
+LOAD R1, [Address]
+
+ADD R4, R5, R6
+          </code></pre>
+
+
+          <p>
+            The second instruction does not use R1, so there is no
+            dependency between these two instructions.
+          </p>
+
+
+          <pre><code>
+LOAD
+  ↓
+No Dependency
+  ↓
+Continue Normally
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Comparison -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Load-Use vs Independent Instruction
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Sequence</th>
+                  <th>Dependency</th>
+                  <th>Typical Action</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>
+                    LOAD R1 → ADD uses R1
+                  </td>
+
+                  <td>
+                    Yes
+                  </td>
+
+                  <td>
+                    Stall
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    LOAD R1 → ADD uses R5
+                  </td>
+
+                  <td>
+                    No
+                  </td>
+
+                  <td>
+                    Continue
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Design Verification Perspective
+          </h4>
+
+          <p>
+            Load-use hazard verification should cover multiple
+            dependency and timing scenarios.
+          </p>
+
+
+          <ul>
+
+            <li>Load followed immediately by RS1 dependency</li>
+
+            <li>Load followed immediately by RS2 dependency</li>
+
+            <li>Load followed by an independent instruction</li>
+
+            <li>Multiple consecutive loads</li>
+
+            <li>Multiple dependent instructions</li>
+
+            <li>Stall generation</li>
+
+            <li>Bubble insertion</li>
+
+            <li>Forwarding after the stall</li>
+
+            <li>Pipeline recovery</li>
+
+            <li>No stale data usage</li>
+
+            <li>No lost transactions</li>
+
+            <li>No duplicate transactions</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Flow -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Verification Flow
+          </h4>
+
+
+          <pre><code>
+Load Instruction
+       ↓
+Check Destination Register
+       ↓
+Compare With Next Instruction
+       ↓
+Dependency?
+    /       \
+  No         Yes
+  |           |
+Continue    Stall
+              ↓
+         Insert Bubble
+              ↓
+        Data Available
+              ↓
+          Forward
+              ↓
+        Resume Pipeline
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Important Rule -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h5 class="text-info">
+                Important Rule
+              </h5>
+
+              <p class="mb-0">
+                <strong>
+                  A load-use dependency occurs when a following
+                  instruction needs the result of a load before that
+                  result is available. In such cases, the pipeline
+                  generally needs a stall before forwarding can safely
+                  provide the data.
+                </strong>
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            13. EDA Playground — Load-Use Hazard &amp; Stall
+          </h4>
+
+          <p>
+            Now verify the load-use hazard using an RTL simulation.
+            The testbench will create both dependent and independent
+            instruction scenarios.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Paste the Design and Testbench code into EDA Playground,
+                run the simulation and observe the stall and pipeline
+                recovery behavior.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/mWuJ"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>load_valid</li>
+
+            <li>load_rd</li>
+
+            <li>consumer_rs1</li>
+
+            <li>consumer_rs2</li>
+
+            <li>stall</li>
+
+            <li>pipeline_valid</li>
+
+            <li>pipeline_data</li>
+
+            <li>result</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Load followed by RS1 dependency should generate a stall.
+            </li>
+
+            <li>
+              Load followed by RS2 dependency should generate a stall.
+            </li>
+
+            <li>
+              Independent instruction should not generate a stall.
+            </li>
+
+            <li>
+              Pipeline state should remain correct during the stall.
+            </li>
+
+            <li>
+              The dependent instruction should resume after the stall.
+            </li>
+
+            <li>
+              Correct data should reach the final result.
+            </li>
+
+            <li>
+              No transaction should be lost or duplicated.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  A load-use hazard occurs when a dependent instruction
+                  needs load data before that data is available. The
+                  pipeline generally inserts a stall or bubble and
+                  then forwards the data when it becomes available.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                Correct load-use hazard handling is essential for both
+                functional correctness and pipeline performance.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 25 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      25. Multiple Data Hazards
+    </h2>
+
+    <p class="text-secondary">
+      Understand how multiple dependencies can exist at the same time
+      and how forwarding and stalls must handle them correctly.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Are Multiple Data Hazards?
+          </h4>
+
+          <p>
+            A pipeline may contain several instructions that have
+            dependencies on results produced by earlier instructions.
+            These dependencies can occur simultaneously or across
+            consecutive instructions.
+          </p>
+
+
+          <pre><code>
+I1 → Produces R1
+       ↓
+I2 → Uses R1 and Produces R2
+       ↓
+I3 → Uses R2 and Produces R3
+       ↓
+I4 → Uses R3
+          </code></pre>
+
+
+          <p>
+            This creates a chain of data dependencies that must be
+            handled correctly by the pipeline.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Consecutive Dependencies -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Consecutive RAW Dependencies
+          </h4>
+
+          <p>
+            Consider three consecutive instructions:
+          </p>
+
+
+          <pre><code>
+I1: R1 = R2 + R3
+
+I2: R4 = R1 + R5
+
+I3: R6 = R4 + R7
+          </code></pre>
+
+
+          <p>
+            Here, I2 depends on I1 and I3 depends on I2.
+          </p>
+
+
+          <pre><code>
+I1
+ ↓
+R1
+ ↓
+I2
+ ↓
+R4
+ ↓
+I3
+          </code></pre>
+
+
+          <p>
+            The forwarding logic must correctly handle each dependency
+            as the instructions move through the pipeline.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Two Operands -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Multiple Dependencies in One Instruction
+          </h4>
+
+          <p>
+            A single instruction can depend on two different
+            previously generated values.
+          </p>
+
+
+          <pre><code>
+I1: R1 = R2 + R3
+
+I2: R4 = R5 + R6
+
+I3: R7 = R1 + R4
+          </code></pre>
+
+
+          <p>
+            I3 requires both R1 and R4.
+          </p>
+
+
+          <pre><code>
+R1 ─────→ Operand A
+           \
+            I3
+           /
+R4 ─────→ Operand B
+          </code></pre>
+
+
+          <p>
+            Therefore, the forwarding unit may need to select a
+            different forwarding source for each operand.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Forward A / B -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Independent Forwarding for RS1 and RS2
+          </h4>
+
+          <p>
+            The forwarding decisions for the two source operands are
+            independent.
+          </p>
+
+
+          <pre><code>
+RS1 → Forwarding Unit → Forward A
+
+RS2 → Forwarding Unit → Forward B
+          </code></pre>
+
+
+          <p>
+            For example:
+          </p>
+
+
+          <pre><code>
+forward_a = EX/MEM
+
+forward_b = MEM/WB
+          </code></pre>
+
+
+          <p>
+            This means operand A receives a result from one pipeline
+            stage while operand B receives a result from another.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding Priority -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Multiple Producers
+          </h4>
+
+          <p>
+            Multiple in-flight instructions may write the same
+            destination register.
+          </p>
+
+
+          <pre><code>
+I1: R1 = ...
+
+I2: R1 = ...
+
+I3: Uses R1
+          </code></pre>
+
+
+          <p>
+            The forwarding logic must select the newest valid result.
+          </p>
+
+
+          <pre><code>
+Newest Result
+     ↓
+Highest Priority
+
+
+Older Result
+     ↓
+Lower Priority
+          </code></pre>
+
+
+          <p>
+            Selecting an older value can cause functional corruption
+            even though the pipeline appears to be operating normally.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Dependency Chain -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Dependency Chain
+          </h4>
+
+
+          <pre><code>
+I1: R1 = R2 + R3
+       ↓
+I2: R4 = R1 + R5
+       ↓
+I3: R6 = R4 + R7
+       ↓
+I4: R8 = R6 + R9
+          </code></pre>
+
+
+          <p>
+            This is a dependency chain. Each instruction depends on
+            the result of the previous instruction.
+          </p>
+
+
+          <p>
+            Forwarding can allow the chain to progress without
+            unnecessarily waiting for every result to reach the
+            register file.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Load Mixed With ALU -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Multiple Hazards With a Load
+          </h4>
+
+
+          <p>
+            A dependency chain can also contain a load-use hazard.
+          </p>
+
+
+          <pre><code>
+I1: LOAD R1, [ADDR]
+
+I2: ADD R4, R1, R5
+
+I3: ADD R6, R4, R7
+          </code></pre>
+
+
+          <p>
+            I2 may require a stall because of the load-use dependency,
+            while I3 may require forwarding from I2.
+          </p>
+
+
+          <pre><code>
+LOAD
+ ↓
+STALL
+ ↓
+I2
+ ↓
+Forward
+ ↓
+I3
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Hazard Resolution -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Resolving Multiple Hazards
+          </h4>
+
+
+          <pre><code>
+Detect Dependencies
+        ↓
+Check Result Availability
+        ↓
++-----------------------+
+|                       |
+v                       v
+Forward Available    Stall Required
+|                       |
+v                       v
+Select Source        Hold Pipeline
+        \               /
+         \             /
+          v           v
+          Continue
+          </code></pre>
+
+
+          <p>
+            The hazard logic must make the correct decision for every
+            dependent operand.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Performance -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Performance Impact
+          </h4>
+
+          <p>
+            Multiple hazards can increase the number of stall cycles
+            and reduce effective pipeline performance.
+          </p>
+
+
+          <pre><code>
+Multiple Hazards
+       ↓
+More Stalls / Bubbles
+       ↓
+More Cycles
+       ↓
+Higher CPI
+       ↓
+Lower Throughput
+          </code></pre>
+
+
+          <p>
+            Effective forwarding reduces the number of unnecessary
+            stalls.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Verification -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Design Verification Perspective
+          </h4>
+
+          <p>
+            Multiple-hazard scenarios are important corner cases for
+            Design Verification.
+          </p>
+
+
+          <ul>
+
+            <li>Two operands requiring forwarding</li>
+
+            <li>Different forwarding sources for RS1 and RS2</li>
+
+            <li>Consecutive RAW dependencies</li>
+
+            <li>Multiple instructions writing the same register</li>
+
+            <li>Load-use followed by another dependency</li>
+
+            <li>Back-to-back dependent instructions</li>
+
+            <li>Dependency on register zero</li>
+
+            <li>Stall followed by forwarding</li>
+
+            <li>Pipeline recovery after multiple hazards</li>
+
+            <li>No lost or duplicated transactions</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Verification Example
+          </h4>
+
+
+          <pre><code>
+I1: R1 = R2 + R3
+
+I2: R4 = R1 + R5
+
+I3: R6 = R4 + R1
+          </code></pre>
+
+
+          <p>
+            I3 has two dependencies:
+          </p>
+
+
+          <ul>
+
+            <li>R4 produced by I2</li>
+
+            <li>R1 produced by I1</li>
+
+          </ul>
+
+
+          <p>
+            The forwarding logic must provide the correct value to
+            each operand.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Review Table -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Multiple Hazard Review
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Scenario</th>
+                  <th>Expected Handling</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>RS1 dependency</td>
+                  <td>Forward A</td>
+                </tr>
+
+                <tr>
+                  <td>RS2 dependency</td>
+                  <td>Forward B</td>
+                </tr>
+
+                <tr>
+                  <td>Both operands dependent</td>
+                  <td>Forward A and B independently</td>
+                </tr>
+
+                <tr>
+                  <td>Newest and older producer</td>
+                  <td>Newest result wins</td>
+                </tr>
+
+                <tr>
+                  <td>Load-use dependency</td>
+                  <td>Stall then forward</td>
+                </tr>
+
+                <tr>
+                  <td>No dependency</td>
+                  <td>Continue normally</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            12. EDA Playground — Multiple Data Hazards
+          </h4>
+
+          <p>
+            Now verify multiple simultaneous and consecutive data
+            dependencies using an RTL simulation.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Run the Design and Testbench in EDA Playground and
+                verify forwarding decisions for multiple dependencies.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/KbWm"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>id_ex_rs1</li>
+
+            <li>id_ex_rs2</li>
+
+            <li>ex_mem_rd</li>
+
+            <li>mem_wb_rd</li>
+
+            <li>ex_mem_regwrite</li>
+
+            <li>mem_wb_regwrite</li>
+
+            <li>id_ex_memread</li>
+
+            <li>forward_a</li>
+
+            <li>forward_b</li>
+
+            <li>stall</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Verify independent forwarding for RS1 and RS2.
+            </li>
+
+            <li>
+              Verify EX/MEM priority over MEM/WB.
+            </li>
+
+            <li>
+              Verify consecutive RAW dependencies.
+            </li>
+
+            <li>
+              Verify multiple producers for the same destination.
+            </li>
+
+            <li>
+              Verify load-use stall behavior.
+            </li>
+
+            <li>
+              Verify correct recovery after a stall.
+            </li>
+
+            <li>
+              Verify that no stale result is selected.
+            </li>
+
+            <li>
+              Verify no transaction loss or duplication.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Multiple data hazards require the forwarding and
+                  hazard detection logic to evaluate each operand and
+                  each dependency correctly. The newest available
+                  result must have priority, while hazards that cannot
+                  be resolved by forwarding must generate a stall.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                Testing consecutive dependencies, multiple producers,
+                two-operand forwarding and load-use combinations is
+                essential for robust pipeline verification.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>     
 
 <!-- ========================= -->
 <!-- Bootstrap JS -->
