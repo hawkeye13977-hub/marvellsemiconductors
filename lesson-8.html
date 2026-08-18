@@ -965,3 +965,5991 @@ and process a continuous stream of operations with higher throughput.
 </div>
 
 </section>
+
+<!-- ========================= -->
+<!-- Step 3 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+3. Pipeline Stages
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how a large operation is divided into smaller processing stages.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Pipeline Stage?
+
+</h4>
+
+<p>
+
+A <strong>pipeline stage</strong> is a portion of a larger operation
+that performs a specific amount of combinational work.
+
+Pipeline stages are separated by registers.
+
+</p>
+
+<pre><code>
+Stage 1
+   |
+Register
+   |
+Stage 2
+   |
+Register
+   |
+Stage 3
+   |
+Register
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Basic Three-Stage Pipeline
+
+</h4>
+
+<p>
+
+Consider a datapath that performs three major operations:
+
+</p>
+
+<pre><code>
+Operation A → Operation B → Operation C
+</code></pre>
+
+<p>
+
+Instead of performing all three operations in one cycle, we can divide
+them into three pipeline stages.
+
+</p>
+
+<pre><code>
+        Stage 1          Stage 2          Stage 3
+
+Input ──> Logic A ──> Reg ──> Logic B ──> Reg ──> Logic C ──> Reg
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Pipeline Registers
+
+</h4>
+
+<p>
+
+The registers between stages are called
+<strong>pipeline registers</strong>.
+
+They capture the intermediate result at the active clock edge and
+hold it while the next stage processes it.
+
+</p>
+
+<pre><code>
+        Stage 1
+           |
+           v
+     +-----------+
+     | Pipeline  |
+     | Register  |
+     +-----------+
+           |
+           v
+        Stage 2
+           |
+           v
+     +-----------+
+     | Pipeline  |
+     | Register  |
+     +-----------+
+           |
+           v
+        Stage 3
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Why Divide the Design into Stages?
+
+</h4>
+
+<ul>
+
+<li>Reduce combinational delay per stage.</li>
+
+<li>Improve the achievable clock frequency.</li>
+
+<li>Allow multiple data items to be processed simultaneously.</li>
+
+<li>Make large datapaths easier to organize.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Example: Arithmetic Pipeline
+
+</h4>
+
+<p>
+
+Suppose an operation contains:
+
+</p>
+
+<pre><code>
+Addition → Multiplication → Comparison
+</code></pre>
+
+<p>
+
+A simple pipeline could be:
+
+</p>
+
+<pre><code>
+Stage 1          Stage 2             Stage 3
+
+Addition         Multiplication      Comparison
+   |                  |                  |
+   v                  v                  v
+ [Reg]              [Reg]              [Reg]
+</code></pre>
+
+<p>
+
+Each register stores the intermediate result before passing it to the
+next stage.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Pipeline Processing
+
+</h4>
+
+<p>
+
+Once the pipeline is full, different input data items can occupy
+different stages at the same time.
+
+</p>
+
+<pre><code>
+Cycle 1:
+
+Data A → Stage 1
+
+
+Cycle 2:
+
+Data A → Stage 2
+Data B → Stage 1
+
+
+Cycle 3:
+
+Data A → Stage 3
+Data B → Stage 2
+Data C → Stage 1
+
+
+Cycle 4:
+
+Data A → Output
+Data B → Stage 3
+Data C → Stage 2
+Data D → Stage 1
+</code></pre>
+
+<p>
+
+This overlapping of operations is the main reason pipelining can
+increase throughput.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Balanced Pipeline Stages
+
+</h4>
+
+<p>
+
+Ideally, the amount of combinational delay in each pipeline stage
+should be reasonably balanced.
+
+For example:
+
+</p>
+
+<pre><code>
+Stage 1 → 3 ns
+Stage 2 → 3 ns
+Stage 3 → 3 ns
+</code></pre>
+
+<p>
+
+is generally more efficient than:
+
+</p>
+
+<pre><code>
+Stage 1 → 1 ns
+Stage 2 → 7 ns
+Stage 3 → 1 ns
+</code></pre>
+
+<p>
+
+The longest stage can still limit the clock period.
+
+Therefore, pipeline design often involves balancing the work between
+stages.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A pipeline divides a datapath into stages separated by registers.
+Each stage performs part of the overall computation, allowing
+different data items to be processed simultaneously.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 4 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+4. Pipeline Registers
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how registers separate pipeline stages and store intermediate results.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Pipeline Register?
+
+</h4>
+
+<p>
+
+A <strong>pipeline register</strong> is a sequential storage element
+placed between two pipeline stages.
+
+It captures the output of one stage at a clock edge and provides that
+value as the input to the next stage.
+
+</p>
+
+<pre><code>
+        Stage 1
+           |
+           v
+    +--------------+
+    |   Pipeline   |
+    |   Register   |
+    +--------------+
+           |
+           v
+        Stage 2
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Why Are Pipeline Registers Required?
+
+</h4>
+
+<p>
+
+Pipeline registers divide a long combinational path into smaller
+timing paths.
+
+Without pipeline registers:
+
+</p>
+
+<pre><code>
+Register
+   |
+   v
+Logic A → Logic B → Logic C → Logic D
+   |
+   v
+Register
+</code></pre>
+
+<p>
+
+With pipeline registers:
+
+</p>
+
+<pre><code>
+Register
+   |
+   v
+Logic A
+   |
+   v
+Pipeline Register
+   |
+   v
+Logic B
+   |
+   v
+Pipeline Register
+   |
+   v
+Logic C → Logic D
+   |
+   v
+Register
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+What Does a Pipeline Register Store?
+
+</h4>
+
+<p>
+
+A pipeline register can store intermediate values required by the
+next stage.
+
+For example:
+
+</p>
+
+<pre><code>
+Stage 1:
+
+A + B
+
+       ↓
+
+Pipeline Register
+
+       ↓
+
+Stage 2:
+
+Stored Result × C
+</code></pre>
+
+<p>
+
+The register holds the result of the first operation until the next
+pipeline stage processes it.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Verilog Example
+
+</h4>
+
+<pre><code>
+reg [7:0] stage1_data;
+
+always @(posedge clk) begin
+
+    if (reset)
+
+        stage1_data &lt;= 8'b0;
+
+    else
+
+        stage1_data &lt;= data_in;
+
+end
+</code></pre>
+
+<p>
+
+Here, <strong>stage1_data</strong> acts as a pipeline register.
+
+It captures <strong>data_in</strong> on the active clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Pipeline Register Between Two Operations
+
+</h4>
+
+<pre><code>
+always @(*) begin
+
+    stage1_result = data_a + data_b;
+
+end
+
+
+always @(posedge clk) begin
+
+    if (reset)
+
+        stage2_data &lt;= 8'b0;
+
+    else
+
+        stage2_data &lt;= stage1_result;
+
+end
+</code></pre>
+
+<p>
+
+The combinational logic calculates the intermediate result, and the
+pipeline register captures it at the clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Pipeline Registers and Clock Cycles
+
+</h4>
+
+<pre><code>
+Clock Cycle 1
+
+Stage 1
+   |
+   v
+Pipeline Register
+
+
+Clock Cycle 2
+
+Pipeline Register
+   |
+   v
+Stage 2
+   |
+   v
+Next Pipeline Register
+</code></pre>
+
+<p>
+
+Each pipeline register creates a boundary between clock cycles.
+
+This allows different stages to work on different data items
+simultaneously.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Important Design Consideration
+
+</h4>
+
+<p>
+
+Pipeline registers are sequential elements, so they introduce
+<strong>latency</strong>.
+
+However, they can also allow the clock frequency to increase by
+reducing the amount of combinational logic in each stage.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipeline registers divide the datapath into clocked stages by storing
+intermediate results between combinational logic blocks.
+
+</strong>
+
+<br><br>
+
+They are essential for controlling pipeline timing and enabling
+overlapped processing.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 5 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+5. Latency vs Throughput
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the two most important performance concepts in a pipeline.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is Latency?
+
+</h4>
+
+<p>
+
+<strong>Latency</strong> is the amount of time or number of clock
+cycles required for one input to travel through the pipeline and
+produce its corresponding output.
+
+</p>
+
+<p>
+
+For a simple three-stage pipeline:
+
+</p>
+
+<pre><code>
+Input
+  |
+  v
+Stage 1
+  |
+  v
+Stage 2
+  |
+  v
+Stage 3
+  |
+  v
+Output
+</code></pre>
+
+<p>
+
+The first result becomes available after the input has passed through
+all three stages.
+
+If each stage takes one clock cycle, the pipeline has a latency of
+approximately three clock cycles.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+What is Throughput?
+
+</h4>
+
+<p>
+
+<strong>Throughput</strong> describes how frequently completed results
+can be produced once the pipeline is operating continuously.
+
+</p>
+
+<p>
+
+For example, after a three-stage pipeline becomes full:
+
+</p>
+
+<pre><code>
+Cycle 1:
+
+A → Stage 1
+
+
+Cycle 2:
+
+A → Stage 2
+B → Stage 1
+
+
+Cycle 3:
+
+A → Stage 3
+B → Stage 2
+C → Stage 1
+
+
+Cycle 4:
+
+A → Output
+B → Stage 3
+C → Stage 2
+D → Stage 1
+
+
+Cycle 5:
+
+B → Output
+C → Stage 3
+D → Stage 2
+E → Stage 1
+</code></pre>
+
+<p>
+
+After the pipeline is full, one completed result can be produced every
+clock cycle in this ideal example.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Latency vs Throughput
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Latency</th>
+
+<th>Throughput</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Time for one operation to travel through the pipeline.</td>
+
+<td>Rate at which completed operations are produced.</td>
+
+</tr>
+
+<tr>
+
+<td>Measured in time or clock cycles.</td>
+
+<td>Often expressed as results per cycle or results per second.</td>
+
+</tr>
+
+<tr>
+
+<td>Pipeline stages contribute to latency.</td>
+
+<td>Clock frequency and pipeline utilization affect throughput.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Important Example
+
+</h4>
+
+<p>
+
+Suppose a pipeline has four stages and each stage takes one clock
+cycle.
+
+</p>
+
+<pre><code>
+Pipeline Stages = 4
+
+Latency ≈ 4 clock cycles
+</code></pre>
+
+<p>
+
+After the pipeline is full, if a new input enters every cycle, an
+ideal pipeline can produce:
+
+</p>
+
+<pre><code>
+1 result per clock cycle
+</code></pre>
+
+<p>
+
+So increasing the number of pipeline stages can increase latency while
+still allowing high throughput.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Why This Matters in RTL Design
+
+</h4>
+
+<p>
+
+When designing a pipeline, engineers must consider both latency and
+throughput.
+
+A design may require:
+
+</p>
+
+<ul>
+
+<li>Low latency for fast response.</li>
+
+<li>High throughput for processing large amounts of data.</li>
+
+<li>Or a balance between the two depending on the application.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Pipeline Performance
+
+</h4>
+
+<pre><code>
+                 Pipeline
+                    |
+          +---------+---------+
+          |                   |
+       Latency            Throughput
+          |                   |
+    Time for one        Results produced
+      operation            per cycle
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Latency tells us how long one operation takes to travel through the
+pipeline, while throughput tells us how frequently completed results
+can be produced.
+
+</strong>
+
+<br><br>
+
+A pipeline can have higher latency while still providing excellent
+throughput.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 6 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+6. Combinational Logic Between Pipeline Stages
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding what happens to data between pipeline registers.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Pipeline Stage Structure
+
+</h4>
+
+<p>
+
+A <strong>pipeline stage</strong> normally contains
+<strong>combinational logic followed by a pipeline register</strong>.
+
+The combinational logic performs the actual computation, while the
+register stores the result at the active clock edge.
+
+</p>
+
+
+<pre><code>
+        Pipeline Stage
+
+Input
+  |
+  v
++----------------------+
+|  Combinational Logic |
++----------------------+
+  |
+  v
++----------------------+
+|  Pipeline Register   |
++----------------------+
+  |
+  v
+Next Stage
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Consider a simple two-stage arithmetic pipeline.
+
+Stage 1 performs an addition:
+
+</p>
+
+
+<pre><code>
+A + B
+</code></pre>
+
+
+<p>
+
+The result is stored in a pipeline register and then used by Stage 2.
+
+Stage 2 performs a multiplication:
+
+</p>
+
+
+<pre><code>
+(A + B) × C
+</code></pre>
+
+
+<p>
+
+The complete pipeline can be represented as:
+
+</p>
+
+
+<pre><code>
+A ──┐
+    ├──> ADD ──> Register ──> MULTIPLY ──> Register ──> Output
+B ──┘                         ^
+                              |
+                              C
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Keep Logic Between Registers?
+
+</h4>
+
+<p>
+
+The purpose of pipelining is not simply to add registers.
+
+The combinational work must be divided between those registers so that
+each pipeline stage has a manageable timing requirement.
+
+</p>
+
+
+<pre><code>
+Stage 1
+
+Input
+  |
+  v
+Logic A
+  |
+  v
+Pipeline Register
+
+
+Stage 2
+
+Pipeline Register
+  |
+  v
+Logic B
+  |
+  v
+Pipeline Register
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+What Happens During a Clock Cycle?
+
+</h4>
+
+<p>
+
+During a clock cycle, the output of the previous pipeline register
+propagates through the combinational logic of the current stage.
+
+At the next active clock edge, the resulting value is captured by the
+next pipeline register.
+
+</p>
+
+
+<pre><code>
+Clock Edge
+    |
+    v
+Pipeline Register
+    |
+    v
+Combinational Logic
+    |
+    |  Data propagates
+    |
+    v
+Next Pipeline Register
+    |
+    v
+Next Clock Edge
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Stage Delay
+
+</h4>
+
+<p>
+
+The combinational logic inside a pipeline stage contributes to the
+timing delay of that stage.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Stage 1 = 3 ns
+
+Stage 2 = 4 ns
+
+Stage 3 = 2 ns
+</code></pre>
+
+
+<p>
+
+The slowest stage is 4 ns.
+
+Therefore, before considering clock-to-Q delay, setup time, clock
+uncertainty and other timing effects, the combinational portion of the
+pipeline must accommodate the 4 ns stage.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Balanced Pipeline
+
+</h4>
+
+<p>
+
+Ideally, the combinational work should be distributed reasonably
+evenly between stages.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Stage 1 → 3 ns
+
+Stage 2 → 3 ns
+
+Stage 3 → 3 ns
+</code></pre>
+
+
+<p>
+
+This is generally better balanced than:
+
+</p>
+
+
+<pre><code>
+Stage 1 → 1 ns
+
+Stage 2 → 7 ns
+
+Stage 3 → 2 ns
+</code></pre>
+
+
+<p>
+
+In the second example, the 7 ns stage becomes the limiting stage.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Unbalanced Pipeline
+
+</h4>
+
+<p>
+
+Adding pipeline registers does not automatically guarantee a faster
+design.
+
+If one stage contains significantly more combinational logic than the
+others, that stage can become the critical path.
+
+</p>
+
+
+<pre><code>
+          Pipeline Register
+                 |
+                 v
+
+       +------------------+
+       | Small Logic      |
+       +------------------+
+                 |
+                 v
+          Pipeline Register
+                 |
+                 v
+
+       +------------------+
+       | Large Logic      |
+       |                  |
+       |   CRITICAL       |
+       |     PATH         |
+       +------------------+
+                 |
+                 v
+          Pipeline Register
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Verilog Example
+
+</h4>
+
+
+<pre><code>
+module pipeline_stage_example (
+
+    input wire clk,
+    input wire reset,
+
+    input wire [7:0] data_a,
+    input wire [7:0] data_b,
+
+    output reg [7:0] stage1_result
+
+);
+
+always @(posedge clk) begin
+
+    if (reset)
+
+        stage1_result &lt;= 8'b0;
+
+    else
+
+        stage1_result &lt;= data_a + data_b;
+
+end
+
+endmodule
+</code></pre>
+
+
+<p>
+
+The addition is the combinational operation feeding the pipeline
+register.
+
+The register captures the result at the active clock edge.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Multiple Pipeline Stages
+
+</h4>
+
+
+<pre><code>
+             Stage 1
+                |
+                v
+        +----------------+
+        | Combinational  |
+        | Logic          |
+        +----------------+
+                |
+                v
+        +----------------+
+        | Pipeline Reg 1 |
+        +----------------+
+                |
+                v
+             Stage 2
+                |
+                v
+        +----------------+
+        | Combinational  |
+        | Logic          |
+        +----------------+
+                |
+                v
+        +----------------+
+        | Pipeline Reg 2 |
+        +----------------+
+                |
+                v
+             Stage 3
+</code></pre>
+
+
+<p>
+
+Each stage performs its own portion of the overall computation.
+
+Once the pipeline is full, all stages can operate simultaneously on
+different data items.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Data Flow
+
+</h4>
+
+
+<pre><code>
+Cycle 1:
+
+Data A → Stage 1
+
+
+Cycle 2:
+
+Data A → Stage 2
+Data B → Stage 1
+
+
+Cycle 3:
+
+Data A → Stage 3
+Data B → Stage 2
+Data C → Stage 1
+
+
+Cycle 4:
+
+Data A → Output
+Data B → Stage 3
+Data C → Stage 2
+Data D → Stage 1
+</code></pre>
+
+
+<p>
+
+This overlapping operation is what allows a pipeline to achieve high
+throughput.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Important Timing Concept
+
+</h4>
+
+<p>
+
+The timing of a pipeline stage is determined by the amount of
+combinational logic between its input and output registers.
+
+A simplified timing relationship is:
+
+</p>
+
+
+<pre><code>
+Clock Period ≥
+
+Clock-to-Q Delay
++
+Combinational Logic Delay
++
+Setup Time
++
+Timing Margin
+</code></pre>
+
+
+<p>
+
+Therefore, pipeline design is not only about dividing functionality.
+The stages must also be designed so that their timing requirements are
+reasonable.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipeline registers divide combinational logic into separate timing
+stages. Good pipeline design distributes the computational work so
+that no single stage becomes unnecessarily slow.
+
+</strong>
+
+<br><br>
+
+The goal is to create stages that can operate reliably at the desired
+clock frequency while allowing multiple data items to be processed
+concurrently.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 7 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+7. Basic 2-Stage Pipeline
+
+</h2>
+
+<p class="text-secondary">
+
+Build a simple two-stage pipeline and understand how data moves between stages.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a 2-Stage Pipeline?
+
+</h4>
+
+<p>
+
+A two-stage pipeline divides a computation into two sections of
+combinational logic separated by a pipeline register.
+
+</p>
+
+<pre><code>
+             Stage 1              Stage 2
+
+Input ──> Logic A ──> Register ──> Logic B ──> Register ──> Output
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Consider the following operation:
+
+</p>
+
+<pre><code>
+Result = (A + B) + C
+</code></pre>
+
+<p>
+
+We can divide it into two stages.
+
+</p>
+
+<pre><code>
+Stage 1:
+
+A + B
+
+       ↓
+
+Pipeline Register
+
+       ↓
+
+Stage 2:
+
+(A + B) + C
+
+       ↓
+
+Output Register
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Data Flow
+
+</h4>
+
+<pre><code>
+A ──┐
+    ├──> ADD ──> Stage 1 Register ──┐
+B ──┘                               |
+                                    v
+                                   ADD ──> Output Register
+                                    ^
+                                    |
+                                    C
+</code></pre>
+
+<p>
+
+The first addition is completed in Stage 1.
+
+The intermediate result is stored in the pipeline register.
+
+During the next clock cycle, Stage 2 uses that stored value together
+with C.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Cycle-by-Cycle Operation
+
+</h4>
+
+<pre><code>
+Cycle 1:
+
+A + B
+  |
+  v
+Stage 1 Register
+
+
+Cycle 2:
+
+Stage 1 Register + C
+  |
+  v
+Output Register
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Why Is This Better Than One Long Stage?
+
+</h4>
+
+<p>
+
+Without pipelining, both additions may be placed in one long
+combinational path:
+
+</p>
+
+<pre><code>
+A + B + C
+
+      ↓
+
+One long combinational path
+
+      ↓
+
+Register
+</code></pre>
+
+<p>
+
+With pipelining:
+
+</p>
+
+<pre><code>
+A + B
+  |
+  v
+Register
+  |
+  v
++ C
+  |
+  v
+Register
+</code></pre>
+
+<p>
+
+The logic is divided across two clock cycles.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Verilog RTL
+
+</h4>
+
+<pre><code>
+module pipeline_2_stage (
+
+    input wire clk,
+    input wire reset,
+
+    input wire [7:0] a,
+    input wire [7:0] b,
+    input wire [7:0] c,
+
+    output reg [7:0] result
+
+);
+
+reg [7:0] stage1;
+
+
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        stage1 &lt;= 8'b0;
+        result &lt;= 8'b0;
+
+    end
+
+    else begin
+
+        // Stage 1
+        stage1 &lt;= a + b;
+
+        // Stage 2
+        result &lt;= stage1 + c;
+
+    end
+
+end
+
+endmodule
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+Both assignments occur on the same clock edge, but because
+<strong>nonblocking assignments</strong> are used, the second stage
+uses the previous value of <strong>stage1</strong>.
+
+That is what creates the pipeline behavior.
+
+</p>
+
+<pre><code>
+At Clock N:
+
+stage1  ← A + B
+
+result  ← previous stage1 + C
+
+
+At Clock N+1:
+
+stage1  ← new A + B
+
+result  ← previous stage1 + C
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Pipeline Latency
+
+</h4>
+
+<p>
+
+For this example, an input requires two pipeline stages before its
+result appears at the output.
+
+Therefore, the pipeline has approximately:
+
+</p>
+
+<pre><code>
+Latency = 2 clock cycles
+</code></pre>
+
+<p>
+
+Once the pipeline is full, new input data can be accepted every clock
+cycle.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A 2-stage pipeline divides a computation into two clocked stages.
+The intermediate result is stored in a pipeline register, allowing
+new input data to enter the pipeline while previous data continues
+through the next stage.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 8 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+8. 3-Stage Pipeline
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how a computation can be divided into three pipeline stages.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a 3-Stage Pipeline?
+
+</h4>
+
+<p>
+
+A <strong>3-stage pipeline</strong> divides a computation into three
+separate processing stages.
+
+Pipeline registers are placed between the stages so that each stage
+can operate during a different clock cycle.
+
+</p>
+
+
+<pre><code>
+Stage 1
+   |
+Pipeline Register
+   |
+Stage 2
+   |
+Pipeline Register
+   |
+Stage 3
+   |
+Output Register
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Consider the following operation:
+
+</p>
+
+
+<pre><code>
+Result = ((A + B) × C) - D
+</code></pre>
+
+
+<p>
+
+We can divide the operation into three stages:
+
+</p>
+
+
+<pre><code>
+Stage 1:
+
+A + B
+
+
+Stage 2:
+
+(A + B) × C
+
+
+Stage 3:
+
+((A + B) × C) - D
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Structure
+
+</h4>
+
+
+<pre><code>
+A ──┐
+    ├──> ADD ──> Reg 1
+B ──┘               |
+                    v
+                    × C
+                    |
+                    v
+                  Reg 2
+                    |
+                    v
+                    - D
+                    |
+                    v
+                  Reg 3
+                    |
+                    v
+                  Result
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Cycle-by-Cycle Operation
+
+</h4>
+
+<p>
+
+Suppose three different inputs enter the pipeline on consecutive
+clock cycles.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Data A → Stage 1
+
+
+Cycle 2:
+
+Data A → Stage 2
+Data B → Stage 1
+
+
+Cycle 3:
+
+Data A → Stage 3
+Data B → Stage 2
+Data C → Stage 1
+
+
+Cycle 4:
+
+Data A → Output
+Data B → Stage 3
+Data C → Stage 2
+Data D → Stage 1
+</code></pre>
+
+
+<p>
+
+The pipeline is now processing multiple data items simultaneously.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Registers
+
+</h4>
+
+<p>
+
+Each pipeline register stores the intermediate result and allows the
+next stage to work independently during the following clock cycle.
+
+</p>
+
+
+<pre><code>
+Stage 1
+   |
+   v
++---------+
+| Reg 1   |
++---------+
+   |
+   v
+Stage 2
+   |
+   v
++---------+
+| Reg 2   |
++---------+
+   |
+   v
+Stage 3
+   |
+   v
++---------+
+| Reg 3   |
++---------+
+   |
+   v
+Output
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Basic Verilog Example
+
+</h4>
+
+
+<pre><code>
+module pipeline_3_stage (
+
+    input wire clk,
+    input wire reset,
+
+    input wire [7:0] a,
+    input wire [7:0] b,
+    input wire [7:0] c,
+    input wire [7:0] d,
+
+    output reg [7:0] result
+
+);
+
+reg [7:0] stage1;
+reg [7:0] stage2;
+
+
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        stage1 &lt;= 8'b0;
+        stage2 &lt;= 8'b0;
+        result &lt;= 8'b0;
+
+    end
+
+    else begin
+
+        // Stage 1
+        stage1 &lt;= a + b;
+
+        // Stage 2
+        stage2 &lt;= stage1 * c;
+
+        // Stage 3
+        result &lt;= stage2 - d;
+
+    end
+
+end
+
+endmodule
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+The nonblocking assignments ensure that each stage receives the value
+from the previous clock cycle.
+
+Therefore, the stages operate concurrently on different data items.
+
+</p>
+
+
+<pre><code>
+Clock N:
+
+stage1 ← current A + B
+
+stage2 ← previous stage1 × C
+
+result ← previous stage2 - D
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Latency
+
+</h4>
+
+<p>
+
+Because the operation passes through three pipeline stages, the
+latency is approximately:
+
+</p>
+
+
+<pre><code>
+Latency = 3 clock cycles
+</code></pre>
+
+
+<p>
+
+However, once the pipeline is full, a new result can ideally be
+produced every clock cycle.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Throughput
+
+</h4>
+
+<pre><code>
+Cycle 1 → Input A
+Cycle 2 → Input B
+Cycle 3 → Input C
+Cycle 4 → Input D
+
+After the pipeline fills:
+
+One result per clock cycle
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Stage Balancing
+
+</h4>
+
+<p>
+
+The three stages should ideally contain reasonably balanced amounts of
+combinational logic.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Stage 1 → 2 ns
+
+Stage 2 → 3 ns
+
+Stage 3 → 2 ns
+</code></pre>
+
+
+<p>
+
+The second stage is the slowest stage and may therefore influence the
+maximum clock frequency.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A 3-stage pipeline divides a computation into three clocked stages.
+Pipeline registers store intermediate results, allowing all stages to
+work simultaneously on different data items.
+
+</strong>
+
+<br><br>
+
+The pipeline can have multiple-cycle latency while still achieving
+high throughput once it is full.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 9 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+9. Pipeline Timing Diagram
+
+</h2>
+
+<p class="text-secondary">
+
+Learn how data moves through pipeline stages across clock cycles.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Why Use a Timing Diagram?
+
+</h4>
+
+<p>
+
+A pipeline timing diagram shows which stage is processing each data
+item during each clock cycle.
+
+It makes the concepts of <strong>latency</strong>,
+<strong>overlap</strong> and <strong>throughput</strong> easier to
+understand.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Three-Stage Pipeline
+
+</h4>
+
+<p>
+
+Consider a pipeline containing three stages:
+
+</p>
+
+
+<pre><code>
+Stage 1 → Stage 2 → Stage 3
+</code></pre>
+
+
+<p>
+
+Suppose inputs A, B and C enter the pipeline on consecutive clock
+cycles.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Timing Table
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Cycle</th>
+
+<th>Stage 1</th>
+
+<th>Stage 2</th>
+
+<th>Stage 3</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>Data A</td>
+
+<td>—</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Data B</td>
+
+<td>Data A</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>Data C</td>
+
+<td>Data B</td>
+
+<td>Data A</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>Data D</td>
+
+<td>Data C</td>
+
+<td>Data B</td>
+
+</tr>
+
+<tr>
+
+<td>5</td>
+
+<td>Data E</td>
+
+<td>Data D</td>
+
+<td>Data C</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Visual Representation
+
+</h4>
+
+
+<pre><code>
+             Clock Cycle
+
+             1      2      3      4      5
+
+Stage 1      A      B      C      D      E
+
+Stage 2             A      B      C      D
+
+Stage 3                    A      B      C
+
+Output                            A      B
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Understanding the Diagram
+
+</h4>
+
+<p>
+
+During Cycle 1, Data A enters Stage 1.
+
+During Cycle 2, Data A moves to Stage 2 while Data B enters Stage 1.
+
+During Cycle 3, Data A reaches Stage 3 while Data B and Data C occupy
+the earlier stages.
+
+</p>
+
+
+<p>
+
+This means that multiple pieces of data are being processed at the
+same time.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Fill
+
+</h4>
+
+<p>
+
+At the beginning, the pipeline is empty.
+
+It takes several clock cycles to fill all the stages.
+
+For a three-stage pipeline:
+
+</p>
+
+
+<pre><code>
+Cycle 1 → Stage 1 active
+
+Cycle 2 → Stages 1 and 2 active
+
+Cycle 3 → Stages 1, 2 and 3 active
+</code></pre>
+
+
+<p>
+
+After the pipeline becomes full, each additional input can advance
+through the stages every clock cycle.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Latency
+
+</h4>
+
+<p>
+
+For this simplified three-stage example, the first input reaches the
+output after approximately three clock cycles.
+
+</p>
+
+
+<pre><code>
+Input A
+   |
+   v
+Stage 1
+   |
+   v
+Stage 2
+   |
+   v
+Stage 3
+   |
+   v
+Output
+
+Latency ≈ 3 cycles
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Throughput
+
+</h4>
+
+<p>
+
+Once the pipeline is full, a new result can ideally be produced every
+clock cycle.
+
+</p>
+
+
+<pre><code>
+Cycle 3 → Result A
+
+Cycle 4 → Result B
+
+Cycle 5 → Result C
+
+Cycle 6 → Result D
+</code></pre>
+
+
+<p>
+
+This is the major performance advantage of pipelining for continuous
+data processing.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+Increasing the number of pipeline stages generally increases the
+number of cycles required for one input to reach the output.
+
+However, it can also reduce the amount of combinational logic per
+stage and therefore allow a shorter clock period.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A pipeline timing diagram shows how different data items occupy
+different pipeline stages during the same clock cycle.
+
+</strong>
+
+<br><br>
+
+The first result appears after the pipeline fills, and subsequent
+results can ideally be produced at one per clock cycle.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 10 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+10. Critical Path and Pipeline Performance
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how the slowest pipeline stage affects the clock frequency.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is the Critical Path?
+
+</h4>
+
+<p>
+
+The <strong>critical path</strong> is the timing path with the
+largest delay between sequential elements.
+
+In a pipeline, the stage with the largest combinational delay can
+limit the maximum clock frequency.
+
+</p>
+
+
+<pre><code>
+Register
+   |
+   v
++----------------+
+| Combinational  |
+| Logic          |
++----------------+
+   |
+   v
+Register
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Stage Delays
+
+</h4>
+
+<p>
+
+Consider a three-stage pipeline:
+
+</p>
+
+
+<pre><code>
+Stage 1 → 2 ns
+
+Stage 2 → 5 ns
+
+Stage 3 → 3 ns
+</code></pre>
+
+
+<p>
+
+Stage 2 is the slowest stage.
+
+Therefore, it is the likely critical stage.
+
+</p>
+
+
+<pre><code>
+Stage 1       Stage 2       Stage 3
+
+  2 ns          5 ns          3 ns
+   |             |             |
+   |             |             |
+   +-------------+-------------+
+
+             Critical
+              Stage
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Effect on Clock Period
+
+</h4>
+
+<p>
+
+A simplified pipeline timing relationship is:
+
+</p>
+
+
+<pre><code>
+Clock Period ≥
+
+Clock-to-Q Delay
++
+Maximum Combinational Delay
++
+Setup Time
++
+Timing Margin
+</code></pre>
+
+
+<p>
+
+The maximum combinational delay is determined by the slowest pipeline
+stage.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Suppose:
+
+</p>
+
+
+<ul>
+
+<li>Clock-to-Q delay = 1 ns</li>
+
+<li>Maximum stage delay = 5 ns</li>
+
+<li>Setup time = 1 ns</li>
+
+<li>Timing margin = 1 ns</li>
+
+</ul>
+
+
+<p>
+
+Then a simplified minimum clock period is:
+
+</p>
+
+
+<pre><code>
+Clock Period
+
+= 1 ns + 5 ns + 1 ns + 1 ns
+
+= 8 ns
+</code></pre>
+
+
+<p>
+
+The theoretical maximum frequency is approximately:
+
+</p>
+
+
+<pre><code>
+Frequency = 1 / Clock Period
+
+          = 1 / 8 ns
+
+          ≈ 125 MHz
+</code></pre>
+
+
+<p>
+
+Real timing analysis also considers factors such as clock skew,
+jitter, uncertainty, routing delay and library timing characteristics.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Balancing Pipeline Stages
+
+</h4>
+
+<p>
+
+One way to improve pipeline performance is to distribute the
+combinational logic more evenly between stages.
+
+</p>
+
+
+<pre><code>
+Before:
+
+Stage 1 → 2 ns
+Stage 2 → 5 ns
+Stage 3 → 3 ns
+
+
+After Balancing:
+
+Stage 1 → 3 ns
+Stage 2 → 3 ns
+Stage 3 → 3 ns
+</code></pre>
+
+
+<p>
+
+The slowest stage has been reduced from 5 ns to 3 ns.
+
+This can potentially allow a shorter clock period.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Adding Another Pipeline Stage
+
+</h4>
+
+<p>
+
+Another approach is to divide a long stage into smaller stages.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Before:
+
+Register
+   |
+   v
+Logic A → Logic B
+   |
+   v
+Register
+</code></pre>
+
+
+<p>
+
+can become:
+
+</p>
+
+
+<pre><code>
+Register
+   |
+   v
+Logic A
+   |
+   v
+Pipeline Register
+   |
+   v
+Logic B
+   |
+   v
+Register
+</code></pre>
+
+
+<p>
+
+This can reduce the combinational delay per clock cycle, but it also
+adds another pipeline stage and therefore increases latency.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Performance Trade-Off
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Change</th>
+
+<th>Possible Benefit</th>
+
+<th>Possible Cost</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Add Pipeline Stage</td>
+
+<td>Shorter combinational path</td>
+
+<td>Higher latency</td>
+
+</tr>
+
+<tr>
+
+<td>Balance Stages</td>
+
+<td>Better clock frequency</td>
+
+<td>May require redesign</td>
+
+</tr>
+
+<tr>
+
+<td>Reduce Logic</td>
+
+<td>Lower stage delay</td>
+
+<td>Can require architectural changes</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Critical Path in RTL Design
+
+</h4>
+
+<p>
+
+When designing RTL, engineers should identify logic paths that may
+become timing bottlenecks.
+
+Typical examples include:
+
+</p>
+
+
+<ul>
+
+<li>Large arithmetic operations.</li>
+
+<li>Deep multiplexer chains.</li>
+
+<li>Long combinational logic chains.</li>
+
+<li>Large comparison logic.</li>
+
+<li>Unbalanced pipeline stages.</li>
+
+</ul>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+The slowest pipeline stage can determine the minimum clock period.
+Good pipeline design attempts to balance the combinational delay
+between stages while considering the trade-off between frequency,
+latency and hardware cost.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 11 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+11. Pipeline RTL Implementation
+
+</h2>
+
+<p class="text-secondary">
+
+Implementing a basic multi-stage pipeline using synthesizable Verilog RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Pipeline RTL Structure
+
+</h4>
+
+<p>
+
+A pipelined RTL design typically contains combinational logic
+followed by registers at the boundaries of each stage.
+
+For a simple three-stage pipeline:
+
+</p>
+
+<pre><code>
+Input
+  |
+  v
+Combinational Logic
+  |
+  v
+Pipeline Register 1
+  |
+  v
+Combinational Logic
+  |
+  v
+Pipeline Register 2
+  |
+  v
+Combinational Logic
+  |
+  v
+Output Register
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example Design
+
+</h4>
+
+<p>
+
+Let's implement a simple three-stage arithmetic pipeline.
+
+The operation will be:
+
+</p>
+
+<pre><code>
+Stage 1:
+
+A + B
+
+
+Stage 2:
+
+Stage 1 Result × C
+
+
+Stage 3:
+
+Stage 2 Result - D
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Complete Verilog RTL
+
+</h4>
+
+<pre><code>
+module pipeline_3_stage (
+
+    input wire clk,
+    input wire reset,
+
+    input wire [7:0] a,
+    input wire [7:0] b,
+    input wire [7:0] c,
+    input wire [7:0] d,
+
+    output reg [7:0] result
+
+);
+
+reg [7:0] stage1;
+reg [7:0] stage2;
+
+
+// =====================================
+// Pipeline Stages
+// =====================================
+
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        stage1 &lt;= 8'b0;
+        stage2 &lt;= 8'b0;
+        result &lt;= 8'b0;
+
+    end
+
+    else begin
+
+        // Stage 1
+        stage1 &lt;= a + b;
+
+        // Stage 2
+        stage2 &lt;= stage1 * c;
+
+        // Stage 3
+        result &lt;= stage2 - d;
+
+    end
+
+end
+
+endmodule
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Understanding the RTL
+
+</h4>
+
+<p>
+
+The design uses three sequential pipeline stages.
+
+At every rising edge of the clock:
+
+</p>
+
+<pre><code>
+stage1 <= a + b;
+
+stage2 <= stage1 * c;
+
+result <= stage2 - d;
+</code></pre>
+
+<p>
+
+Because these are <strong>nonblocking assignments</strong>, all three
+assignments use the values that existed before the clock edge.
+
+This is what allows the pipeline stages to operate concurrently.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Suppose:
+
+</p>
+
+<pre><code>
+A = 2
+B = 3
+C = 4
+D = 5
+</code></pre>
+
+<p>
+
+The mathematical result is:
+
+</p>
+
+<pre><code>
+((A + B) × C) - D
+
+= ((2 + 3) × 4) - 5
+
+= 20 - 5
+
+= 15
+</code></pre>
+
+<p>
+
+The pipeline does not perform the entire calculation in one clock
+cycle.
+
+Instead:
+
+</p>
+
+<pre><code>
+Stage 1:
+
+2 + 3 = 5
+
+
+Stage 2:
+
+5 × 4 = 20
+
+
+Stage 3:
+
+20 - 5 = 15
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Cycle-by-Cycle View
+
+</h4>
+
+<pre><code>
+Clock 1:
+
+stage1 = A + B
+
+
+Clock 2:
+
+stage1 = new A + B
+stage2 = previous stage1 × C
+
+
+Clock 3:
+
+stage1 = new A + B
+stage2 = previous stage1 × C
+result = previous stage2 - D
+</code></pre>
+
+<p>
+
+This demonstrates how different input transactions can occupy
+different pipeline stages at the same time.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Important RTL Rule
+
+</h4>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Use Nonblocking Assignments for Sequential Logic
+
+</h4>
+
+<p>
+
+Pipeline registers are sequential logic.
+
+Therefore, clocked RTL should normally use
+<strong>&lt;=</strong> nonblocking assignments.
+
+</p>
+
+<pre><code>
+always @(posedge clk) begin
+
+    stage1 &lt;= a + b;
+
+    stage2 &lt;= stage1 * c;
+
+    result &lt;= stage2 - d;
+
+end
+</code></pre>
+
+<p class="mb-0">
+
+Using nonblocking assignments models the simultaneous state updates
+that occur at a clock edge.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Reset Behavior
+
+</h4>
+
+<p>
+
+The reset condition clears every pipeline register.
+
+This is important because otherwise the pipeline can initially contain
+unknown values.
+
+</p>
+
+<pre><code>
+if (reset) begin
+
+    stage1 &lt;= 8'b0;
+    stage2 &lt;= 8'b0;
+    result &lt;= 8'b0;
+
+end
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Key Observation
+
+</h4>
+
+<p>
+
+A pipeline is fundamentally a combination of:
+
+</p>
+
+<pre><code>
+Combinational Logic
+        +
+Pipeline Registers
+        +
+Clock
+</code></pre>
+
+<p>
+
+The registers establish the stage boundaries, while the combinational
+logic performs the work within each stage.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipelined RTL divides a computation into clocked stages. Nonblocking
+assignments allow each pipeline register to capture the previous
+stage's result while the other stages process different data during
+the same clock cycle.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 12 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+12. Pipeline Data Flow
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how multiple data transactions move through a pipeline simultaneously.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is Pipeline Data Flow?
+
+</h4>
+
+<p>
+
+Pipeline data flow describes how input data moves from one pipeline
+stage to the next on successive clock cycles.
+
+Each pipeline register stores the intermediate result until the next
+clock edge.
+
+</p>
+
+
+<pre><code>
+Input
+  |
+  v
++---------+
+| Stage 1 |
++---------+
+  |
+  v
++---------+
+| Reg 1   |
++---------+
+  |
+  v
++---------+
+| Stage 2 |
++---------+
+  |
+  v
++---------+
+| Reg 2   |
++---------+
+  |
+  v
++---------+
+| Stage 3 |
++---------+
+  |
+  v
+Output
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Single Data Transaction
+
+</h4>
+
+<p>
+
+Consider one input transaction called <strong>Data A</strong>.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Data A → Stage 1
+
+
+Cycle 2:
+
+Data A → Stage 2
+
+
+Cycle 3:
+
+Data A → Stage 3
+
+
+Cycle 4:
+
+Data A → Output
+</code></pre>
+
+
+<p>
+
+The data advances one pipeline stage at each active clock edge.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Multiple Transactions
+
+</h4>
+
+<p>
+
+The real advantage of pipelining becomes visible when multiple data
+transactions enter the pipeline.
+
+Suppose Data A, B, C and D enter on consecutive clock cycles.
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Cycle</th>
+
+<th>Stage 1</th>
+
+<th>Stage 2</th>
+
+<th>Stage 3</th>
+
+<th>Output</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>Data A</td>
+
+<td>—</td>
+
+<td>—</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Data B</td>
+
+<td>Data A</td>
+
+<td>—</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>Data C</td>
+
+<td>Data B</td>
+
+<td>Data A</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>Data D</td>
+
+<td>Data C</td>
+
+<td>Data B</td>
+
+<td>Data A</td>
+
+</tr>
+
+<tr>
+
+<td>5</td>
+
+<td>Data E</td>
+
+<td>Data D</td>
+
+<td>Data C</td>
+
+<td>Data B</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Overlap
+
+</h4>
+
+<p>
+
+Notice that during Cycle 3, three different data transactions are
+being processed simultaneously:
+
+</p>
+
+
+<pre><code>
+Stage 1 → Data C
+
+Stage 2 → Data B
+
+Stage 3 → Data A
+</code></pre>
+
+
+<p>
+
+This is called <strong>overlapping</strong>.
+
+Each stage is working on a different transaction during the same
+clock cycle.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Fill and Drain
+
+</h4>
+
+<p>
+
+A pipeline has three important phases:
+
+</p>
+
+
+<ul>
+
+<li>
+<strong>Fill:</strong> The pipeline is gradually populated with data.
+</li>
+
+<li>
+<strong>Steady State:</strong> All stages are actively processing data.
+</li>
+
+<li>
+<strong>Drain:</strong> After inputs stop arriving, remaining data
+continues moving toward the output.
+</li>
+
+</ul>
+
+
+<pre><code>
+Pipeline Fill
+      ↓
++-----+-----+-----+
+| A   |     |     |
++-----+-----+-----+
+
+      ↓
+
++-----+-----+-----+
+| B   | A   |     |
++-----+-----+-----+
+
+      ↓
+
+Pipeline Full
+      ↓
+
++-----+-----+-----+
+| C   | B   | A   |
++-----+-----+-----+
+
+      ↓
+
+Pipeline Drain
+      ↓
+
++-----+-----+-----+
+|     | C   | B   |
++-----+-----+-----+
+
+      ↓
+
++-----+-----+-----+
+|     |     | C   |
++-----+-----+-----+
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Registers Preserve Data Order
+
+</h4>
+
+<p>
+
+For a simple pipeline with no stalls or special control behavior,
+transactions maintain their order.
+
+If inputs enter as:
+
+</p>
+
+
+<pre><code>
+A → B → C → D
+</code></pre>
+
+
+<p>
+
+the corresponding outputs appear in the same order:
+
+</p>
+
+
+<pre><code>
+A → B → C → D
+</code></pre>
+
+
+<p>
+
+The pipeline changes <strong>when</strong> the result becomes available,
+but it does not inherently change the ordering of independent
+transactions.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Valid Signal
+
+</h4>
+
+<p>
+
+Real RTL pipelines often use a <strong>valid</strong> signal to
+indicate whether the data currently stored in a pipeline stage is
+meaningful.
+
+For example:
+
+</p>
+
+
+<pre><code>
+data  +  valid
+  |
+  v
+Stage 1
+  |
+  v
+data  +  valid
+  |
+  v
+Stage 2
+</code></pre>
+
+
+<p>
+
+When a pipeline is reset, the valid information is commonly cleared.
+As new transactions enter, the valid signal moves along with the data.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why Valid Tracking Matters
+
+</h4>
+
+<p>
+
+Suppose the pipeline has just been reset.
+
+The registers may contain zeros, but those zeros should not
+necessarily be interpreted as real output data.
+
+A valid signal can distinguish:
+
+</p>
+
+
+<pre><code>
+valid = 0
+
+Data is not a valid transaction.
+
+
+valid = 1
+
+Data represents a valid transaction.
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Basic Pipeline Concept
+
+</h4>
+
+<pre><code>
+             Clock
+               |
+               v
+
+Input → Stage 1 → Reg → Stage 2 → Reg → Stage 3 → Output
+          |                         |
+        Valid                      Valid
+</code></pre>
+
+
+<p>
+
+In larger SoCs and datapaths, this concept becomes important when
+pipelines support stalls, bubbles, backpressure or multiple types of
+transactions.
+
+These advanced mechanisms will be covered later.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipeline data moves one stage at a time on clock edges. Multiple
+transactions can occupy different stages simultaneously, allowing
+overlapped processing and high throughput.
+
+</strong>
+
+<br><br>
+
+In practical RTL designs, control information such as a
+<strong>valid</strong> signal often travels alongside the data.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 13 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+13. Pipeline Hazards — Introduction
+
+</h2>
+
+<p class="text-secondary">
+
+Understand why pipelines can encounter situations that prevent
+normal data flow.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Pipeline Hazard?
+
+</h4>
+
+<p>
+
+A <strong>pipeline hazard</strong> is a condition that prevents a
+pipeline from proceeding normally in the expected sequence.
+
+Hazards become important when one operation depends on another
+operation, when hardware resources are shared, or when the normal
+control flow changes.
+
+</p>
+
+
+<p>
+
+In a simple independent-data pipeline, every input can move forward
+one stage per clock cycle.
+
+However, real designs can introduce situations where the next
+operation cannot safely proceed.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Example
+
+</h4>
+
+<p>
+
+Consider two operations:
+
+</p>
+
+
+<pre><code>
+Operation A
+    |
+    v
+Produces Data X
+
+
+Operation B
+    |
+    v
+Needs Data X
+</code></pre>
+
+
+<p>
+
+If Operation B reaches a pipeline stage before Data X is available,
+the pipeline must somehow handle that dependency.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why Hazards Occur
+
+</h4>
+
+<p>
+
+Pipeline hazards can occur for several reasons.
+
+Common categories include:
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Hazard Type</th>
+
+<th>Basic Idea</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Data Hazard</td>
+
+<td>One operation depends on data produced by another operation.</td>
+
+</tr>
+
+<tr>
+
+<td>Structural Hazard</td>
+
+<td>Two operations require the same hardware resource at the same time.</td>
+
+</tr>
+
+<tr>
+
+<td>Control Hazard</td>
+
+<td>Changing control flow makes the next operation uncertain.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+1. Data Hazard
+
+</h4>
+
+<p>
+
+A data hazard occurs when one operation needs a value that is being
+produced by another operation.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Instruction A:
+
+R1 = R2 + R3
+
+
+Instruction B:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction B needs the value of R1 produced by Instruction A.
+
+In a pipeline, the two operations may overlap, creating a dependency
+problem.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+2. Structural Hazard
+
+</h4>
+
+<p>
+
+A structural hazard occurs when multiple pipeline operations require
+the same hardware resource at the same time.
+
+For example, if two stages require a single shared memory interface,
+both operations cannot use it simultaneously.
+
+</p>
+
+
+<pre><code>
+Stage 1 ──┐
+          |
+          v
+       Shared
+       Resource
+          ^
+          |
+Stage 2 ──┘
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+3. Control Hazard
+
+</h4>
+
+<p>
+
+A control hazard occurs when the next operation depends on a control
+decision.
+
+Branches are a common example.
+
+</p>
+
+
+<pre><code>
+        Branch
+          |
+       +--+--+
+       |     |
+      Path A Path B
+</code></pre>
+
+
+<p>
+
+Until the branch decision is known, the pipeline may not know which
+instruction or operation should enter the following stages.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+How Can Hazards Be Handled?
+
+</h4>
+
+<p>
+
+Depending on the architecture, different techniques can be used.
+
+Examples include:
+
+</p>
+
+
+<ul>
+
+<li>Pipeline stalls</li>
+
+<li>Forwarding or bypassing</li>
+
+<li>Resource duplication</li>
+
+<li>Pipeline flushing</li>
+
+<li>Hazard detection logic</li>
+
+</ul>
+
+
+<p>
+
+These techniques are especially important in processor pipelines.
+
+We will focus first on understanding the underlying dependency
+concepts before studying advanced hazard handling.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Stall
+
+</h4>
+
+<p>
+
+A <strong>stall</strong> temporarily prevents a pipeline stage from
+advancing.
+
+An empty slot created in the pipeline is often called a
+<strong>bubble</strong>.
+
+</p>
+
+
+<pre><code>
+Normal:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → C
+
+
+With Stall:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → Bubble
+Cycle 4 → C
+</code></pre>
+
+
+<p>
+
+A stall can reduce throughput, but it may be necessary to preserve
+correct operation.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Hazards in Basic RTL Pipelines
+
+</h4>
+
+<p>
+
+Even a simple RTL datapath can encounter dependencies.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Stage 1 → produces result X
+
+Stage 2 → requires result X
+</code></pre>
+
+
+<p>
+
+The designer must determine whether the value is available at the
+required time.
+
+This is why pipeline timing and data dependencies must be considered
+together during RTL design.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Important Distinction
+
+</h4>
+
+<p>
+
+Pipeline hazards are not automatically bugs.
+
+A hazard is a condition that requires the architecture or control
+logic to take appropriate action.
+
+The actual design must ensure that the final behavior remains
+correct.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipeline hazards are situations that can prevent normal pipeline
+progress. The major categories are data hazards, structural hazards
+and control hazards.
+
+</strong>
+
+<br><br>
+
+Understanding dependencies is the first step toward designing
+correct and efficient pipelined systems.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 14 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+14. Data Dependencies
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how one operation can depend on the result of another operation.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Data Dependency?
+
+</h4>
+
+<p>
+
+A <strong>data dependency</strong> occurs when one operation requires
+a value that is produced or modified by another operation.
+
+In a pipeline, these dependencies are important because multiple
+operations execute at overlapping times.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Example
+
+</h4>
+
+<p>
+
+Consider two operations:
+
+</p>
+
+
+<pre><code>
+Operation 1:
+
+X = A + B
+
+
+Operation 2:
+
+Y = X + C
+</code></pre>
+
+
+<p>
+
+Operation 2 requires the value of <strong>X</strong> produced by
+Operation 1.
+
+Therefore:
+
+</p>
+
+
+<pre><code>
+Operation 1
+     |
+     | Produces X
+     v
+Operation 2
+     |
+     | Uses X
+     v
+Result
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Is This Important in a Pipeline?
+
+</h4>
+
+<p>
+
+Suppose the two operations are placed into consecutive pipeline
+stages:
+
+</p>
+
+
+<pre><code>
+Stage 1:
+
+X = A + B
+
+      |
+      v
+Pipeline Register
+
+      |
+      v
+
+Stage 2:
+
+Y = X + C
+</code></pre>
+
+
+<p>
+
+This is straightforward because the pipeline register stores the
+result of Stage 1 before Stage 2 uses it.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Dependency Across Pipeline Cycles
+
+</h4>
+
+<p>
+
+Consider the following simplified timing:
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Stage 1 → Calculate X
+
+
+Cycle 2:
+
+Stage 2 → Use X
+</code></pre>
+
+
+<p>
+
+The register between the stages ensures that Stage 2 receives the
+value produced by Stage 1.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Read-After-Write Dependency
+
+</h4>
+
+<p>
+
+One common dependency is a
+<strong>Read-After-Write (RAW)</strong> dependency.
+
+It occurs when a later operation reads a value that an earlier
+operation writes.
+
+</p>
+
+
+<pre><code>
+Instruction A:
+
+R1 = R2 + R3
+
+
+Instruction B:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction B reads <strong>R1</strong>, but Instruction A must first
+produce the new value of R1.
+
+Therefore:
+
+</p>
+
+
+<pre><code>
+Instruction A
+     |
+     | Writes R1
+     v
+Instruction B
+     |
+     | Reads R1
+     v
+Result
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Timing Example
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Cycle</th>
+
+<th>Stage 1</th>
+
+<th>Stage 2</th>
+
+<th>Stage 3</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>Instruction A</td>
+
+<td>—</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Instruction B</td>
+
+<td>Instruction A</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>Instruction C</td>
+
+<td>Instruction B</td>
+
+<td>Instruction A</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<p>
+
+If Instruction B needs a value that Instruction A has not yet made
+available, additional mechanisms may be required.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Dependency Handling
+
+</h4>
+
+<p>
+
+Common techniques for handling pipeline data dependencies include:
+
+</p>
+
+
+<ul>
+
+<li>
+<strong>Forwarding:</strong> Send a newly generated value directly to
+the stage that needs it.
+</li>
+
+<li>
+<strong>Stalling:</strong> Temporarily stop the pipeline until the
+required data becomes available.
+</li>
+
+<li>
+<strong>Scheduling:</strong> Reorder independent operations when the
+architecture allows it.
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding Concept
+
+</h4>
+
+<p>
+
+Forwarding, also called bypassing, allows a result to be sent directly
+from one pipeline stage to another without waiting for it to be
+written back and read again through the normal path.
+
+</p>
+
+
+<pre><code>
+             +----------------+
+             |                |
+             v                |
+Stage 1 → Stage 2 → Stage 3
+   |                         ^
+   |                         |
+   +------ Forwarding -------+
+</code></pre>
+
+
+<p>
+
+Forwarding can reduce unnecessary pipeline stalls when the required
+value is already available somewhere inside the pipeline.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Stall Example
+
+</h4>
+
+<p>
+
+If the required value is not yet available, the pipeline may need to
+wait.
+
+</p>
+
+
+<pre><code>
+Cycle 1 → Instruction A
+
+Cycle 2 → Instruction B
+
+Cycle 3 → STALL
+
+Cycle 4 → Instruction B continues
+</code></pre>
+
+
+<p>
+
+The stall introduces a bubble into the pipeline.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Important Design Question
+
+</h4>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Think About It
+
+</h4>
+
+<p>
+
+If Stage 2 requires a value produced by Stage 1, but Stage 1 has not
+yet produced the value at the required time, what should the design
+do?
+
+</p>
+
+<ul>
+
+<li>Forward the value if it is available.</li>
+
+<li>Otherwise, stall the pipeline.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Data Dependencies in RTL
+
+</h4>
+
+<p>
+
+At the RTL level, pipeline registers naturally introduce clock-cycle
+boundaries.
+
+For example:
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    stage1 &lt;= a + b;
+
+    stage2 &lt;= stage1 + c;
+
+end
+</code></pre>
+
+
+<p>
+
+Here, <strong>stage2</strong> receives the previous value of
+<strong>stage1</strong> because nonblocking assignments update the
+registers together at the clock edge.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Data dependencies occur when one operation needs data produced by
+another operation. In pipelined systems, dependencies must be handled
+carefully using techniques such as forwarding or stalling when
+necessary.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 15 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+15. Pipeline Design Considerations
+
+</h2>
+
+<p class="text-secondary">
+
+Important factors to consider when designing a practical RTL pipeline.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<!-- ========================= -->
+<!-- 1. Stage Balancing -->
+<!-- ========================= -->
+
+<h4 class="text-info">
+
+1. Stage Balancing
+
+</h4>
+
+<p>
+
+Pipeline stages should contain reasonably balanced amounts of
+combinational logic.
+
+If one stage is significantly slower than the others, it can limit
+the maximum clock frequency.
+
+</p>
+
+
+<pre><code>
+Poorly Balanced:
+
+Stage 1 → 2 ns
+Stage 2 → 8 ns
+Stage 3 → 2 ns
+
+
+Better Balanced:
+
+Stage 1 → 4 ns
+Stage 2 → 4 ns
+Stage 3 → 4 ns
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- 2. Latency -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+2. Latency
+
+</h4>
+
+<p>
+
+Adding pipeline stages generally increases the number of clock cycles
+required for one input to reach the output.
+
+</p>
+
+
+<pre><code>
+2-stage pipeline → approximately 2 cycles
+
+4-stage pipeline → approximately 4 cycles
+</code></pre>
+
+
+<p>
+
+The correct number of pipeline stages depends on the system
+requirements.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- 3. Throughput -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+3. Throughput
+
+</h4>
+
+<p>
+
+A pipeline should ideally accept new data at the required rate.
+
+Once the pipeline is full, a well-designed pipeline can produce one
+result per clock cycle for a continuous stream of independent data.
+
+</p>
+
+
+<pre><code>
+Input:
+
+A → B → C → D → E
+
+
+Output:
+
+A → B → C → D → E
+
+One result can be produced per cycle
+after the pipeline is full.
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- 4. Pipeline Register Overhead -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+4. Pipeline Register Overhead
+
+</h4>
+
+<p>
+
+Pipeline registers are not free.
+
+They introduce clock-to-Q delay, setup requirements, clock power and
+additional hardware.
+
+Therefore, adding more registers does not always produce a better
+design.
+
+</p>
+
+
+<pre><code>
+More Pipeline Stages
+        |
+        +----> Smaller Logic Per Stage
+        |
+        +----> Potentially Higher Frequency
+        |
+        +----> Higher Latency
+        |
+        +----> More Registers
+        |
+        +----> More Clock Power
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- 5. Reset Strategy -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+5. Reset Strategy
+
+</h4>
+
+<p>
+
+Pipeline registers may need to be initialized or invalidated during
+reset.
+
+For a simple design, reset can clear the pipeline registers.
+
+</p>
+
+
+<pre><code>
+if (reset) begin
+
+    stage1 &lt;= 8'b0;
+    stage2 &lt;= 8'b0;
+    result &lt;= 8'b0;
+
+end
+</code></pre>
+
+
+<p>
+
+In larger designs, valid bits are often used so that reset or empty
+pipeline stages are not interpreted as valid data.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- 6. Valid Signal -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+6. Valid Signal
+
+</h4>
+
+<p>
+
+When a pipeline can contain empty stages, a
+<strong>valid</strong> signal can indicate whether the data in a
+stage represents a real transaction.
+
+</p>
+
+
+<pre><code>
+Data  +  Valid
+  |
+  v
+Pipeline Stage
+
+
+valid = 1
+Data represents a valid transaction.
+
+
+valid = 0
+Data is not valid.
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- 7. Data Alignment -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+7. Data Alignment
+
+</h4>
+
+<p>
+
+When multiple pieces of information belong to the same transaction,
+they must remain aligned as they move through the pipeline.
+
+For example, data, address, control information and valid information
+may all need to advance through matching pipeline stages.
+
+</p>
+
+
+<pre><code>
+Data
+  ↓
+Stage 1 → Stage 2 → Stage 3
+
+
+Address
+  ↓
+Stage 1 → Stage 2 → Stage 3
+
+
+Control
+  ↓
+Stage 1 → Stage 2 → Stage 3
+
+
+Valid
+  ↓
+Stage 1 → Stage 2 → Stage 3
+</code></pre>
+
+
+<p>
+
+If one signal is delayed by an extra cycle while another is not, the
+transaction can become corrupted.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- 8. Pipeline Hazards -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+8. Pipeline Hazards
+
+</h4>
+
+<p>
+
+Dependencies between operations can require additional control
+logic.
+
+Depending on the architecture, hazards may be handled using:
+
+</p>
+
+
+<ul>
+
+<li>Forwarding</li>
+
+<li>Stalling</li>
+
+<li>Bubble insertion</li>
+
+<li>Resource management</li>
+
+<li>Control logic</li>
+
+</ul>
+
+
+<p>
+
+The previous section introduced pipeline hazards and data
+dependencies.
+
+In practical designs, the chosen hazard-handling technique depends
+on the architecture and required performance.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- 9. Area and Power -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+9. Area and Power
+
+</h4>
+
+<p>
+
+Adding pipeline registers increases hardware resources and clock
+activity.
+
+Therefore, pipeline optimization is usually a trade-off between
+performance, area, power and latency.
+
+</p>
+
+
+<pre><code>
+Performance
+     ↕
+Area
+     ↕
+Power
+     ↕
+Latency
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- 10. Verification Complexity -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+10. Verification Complexity
+
+</h4>
+
+<p>
+
+A pipelined design can be more difficult to verify because an input
+does not necessarily produce an output immediately.
+
+The testbench must account for the pipeline latency.
+
+</p>
+
+
+<pre><code>
+Input A
+   |
+   |
+   |  Pipeline Latency
+   |
+   v
+Output A
+</code></pre>
+
+
+<p>
+
+A useful verification strategy is to maintain expected results and
+compare them with the actual output after the appropriate pipeline
+delay.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- 11. Clock Frequency -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+11. Clock Frequency
+
+</h4>
+
+<p>
+
+The desired operating frequency is one of the major factors when
+deciding how deeply to pipeline a design.
+
+A simplified relationship is:
+
+</p>
+
+
+<pre><code>
+Higher Frequency
+       ↓
+Shorter Clock Period
+       ↓
+Smaller Combinational Delay Per Stage
+       ↓
+Potentially More Pipeline Stages
+</code></pre>
+
+
+<p>
+
+However, increasing the number of stages also introduces additional
+register overhead and latency.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- 12. Do Not Over-Pipeline -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+12. Do Not Over-Pipeline
+
+</h4>
+
+<p>
+
+Adding pipeline stages simply to increase the stage count is not
+always beneficial.
+
+Excessive pipelining can increase:
+
+</p>
+
+
+<ul>
+
+<li>Latency</li>
+
+<li>Register count</li>
+
+<li>Clock power</li>
+
+<li>Control complexity</li>
+
+<li>Verification complexity</li>
+
+</ul>
+
+
+<p>
+
+The goal is to find an appropriate balance for the application.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Practical Example -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Practical Design Example
+
+</h4>
+
+<p>
+
+Suppose a datapath contains the following combinational delays:
+
+</p>
+
+
+<pre><code>
+Logic A → 2 ns
+Logic B → 6 ns
+Logic C → 2 ns
+</code></pre>
+
+
+<p>
+
+Without careful partitioning, Logic B may become the timing
+bottleneck.
+
+A designer could consider restructuring the datapath so that the
+work is distributed more evenly.
+
+</p>
+
+
+<pre><code>
+Before:
+
+Stage 1 → 2 ns
+Stage 2 → 6 ns
+Stage 3 → 2 ns
+
+
+Possible balanced design:
+
+Stage 1 → 3 ns
+Stage 2 → 3 ns
+Stage 3 → 4 ns
+</code></pre>
+
+
+<p>
+
+The exact solution depends on the logic and architecture. The goal is
+to avoid unnecessarily large differences between stage delays.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Design Checklist -->
+<!-- ========================= -->
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Pipeline Design Checklist
+
+</h4>
+
+
+<ul>
+
+<li>
+Is the combinational logic reasonably balanced?
+</li>
+
+<li>
+Does the pipeline meet the required clock frequency?
+</li>
+
+<li>
+Is the latency acceptable?
+</li>
+
+<li>
+Is the required throughput achieved?
+</li>
+
+<li>
+Are data and control signals aligned?
+</li>
+
+<li>
+Are pipeline hazards handled correctly?
+</li>
+
+<li>
+Is reset behavior clearly defined?
+</li>
+
+<li>
+Are valid signals required?
+</li>
+
+<li>
+Are area and power acceptable?
+</li>
+
+<li>
+Can the pipeline be verified effectively?
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- Key Idea -->
+<!-- ========================= -->
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p>
+
+<strong>
+
+Good pipeline design is a balance between frequency, latency,
+throughput, area, power, control complexity and verification effort.
+
+</strong>
+
+</p>
+
+
+<p class="mb-0">
+
+The fastest pipeline is not necessarily the best pipeline.
+The architecture must meet the requirements of the complete system.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+            
+<!-- ========================= -->
+<!-- Step 16 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+16. EDA Playground Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Run the pipelined RTL design and observe both console output and waveform behavior.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Simulation Objective
+
+</h4>
+
+<p>
+
+In this simulation, we will verify a simple three-stage arithmetic
+pipeline.
+
+The pipeline performs:
+
+</p>
+
+
+<pre><code>
+Stage 1:
+
+A + B
+
+
+Stage 2:
+
+Stage 1 Result × C
+
+
+Stage 3:
+
+Stage 2 Result - D
+</code></pre>
+
+
+<p>
+
+The testbench will apply multiple input transactions and verify that
+the results appear after the expected pipeline latency.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+What the Testbench Will Check
+
+</h4>
+
+<ul>
+
+<li>Reset behavior</li>
+
+<li>Pipeline latency</li>
+
+<li>Multiple input transactions</li>
+
+<li>Expected output values</li>
+
+<li>Console output</li>
+
+<li>Waveform behavior</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Expected Pipeline Behavior
+
+</h4>
+
+
+<pre><code>
+Input Transaction
+
+        ↓
+
+Stage 1
+A + B
+
+        ↓
+
+Pipeline Register
+
+        ↓
+
+Stage 2
+Result × C
+
+        ↓
+
+Pipeline Register
+
+        ↓
+
+Stage 3
+Result - D
+
+        ↓
+
+Output
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Signals to Observe
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Signal</th>
+
+<th>Purpose</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>clk</td>
+
+<td>Pipeline clock</td>
+
+</tr>
+
+<tr>
+
+<td>reset</td>
+
+<td>Clears the pipeline registers</td>
+
+</tr>
+
+<tr>
+
+<td>a</td>
+
+<td>First input operand</td>
+
+</tr>
+
+<tr>
+
+<td>b</td>
+
+<td>Second input operand</td>
+
+</tr>
+
+<tr>
+
+<td>c</td>
+
+<td>Multiplication operand</td>
+
+</tr>
+
+<tr>
+
+<td>d</td>
+
+<td>Final subtraction operand</td>
+
+</tr>
+
+<tr>
+
+<td>stage1</td>
+
+<td>First pipeline register</td>
+
+</tr>
+
+<tr>
+
+<td>stage2</td>
+
+<td>Second pipeline register</td>
+
+</tr>
+
+<tr>
+
+<td>result</td>
+
+<td>Final pipeline output</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Console Verification
+
+</h4>
+
+<p>
+
+The testbench should print the input values and expected and actual
+results.
+
+A successful simulation should show that the output corresponds to
+the input transaction after the expected pipeline latency.
+
+</p>
+
+
+<pre><code>
+Input:
+A = 2
+B = 3
+C = 4
+D = 5
+
+Expected:
+((2 + 3) × 4) - 5 = 15
+
+Pipeline Output:
+15
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Verification
+
+</h4>
+
+<p>
+
+Open the waveform viewer and observe how the data moves through the
+pipeline registers.
+
+You should be able to see:
+
+</p>
+
+
+<ul>
+
+<li><strong>clk</strong> changing every clock cycle.</li>
+
+<li><strong>reset</strong> clearing the pipeline.</li>
+
+<li><strong>stage1</strong> capturing A + B.</li>
+
+<li><strong>stage2</strong> capturing stage1 × C.</li>
+
+<li><strong>result</strong> capturing stage2 - D.</li>
+
+</ul>
+
+
+<pre><code>
+Clock:
+
+_|‾|_|‾|_|‾|_
+
+
+Pipeline:
+
+A+B → stage1
+
+stage1×C → stage2
+
+stage2-D → result
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+The values in <strong>stage1</strong>,
+<strong>stage2</strong> and <strong>result</strong> should not update
+as if the complete calculation happens in a single cycle.
+
+Each register should update according to the pipeline timing.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Simulation Checklist
+
+</h4>
+
+<ul class="mb-0">
+
+<li>Run the simulation successfully.</li>
+
+<li>Check reset behavior.</li>
+
+<li>Check console output.</li>
+
+<li>Verify pipeline latency.</li>
+
+<li>Check stage1 waveform.</li>
+
+<li>Check stage2 waveform.</li>
+
+<li>Check result waveform.</li>
+
+<li>Verify multiple transactions.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+
+<hr class="my-4">
+
+
+<div class="text-center">
+
+<h4 class="text-info">
+
+▶ Run the Simulation
+
+</h4>
+
+<p>
+
+The complete Verilog design and testbench are available on
+EDA Playground.
+
+</p>
+
+<a href="YOUR_EDA_PLAYGROUND_LINK"
+   target="_blank"
+   class="btn btn-info btn-lg">
+
+▶ Open EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+
+Run the simulation, check the console output first, and then open the
+waveform viewer to verify the pipeline stages.
+
+</p>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>      
