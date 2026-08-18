@@ -477,6 +477,665 @@ end</code></pre>
 </section>
 
 <!-- ========================= -->
+<!-- Blocking Assignment -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Blocking Assignment (=)
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how blocking assignments execute inside procedural blocks.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>blocking assignment</strong> uses the
+<strong>=</strong> operator.
+
+The assignment updates the left-hand side immediately within the
+procedural flow of the block.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y = a &amp; b;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    x = a;
+    y = x;
+
+end</code></pre>
+
+<p class="mt-4">
+
+The statements execute in order.
+
+First:
+
+<strong>x = a</strong>
+
+is executed.
+
+Then:
+
+<strong>y = x</strong>
+
+uses the updated value of <strong>x</strong>.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Concept
+
+</h4>
+
+<p class="mb-0">
+
+Blocking assignments execute sequentially inside the procedural block.
+The next statement sees the value assigned by the previous statement.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Where is Blocking Assignment Commonly Used?
+
+</h4>
+
+<ul>
+
+<li>Combinational logic.</li>
+
+<li>Temporary variables inside combinational calculations.</li>
+
+<li>Procedural calculations where statement ordering matters.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+For combinational logic written using
+<strong>always @(*)</strong>, blocking assignment
+<strong>=</strong> is commonly used.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- Non-Blocking Assignment -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Non-Blocking Assignment (&lt;=)
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the assignment style commonly used for sequential RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>non-blocking assignment</strong> uses the
+<strong>&lt;=</strong> operator.
+
+It is commonly used to describe clocked sequential logic such as
+flip-flops, registers and counters.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q1 &lt;= d1;
+    q2 &lt;= q1;
+
+end</code></pre>
+
+<p class="mt-4">
+
+At the clock edge, the right-hand-side values are evaluated using the
+current state, and the updates are scheduled for the non-blocking
+assignment update region.
+
+</p>
+
+<p>
+
+Therefore, in the example above, <strong>q2</strong> receives the
+previous value of <strong>q1</strong>, rather than the value assigned to
+<strong>q1</strong> during the same clock event.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Where is Non-Blocking Assignment Used?
+
+</h4>
+
+<ul>
+
+<li>Flip-flops.</li>
+
+<li>Registers.</li>
+
+<li>Counters.</li>
+
+<li>Finite State Machines.</li>
+
+<li>Other clocked sequential logic.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+For clocked sequential logic, use
+<strong>non-blocking assignment (&lt;=)</strong> to model state
+updates.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Why Does This Matter?
+
+</h4>
+
+<p>
+
+Consider a two-stage register pipeline:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    stage1 &lt;= data;
+    stage2 &lt;= stage1;
+
+end</code></pre>
+
+<p>
+
+The first stage captures the current value of
+<strong>data</strong>.
+
+The second stage captures the previous value of
+<strong>stage1</strong>.
+
+This models how two flip-flops connected in sequence behave in
+hardware.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Non-blocking assignment allows multiple sequential elements to update
+as if they respond to the same clock edge.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Blocking vs Non-Blocking -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Blocking (=) vs Non-Blocking (&lt;=)
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the most important Verilog assignment rule for RTL design.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<!-- Blocking -->
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Blocking Assignment (=)
+
+</h4>
+
+<ul>
+
+<li>Uses the <strong>=</strong> operator.</li>
+
+<li>Statements execute in procedural order.</li>
+
+<li>The next statement sees the updated value.</li>
+
+<li>Commonly used for combinational logic.</li>
+
+</ul>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    a = b;
+    c = a;
+
+end</code></pre>
+
+<p class="mb-0">
+
+Here, <strong>c</strong> sees the value assigned to
+<strong>a</strong> by the previous statement.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Non Blocking -->
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Non-Blocking Assignment (&lt;=)
+
+</h4>
+
+<ul>
+
+<li>Uses the <strong>&lt;=</strong> operator.</li>
+
+<li>Updates are scheduled rather than immediately visible to following statements.</li>
+
+<li>Models simultaneous state updates at a clock edge.</li>
+
+<li>Commonly used for sequential logic.</li>
+
+</ul>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    a &lt;= b;
+    c &lt;= a;
+
+end</code></pre>
+
+<p class="mb-0">
+
+Here, <strong>c</strong> receives the previous value of
+<strong>a</strong>.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- Comparison Table -->
+<!-- ========================= -->
+
+<div class="row justify-content-center mt-4">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info text-center mb-4">
+
+Quick Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Blocking (=)</th>
+
+<th>Non-Blocking (&lt;=)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Operator</td>
+
+<td><code>=</code></td>
+
+<td><code>&lt;=</code></td>
+
+</tr>
+
+<tr>
+
+<td>Execution behavior</td>
+
+<td>Procedural order</td>
+
+<td>Updates are scheduled</td>
+
+</tr>
+
+<tr>
+
+<td>Common RTL usage</td>
+
+<td>Combinational logic</td>
+
+<td>Sequential logic</td>
+
+</tr>
+
+<tr>
+
+<td>Typical block</td>
+
+<td><code>always @(*)</code></td>
+
+<td><code>always @(posedge clk)</code></td>
+
+</tr>
+
+<tr>
+
+<td>Typical hardware</td>
+
+<td>Combinational logic</td>
+
+<td>Flip-flops / registers</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- ========================= -->
+<!-- Important Example -->
+<!-- ========================= -->
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q1 &lt;= d;
+    q2 &lt;= q1;
+
+end</code></pre>
+
+<p>
+
+Suppose before the clock edge:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>q1 = 0
+q2 = 0
+d  = 1</code></pre>
+
+<p>
+
+At the rising edge:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>q1 &lt;= 1
+q2 &lt;= 0</code></pre>
+
+<p>
+
+After the update:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>q1 = 1
+q2 = 0</code></pre>
+
+<p>
+
+On the next clock edge, <strong>q2</strong> can capture the new value of
+<strong>q1</strong>.
+
+This behavior represents a simple
+<strong>two-stage pipeline</strong>.
+
+</p>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- Golden Rule -->
+<!-- ========================= -->
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+RTL Golden Rule
+
+</h4>
+
+<p class="mb-2">
+
+<strong>
+
+Combinational logic → Blocking (=)
+
+</strong>
+
+</p>
+
+<p class="mb-0">
+
+<strong>
+
+Sequential logic → Non-Blocking (&lt;=)
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>    
+
+<!-- ========================= -->
 <!-- Coming Next -->
 <!-- ========================= -->
 
