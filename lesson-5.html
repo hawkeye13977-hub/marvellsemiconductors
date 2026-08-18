@@ -1133,7 +1133,3273 @@ Sequential logic → Non-Blocking (&lt;=)
 
 </div>
 
-</section>    
+</section>  
+
+<!-- ========================= -->
+<!-- Combinational Coding Style -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Combinational Coding Style
+
+</h2>
+
+<p class="text-secondary">
+
+Learn how to correctly describe combinational logic using an always block.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Combinational logic can be described using
+<strong>always @(*)</strong>.
+
+The output should depend only on the current values of the inputs.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example: 2:1 Multiplexer
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module mux2to1(
+
+    input a,
+    input b,
+    input sel,
+
+    output reg y
+
+);
+
+always @(*) begin
+
+    if (sel)
+        y = b;
+    else
+        y = a;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ul>
+
+<li>When <strong>sel = 0</strong>, output <strong>y = a</strong>.</li>
+
+<li>When <strong>sel = 1</strong>, output <strong>y = b</strong>.</li>
+
+<li>The block executes whenever an input used by the logic changes.</li>
+
+<li>The blocking assignment <strong>=</strong> is used for this combinational logic.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Important Rule: Assign Every Output
+
+</h4>
+
+<p>
+
+In a combinational <strong>always @(*)</strong> block, every output
+should receive a value for every possible input condition.
+
+</p>
+
+<p>
+
+For example, this is a correct implementation:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel)
+        y = b;
+    else
+        y = a;
+
+end</code></pre>
+
+<p>
+
+Both possible values of <strong>sel</strong> assign a value to
+<strong>y</strong>.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Why Is This Important?
+
+</h4>
+
+<p>
+
+If an output is not assigned in some condition, the synthesizer may
+infer a <strong>latch</strong> because the hardware must retain the
+previous value.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Another Useful Coding Style
+
+</h4>
+
+<p>
+
+For more complex combinational logic, a default assignment can be used
+before conditional statements.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y = 1'b0;
+
+    if (sel)
+        y = b;
+    else
+        y = a;
+
+end</code></pre>
+
+<p>
+
+The default assignment ensures that <strong>y</strong> always has a
+defined value.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Combinational RTL Checklist
+
+</h4>
+
+<ul class="mb-0">
+
+<li>Use <strong>always @(*)</strong> for combinational procedural logic.</li>
+
+<li>Use blocking assignment <strong>=</strong>.</li>
+
+<li>Assign every output for every possible condition.</li>
+
+<li>Avoid unintended latches.</li>
+
+<li>Keep the logic dependent only on current inputs.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Sequential Coding Style -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Sequential Coding Style
+
+</h2>
+
+<p class="text-secondary">
+
+Learn how to describe clocked sequential logic correctly in Verilog.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Sequential logic contains storage elements such as flip-flops and
+registers. In Verilog, clocked sequential logic is commonly described
+using an <strong>always @(posedge clk)</strong> block.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Sequential RTL Pattern
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<p class="mt-4">
+
+The block executes when the clock has a rising edge. At that point,
+the input value is captured into the register.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example: D Flip-Flop
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module d_flip_flop (
+
+    input clk,
+    input d,
+
+    output reg q
+
+);
+
+always @(posedge clk) begin
+
+    q &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example: Register with Reset
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module register_4bit (
+
+    input        clk,
+    input        reset,
+    input  [3:0] d,
+    output reg [3:0] q
+
+);
+
+always @(posedge clk) begin
+
+    if (reset)
+        q &lt;= 4'b0000;
+    else
+        q &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ol>
+
+<li>
+The circuit waits for the rising edge of <strong>clk</strong>.
+</li>
+
+<li>
+When the rising edge occurs, the procedural block executes.
+</li>
+
+<li>
+If <strong>reset = 1</strong>, the register is cleared.
+</li>
+
+<li>
+If <strong>reset = 0</strong>, the input data is captured.
+</li>
+
+<li>
+The stored value remains unchanged until the next active clock edge.
+</li>
+
+</ol>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Why Use &lt;=?
+
+</h4>
+
+<p class="mb-0">
+
+For clocked sequential RTL, use the
+<strong>non-blocking assignment (&lt;=)</strong>. It models the behavior
+of multiple flip-flops updating in response to the same clock edge.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Sequential RTL Checklist
+
+</h4>
+
+<ul>
+
+<li>Use <strong>always @(posedge clk)</strong> for positive-edge-triggered sequential logic.</li>
+
+<li>Use <strong>&lt;=</strong> for state updates.</li>
+
+<li>Use reset according to the design specification.</li>
+
+<li>Make sure every stored signal has a clearly defined update behavior.</li>
+
+<li>Do not use blocking assignments for normal clocked state updates.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+Remember
+
+</h4>
+
+<p class="mb-2">
+
+<strong>Combinational RTL</strong>
+
+</p>
+
+<p class="mb-3">
+
+<code>always @(*)</code> + <code>=</code>
+
+</p>
+
+<p class="mb-2">
+
+<strong>Sequential RTL</strong>
+
+</p>
+
+<p class="mb-0">
+
+<code>always @(posedge clk)</code> + <code>&lt;=</code>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section> 
+
+<!-- ========================= -->
+<!-- Practical Assignment Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Practical Example: Two-Stage Pipeline
+
+</h2>
+
+<p class="text-secondary">
+
+See how blocking and non-blocking assignments produce different RTL behavior.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Two-Stage Pipeline
+
+</h4>
+
+<p>
+
+Consider two registers connected in sequence:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+        ┌─────────┐       ┌─────────┐
+D ────→ │ Stage 1 │ ────→ │ Stage 2 │ ────→ Q
+        └─────────┘       └─────────┘
+             ↑                 ↑
+             └────── CLK ──────┘
+</code></pre>
+
+<p>
+
+Each stage represents a flip-flop. Both stages receive the same clock.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Correct Sequential RTL
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    stage1 &lt;= data;
+    stage2 &lt;= stage1;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Initial Values
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+data   = 1
+stage1 = 0
+stage2 = 0
+</code></pre>
+
+<p class="mt-4">
+
+At the first rising clock edge:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+stage1 &lt;= data;     // stage1 gets 1
+stage2 &lt;= stage1;   // stage2 gets previous stage1 = 0
+</code></pre>
+
+<p>
+
+After the clock edge:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+stage1 = 1
+stage2 = 0
+</code></pre>
+
+<p>
+
+At the next rising edge, assuming <strong>data</strong> is still 1:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+stage1 = 1
+stage2 = 1
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Pipeline Behavior
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Edge</th>
+
+<th>Data</th>
+
+<th>Stage 1</th>
+
+<th>Stage 2</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 1</td>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 2</td>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>1</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Why Non-Blocking Assignment?
+
+</h4>
+
+<p>
+
+The two registers are hardware elements that respond to the same clock
+edge.
+
+Using <strong>&lt;=</strong> allows both state updates to be based on
+the values that existed before the clock event.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Interview Point
+
+</h4>
+
+<p>
+
+If blocking assignments were used for ordinary clocked state updates:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    stage1 = data;
+    stage2 = stage1;
+
+end</code></pre>
+
+<p>
+
+<strong>stage2</strong> could immediately see the new value assigned to
+<strong>stage1</strong> during procedural execution.
+
+That does not model the intended two-flip-flop pipeline behavior.
+
+</p>
+
+<p class="mb-0">
+
+Therefore, for normal sequential RTL,
+<strong>non-blocking assignment (&lt;=)</strong> is the standard coding
+style.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Common RTL Coding Mistakes -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Common RTL Coding Mistakes
+
+</h2>
+
+<p class="text-secondary">
+
+Avoid these common mistakes when writing combinational and sequential RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+1. Using Blocking Assignment for Sequential Logic
+
+</h4>
+
+<p>
+
+A common beginner mistake is using <strong>=</strong> for normal
+clocked state updates.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>// Avoid for normal sequential state
+
+always @(posedge clk) begin
+
+    q = d;
+
+end</code></pre>
+
+<p>
+
+The preferred coding style is:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<hr class="my-4">
+
+<h4 class="text-info">
+
+2. Using Non-Blocking Assignment for Simple Combinational Logic
+
+</h4>
+
+<p>
+
+For combinational procedural logic, blocking assignment is normally the
+clearer coding style.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y = a &amp; b;
+
+end</code></pre>
+
+<p>
+
+Use <strong>=</strong> for this type of combinational calculation.
+
+</p>
+
+<hr class="my-4">
+
+<h4 class="text-info">
+
+3. Incomplete Assignment in Combinational Logic
+
+</h4>
+
+<p>
+
+If an output is not assigned under every possible condition, synthesis
+may infer a latch.
+
+</p>
+
+<p>
+
+Example of potentially unintended latch inference:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel)
+        y = a;
+
+end</code></pre>
+
+<p>
+
+When <strong>sel = 0</strong>, there is no assignment to
+<strong>y</strong>.
+
+The circuit therefore needs to retain the previous value of
+<strong>y</strong>, which can result in latch inference.
+
+</p>
+
+<p>
+
+A complete version is:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel)
+        y = a;
+    else
+        y = b;
+
+end</code></pre>
+
+<hr class="my-4">
+
+<h4 class="text-info">
+
+4. Forgetting the Clock in Sequential Logic
+
+</h4>
+
+<p>
+
+Clocked sequential logic must be triggered by the appropriate clock
+event.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<p>
+
+The <strong>posedge clk</strong> indicates that the register updates on
+the rising edge of the clock.
+
+</p>
+
+<hr class="my-4">
+
+<h4 class="text-info">
+
+5. Accidentally Creating Multiple Drivers
+
+</h4>
+
+<p>
+
+A signal should normally have a clear and controlled driving source.
+
+Avoid assigning the same RTL signal from multiple procedural blocks
+unless the design intentionally requires that structure and the
+target technology supports it.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk)
+    q &lt;= a;
+
+always @(posedge clk)
+    q &lt;= b;</code></pre>
+
+<p>
+
+This creates multiple procedural drivers for <strong>q</strong> and is
+generally not the intended RTL structure.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Checklist
+
+</h4>
+
+<ul class="mb-0">
+
+<li>Combinational logic → <strong>always @(*)</strong> + <strong>=</strong>.</li>
+
+<li>Sequential logic → <strong>always @(posedge clk)</strong> + <strong>&lt;=</strong>.</li>
+
+<li>Assign combinational outputs for all possible conditions.</li>
+
+<li>Use the correct clock and reset sensitivity.</li>
+
+<li>Avoid unintended multiple drivers.</li>
+
+<li>Keep RTL simple, predictable and synthesizable.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- always Block Comparison -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Combinational vs Sequential always Blocks
+
+</h2>
+
+<p class="text-secondary">
+
+Learn how to choose the correct always block for your RTL design.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<!-- Combinational -->
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Combinational RTL
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y = a &amp; b;
+
+end</code></pre>
+
+<ul>
+
+<li>Triggered when relevant inputs change.</li>
+
+<li>No clock is required.</li>
+
+<li>Output depends on current inputs.</li>
+
+<li>Blocking assignment <strong>=</strong> is commonly used.</li>
+
+<li>All outputs should be assigned for every possible condition.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- Sequential -->
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Sequential RTL
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    q &lt;= d;
+
+end</code></pre>
+
+<ul>
+
+<li>Triggered by the specified clock edge.</li>
+
+<li>Uses a clock for synchronous state updates.</li>
+
+<li>Stores previous state.</li>
+
+<li>Non-blocking assignment <strong>&lt;=</strong> is commonly used.</li>
+
+<li>Models flip-flops and registers.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- Comparison Table -->
+<!-- ========================= -->
+
+<div class="row justify-content-center mt-4">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info text-center mb-4">
+
+Quick Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Combinational</th>
+
+<th>Sequential</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Typical block</td>
+
+<td><code>always @(*)</code></td>
+
+<td><code>always @(posedge clk)</code></td>
+
+</tr>
+
+<tr>
+
+<td>Clock</td>
+
+<td>Not required</td>
+
+<td>Required for synchronous logic</td>
+
+</tr>
+
+<tr>
+
+<td>Memory</td>
+
+<td>No</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>Assignment</td>
+
+<td><code>=</code></td>
+
+<td><code>&lt;=</code></td>
+
+</tr>
+
+<tr>
+
+<td>Typical hardware</td>
+
+<td>Logic gates / MUX</td>
+
+<td>Flip-flops / registers</td>
+
+</tr>
+
+<tr>
+
+<td>State</td>
+
+<td>No stored state</td>
+
+<td>Stores state</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<!-- ========================= -->
+<!-- Example -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Example: Combining Both Styles
+
+</h4>
+
+<p>
+
+A typical RTL design may contain both combinational and sequential
+logic.
+
+For example, consider a register that increments its value:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    next_count = count + 1'b1;
+
+end
+
+
+always @(posedge clk) begin
+
+    count &lt;= next_count;
+
+end</code></pre>
+
+<p>
+
+The first block calculates the next value using combinational logic.
+
+The second block stores that value in the register at the clock edge.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+Simple Mental Model
+
+</h4>
+
+<p class="mb-2">
+
+<strong>Combinational logic</strong>
+
+</p>
+
+<p>
+
+"What should the next value be?"
+
+</p>
+
+<p class="mb-2">
+
+<strong>Sequential logic</strong>
+
+</p>
+
+<p class="mb-0">
+
+"When should the value be stored?"
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Latch Inference -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Latch Inference
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how incomplete combinational RTL can unintentionally create storage.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Latch?
+
+</h4>
+
+<p>
+
+A <strong>latch</strong> is a storage element whose output can retain
+its previous value when the required input condition is not active.
+
+</p>
+
+<p>
+
+When writing combinational RTL, we normally do not want the synthesis
+tool to create a latch accidentally.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example of Incomplete Combinational Logic
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (enable)
+        y = a;
+
+end</code></pre>
+
+<p>
+
+The problem is that there is no assignment to <strong>y</strong> when
+<strong>enable = 0</strong>.
+
+The hardware therefore needs to retain the previous value of
+<strong>y</strong>.
+
+This can cause the synthesis tool to infer a latch.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Corrected Version
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (enable)
+        y = a;
+    else
+        y = 1'b0;
+
+end</code></pre>
+
+<p>
+
+Now <strong>y</strong> receives a value for both possible values of
+<strong>enable</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Another Safe Coding Style
+
+</h4>
+
+<p>
+
+A default assignment can be placed at the beginning of the block.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y = 1'b0;
+
+    if (enable)
+        y = a;
+
+end</code></pre>
+
+<p>
+
+If <strong>enable = 0</strong>, the default value is used.
+
+If
+<strong>enable = 1</strong>, the value of <strong>a</strong> replaces
+the default value.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+How to Avoid Unintended Latches
+
+</h4>
+
+<ul class="mb-0">
+
+<li>Assign every combinational output on every possible path.</li>
+
+<li>Use <strong>if/else</strong> when all conditions need explicit behavior.</li>
+
+<li>Use default assignments when appropriate.</li>
+
+<li>Review synthesis warnings for inferred latches.</li>
+
+<li>Use simulation to verify all input conditions.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Interview Example
+
+</h4>
+
+<p>
+
+An interviewer may show you this code:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel)
+        y = a;
+
+end</code></pre>
+
+<p>
+
+and ask:
+
+<strong>“What hardware can this code infer?”</strong>
+
+</p>
+
+<p class="mb-0">
+
+The important answer is:
+
+<strong>
+
+Because <code>y</code> is not assigned when
+<code>sel = 0</code>, synthesis may infer a latch to preserve the
+previous value of <code>y</code>.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Conditional Statements -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Conditional Statements in Verilog
+
+</h2>
+
+<p class="text-secondary">
+
+Using if, else if and else to describe hardware decisions.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Conditional statements allow RTL code to select different hardware
+behavior based on input conditions.
+
+The most common conditional construct is:
+
+<strong>if / else if / else</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>if (condition) begin
+
+    // statements
+
+end
+else begin
+
+    // statements
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example: 2:1 MUX
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel)
+        y = b;
+    else
+        y = a;
+
+end</code></pre>
+
+<p>
+
+When <strong>sel = 1</strong>, the output is assigned
+<strong>b</strong>.
+
+When <strong>sel = 0</strong>, the output is assigned
+<strong>a</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+if / else if / else
+
+</h4>
+
+<p>
+
+Multiple conditions can be checked using
+<strong>else if</strong>.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel == 2'b00)
+        y = a;
+    else if (sel == 2'b01)
+        y = b;
+    else if (sel == 2'b10)
+        y = c;
+    else
+        y = d;
+
+end</code></pre>
+
+<p>
+
+This structure can describe a selection between four possible inputs.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Important RTL Rule
+
+</h4>
+
+<p>
+
+For combinational logic, make sure every possible condition assigns a
+value to the output.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (sel == 2'b00)
+        y = a;
+    else if (sel == 2'b01)
+        y = b;
+    else if (sel == 2'b10)
+        y = c;
+    else
+        y = d;
+
+end</code></pre>
+
+<p>
+
+The final <strong>else</strong> handles the remaining condition, so
+<strong>y</strong> is assigned for every possible 2-bit value of
+<strong>sel</strong>.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Nested Conditions
+
+</h4>
+
+<p>
+
+Conditions can also be placed inside other conditions.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    if (enable) begin
+
+        if (sel)
+            y = b;
+        else
+            y = a;
+
+    end
+    else begin
+
+        y = 1'b0;
+
+    end
+
+end</code></pre>
+
+<p class="mb-0">
+
+Although nested conditions are valid, keep RTL simple and readable.
+Complex decision logic can sometimes be expressed more clearly using
+<strong>case</strong> statements, which we will cover later.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Common Uses
+
+</h4>
+
+<ul>
+
+<li>Multiplexers.</li>
+
+<li>Priority logic.</li>
+
+<li>Enable logic.</li>
+
+<li>Control logic.</li>
+
+<li>Combinational decision-making.</li>
+
+<li>Conditional register updates in sequential logic.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Remember</h4>
+
+<p class="mb-0">
+
+<strong>if</strong> checks the first condition,
+<strong>else if</strong> checks additional conditions, and
+<strong>else</strong> handles the remaining case.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Case Statement -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+case Statement
+
+</h2>
+
+<p class="text-secondary">
+
+Use case statements to describe multiple selection conditions clearly.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+The <strong>case</strong> statement is another procedural construct
+used to select one behavior from multiple possible conditions.
+
+It is especially useful when a signal can have several possible values.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    case (select)
+
+        value1: statement1;
+        value2: statement2;
+        value3: statement3;
+
+        default: statement_default;
+
+    endcase
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example: 4:1 Multiplexer
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module mux4to1 (
+
+    input  [1:0] sel,
+    input        a,
+    input        b,
+    input        c,
+    input        d,
+
+    output reg   y
+
+);
+
+always @(*) begin
+
+    case (sel)
+
+        2'b00: y = a;
+        2'b01: y = b;
+        2'b10: y = c;
+        2'b11: y = d;
+
+        default: y = 1'b0;
+
+    endcase
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>SEL</th>
+
+<th>Output</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>00</td>
+
+<td>A</td>
+
+</tr>
+
+<tr>
+
+<td>01</td>
+
+<td>B</td>
+
+</tr>
+
+<tr>
+
+<td>10</td>
+
+<td>C</td>
+
+</tr>
+
+<tr>
+
+<td>11</td>
+
+<td>D</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<p class="mt-4">
+
+The <strong>case expression</strong> is evaluated and compared with
+each case item.
+
+The matching item determines which assignment is executed.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Why Use default?
+
+</h4>
+
+<p>
+
+A <strong>default</strong> case handles values that do not match any
+explicit case item.
+
+It is a good RTL practice to make the intended behavior explicit.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>default:
+    y = 1'b0;</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+case vs if / else
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>if / else</th>
+
+<th>case</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Best suited for</td>
+
+<td>Conditional decisions</td>
+
+<td>Multiple discrete values</td>
+
+</tr>
+
+<tr>
+
+<td>Example</td>
+
+<td>Enable conditions</td>
+
+<td>Opcode / MUX selection</td>
+
+</tr>
+
+<tr>
+
+<td>Readability</td>
+
+<td>Good for few conditions</td>
+
+<td>Often clearer for many values</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Example: Decoder
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    case (sel)
+
+        2'b00: y = 4'b0001;
+        2'b01: y = 4'b0010;
+        2'b10: y = 4'b0100;
+        2'b11: y = 4'b1000;
+
+        default: y = 4'b0000;
+
+    endcase
+
+end</code></pre>
+
+<p>
+
+Here, the case statement can describe a simple
+<strong>2-to-4 decoder</strong>.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+For combinational case statements, ensure that the output has a defined
+value for all relevant conditions. A <strong>default</strong> branch is
+often useful for making the intended behavior explicit.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Where case Statements Are Commonly Used
+
+</h4>
+
+<ul>
+
+<li>Multiplexers.</li>
+
+<li>Decoders.</li>
+
+<li>Opcode decoding.</li>
+
+<li>Control logic.</li>
+
+<li>Finite State Machines.</li>
+
+<li>Protocol and command decoding.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- casez and casex -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+casez and casex
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding wildcard matching in Verilog case statements.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Verilog provides <strong>casez</strong> and <strong>casex</strong>
+statements for situations where some bits of a value are treated as
+wildcards during comparison.
+
+These constructs are useful when designing decoders, instruction
+decoders and control logic.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+1. casez
+
+</h4>
+
+<p>
+
+<strong>casez</strong> treats <strong>Z</strong> values and
+<strong>?</strong> bits as don't-care positions during matching.
+
+The <strong>?</strong> symbol is commonly used to indicate a bit that
+does not matter for the comparison.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+Example
+
+</h5>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    casez (opcode)
+
+        4'b10??: result = 1'b1;
+        4'b01??: result = 1'b0;
+
+        default: result = 1'b0;
+
+    endcase
+
+end</code></pre>
+
+<p>
+
+For the pattern:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>4'b10??</code></pre>
+
+<p>
+
+the first two bits must be <strong>10</strong>, while the last two bits
+can have any value.
+
+For example:
+
+</p>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Opcode</th>
+
+<th>Matches 10???</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1000</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>1001</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>1010</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>1011</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>1100</td>
+
+<td>No</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+2. casex
+
+</h4>
+
+<p>
+
+<strong>casex</strong> treats both <strong>X</strong> and
+<strong>Z</strong> values as don't-care bits during comparison.
+
+Example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    casex (opcode)
+
+        4'b10xx: result = 1'b1;
+        4'b01xx: result = 1'b0;
+
+        default: result = 1'b0;
+
+    endcase
+
+end</code></pre>
+
+<p>
+
+The <strong>x</strong> positions are treated as wildcards.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+case vs casez vs casex
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Statement</th>
+
+<th>Wildcard Behavior</th>
+
+<th>Typical Use</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>case</strong></td>
+
+<td>Exact 4-state comparison</td>
+
+<td>Normal decoding</td>
+
+</tr>
+
+<tr>
+
+<td><strong>casez</strong></td>
+
+<td>Z / ? can be don't-care</td>
+
+<td>Wildcard decoding</td>
+
+</tr>
+
+<tr>
+
+<td><strong>casex</strong></td>
+
+<td>X / Z can be don't-care</td>
+
+<td>Generally avoided in RTL</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Why is casex Usually Avoided?
+
+</h4>
+
+<p>
+
+In simulation, an <strong>X</strong> often represents an unknown value.
+
+Using <strong>casex</strong> can cause an unknown signal to match a
+wildcard pattern, potentially hiding an initialization or design
+problem.
+
+For example, if an input unexpectedly becomes:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>4'b1x10</code></pre>
+
+<p>
+
+a <strong>casex</strong> statement may treat the unknown
+<strong>X</strong> as a don't-care value.
+
+That can make simulation appear correct even though the design contains
+an unknown condition.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Best Practice
+
+</h4>
+
+<p class="mb-0">
+
+When wildcard matching is required, <strong>casez</strong> with
+<strong>?</strong> is generally preferred over <strong>casex</strong>
+because it does not automatically treat X values as don't-care.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Practical Example: Opcode Decoder
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    casez (opcode)
+
+        8'b1010_????:
+            instruction = 4'b0001;
+
+        8'b1100_????:
+            instruction = 4'b0010;
+
+        8'b1110_????:
+            instruction = 4'b0011;
+
+        default:
+            instruction = 4'b0000;
+
+    endcase
+
+end</code></pre>
+
+<p>
+
+Here, the upper four bits identify the instruction group while the
+lower four bits are ignored.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Interview Tip
+
+</h4>
+
+<p>
+
+A common interview question is:
+
+<strong>What is the difference between case, casez and casex?</strong>
+
+</p>
+
+<ul>
+
+<li>
+<strong>case</strong> performs normal 4-state matching.
+</li>
+
+<li>
+<strong>casez</strong> allows Z and ? wildcard matching.
+</li>
+
+<li>
+<strong>casex</strong> treats X and Z as don't-care values.
+</li>
+
+<li>
+<strong>casex</strong> can hide unknown-state problems and is therefore
+generally avoided in synthesizable RTL.
+</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+Remember
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+case → exact matching
+<br>
+casez → wildcard matching
+<br>
+casex → X/Z wildcard matching — use with caution
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- for Loop -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+for Loop in Verilog
+
+</h2>
+
+<p class="text-secondary">
+
+Using loops to describe repetitive hardware operations.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+The <strong>for loop</strong> is commonly used in Verilog to repeat
+a set of statements a specific number of times.
+
+It is especially useful when describing repetitive operations such as
+array processing, bit manipulation and hardware structures.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>for (initialization; condition; increment) begin
+
+    // statements
+
+end</code></pre>
+
+<p>
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>integer i;
+
+always @(*) begin
+
+    for (i = 0; i &lt; 4; i = i + 1) begin
+
+        // statements
+
+    end
+
+end</code></pre>
+
+<h4 class="text-info mt-5">
+
+Understanding the Three Parts
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Part</th>
+
+<th>Example</th>
+
+<th>Purpose</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initialization</td>
+
+<td><code>i = 0</code></td>
+
+<td>Sets the starting value</td>
+
+</tr>
+
+<tr>
+
+<td>Condition</td>
+
+<td><code>i &lt; 4</code></td>
+
+<td>Determines whether the loop continues</td>
+
+</tr>
+
+<tr>
+
+<td>Increment</td>
+
+<td><code>i = i + 1</code></td>
+
+<td>Changes the loop variable</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Simple Example
+
+</h4>
+
+<p>
+
+Suppose we want to invert every bit of a 4-bit input.
+
+Without a loop:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    y[0] = ~a[0];
+    y[1] = ~a[1];
+    y[2] = ~a[2];
+    y[3] = ~a[3];
+
+end</code></pre>
+
+<p>
+
+A <strong>for loop</strong> can describe the same operation more
+compactly:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>integer i;
+
+always @(*) begin
+
+    for (i = 0; i &lt; 4; i = i + 1) begin
+
+        y[i] = ~a[i];
+
+    end
+
+end</code></pre>
+
+<p>
+
+Here the loop processes bits:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>i = 0 → y[0] = ~a[0]
+
+i = 1 → y[1] = ~a[1]
+
+i = 2 → y[2] = ~a[2]
+
+i = 3 → y[3] = ~a[3]</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important RTL Concept
+
+</h4>
+
+<p class="mb-0">
+
+A synthesizable <strong>for loop</strong> does not normally mean that
+hardware executes the loop sequentially like software. During synthesis,
+the loop is typically <strong>unrolled</strong> into the corresponding
+hardware structure.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Practical Example: 4-bit Bit Inverter
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module bit_inverter (
+
+    input  [3:0] a,
+    output reg [3:0] y
+
+);
+
+integer i;
+
+always @(*) begin
+
+    for (i = 0; i &lt; 4; i = i + 1) begin
+
+        y[i] = ~a[i];
+
+    end
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ul>
+
+<li><strong>a</strong> is a 4-bit input.</li>
+
+<li><strong>y</strong> is a 4-bit output.</li>
+
+<li>The loop iterates from <strong>0</strong> through <strong>3</strong>.</li>
+
+<li>Each input bit is inverted.</li>
+
+<li>All four output bits are assigned.</li>
+
+</ul>
+
+<h4 class="text-info mt-5">
+
+Another Common Use: Checking Bits
+
+</h4>
+
+<p>
+
+A loop can also be used to examine each bit of a vector.
+
+For example, we can determine whether any bit of a 4-bit input is
+set to <strong>1</strong>:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>module any_bit_set (
+
+    input  [3:0] a,
+    output reg   y
+
+);
+
+integer i;
+
+always @(*) begin
+
+    y = 1'b0;
+
+    for (i = 0; i &lt; 4; i = i + 1) begin
+
+        if (a[i])
+            y = 1'b1;
+
+    end
+
+end
+
+endmodule</code></pre>
+
+<p>
+
+The output becomes <strong>1</strong> if at least one bit of
+<strong>a</strong> is 1.
+
+For example:
+
+</p>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>A</th>
+
+<th>Y</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0000</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>0001</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>0100</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>1000</td>
+
+<td>1</td>
+
+</tr>
+
+<tr>
+
+<td>1111</td>
+
+<td>1</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Common Mistakes
+
+</h4>
+
+<ul>
+
+<li>Forgetting to initialize the loop variable.</li>
+
+<li>Using an incorrect loop termination condition.</li>
+
+<li>Creating an infinite loop by never changing the loop variable.</li>
+
+<li>Failing to assign outputs in all required paths inside a combinational block.</li>
+
+<li>Assuming a synthesizable loop automatically creates sequential software-like execution.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Interview Tip
+
+</h4>
+
+<p class="mb-0">
+
+Be prepared to explain that a synthesizable <strong>for loop</strong>
+is generally elaborated/unrolled by synthesis to create the required
+hardware rather than creating a software-style runtime loop.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Key Syntax to Remember
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>for (i = 0; i &lt; WIDTH; i = i + 1) begin
+
+    // RTL statements
+
+end</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+Remember
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+Initialize → Check → Execute → Increment → Repeat
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- while Loop -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+while Loop in Verilog
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding conditional loops and where they are commonly used in Verilog.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+The <strong>while loop</strong> repeatedly executes a group of
+statements as long as a specified condition remains true.
+
+Unlike a <strong>for loop</strong>, a while loop does not automatically
+provide initialization and increment expressions.
+
+The loop continues based entirely on its condition.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>while (condition) begin
+
+    // statements
+
+end</code></pre>
+
+<h4 class="text-info mt-5">
+
+Simple Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>integer i;
+
+initial begin
+
+    i = 0;
+
+    while (i &lt; 4) begin
+
+        i = i + 1;
+
+    end
+
+end</code></pre>
+
+<p class="mt-4">
+
+The loop executes while <strong>i &lt; 4</strong>.
+
+The sequence is:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>i = 0
+ ↓
+i &lt; 4 → Yes
+ ↓
+i = 1
+ ↓
+i &lt; 4 → Yes
+ ↓
+i = 2
+ ↓
+i &lt; 4 → Yes
+ ↓
+i = 3
+ ↓
+i &lt; 4 → Yes
+ ↓
+i = 4
+ ↓
+i &lt; 4 → No
+ ↓
+Loop ends</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important Concept
+
+</h4>
+
+<p class="mb-0">
+
+The condition is checked <strong>before</strong> each iteration. If the
+condition is false initially, the loop body does not execute even once.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+for vs while
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>for Loop</th>
+
+<th>while Loop</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initialization</td>
+
+<td>Usually included in loop syntax</td>
+
+<td>Usually written separately</td>
+
+</tr>
+
+<tr>
+
+<td>Condition</td>
+
+<td>Specified in loop syntax</td>
+
+<td>Specified in loop syntax</td>
+
+</tr>
+
+<tr>
+
+<td>Increment</td>
+
+<td>Usually included in loop syntax</td>
+
+<td>Must be handled explicitly</td>
+
+</tr>
+
+<tr>
+
+<td>Best suited for</td>
+
+<td>Known/fixed iterations</td>
+
+<td>Condition-based repetition</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Testbench Example
+
+</h4>
+
+<p>
+
+The while loop is particularly useful in testbenches when an operation
+needs to continue until a condition becomes true.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>integer count;
+
+initial begin
+
+    count = 0;
+
+    while (count &lt; 5) begin
+
+        #10;
+
+        count = count + 1;
+
+    end
+
+end</code></pre>
+
+<p>
+
+Here, the testbench waits for five iterations, with a
+<strong>10 time-unit delay</strong> between iterations.
+
+</p>
+
+<h4 class="text-info mt-5">
+
+Important Difference: RTL vs Testbench
+
+</h4>
+
+<p>
+
+A while loop can be used in RTL, but the loop must have a clearly
+synthesizable and bounded behavior for synthesis tools.
+
+In testbenches, while loops are much more flexible and are commonly used
+for stimulus generation and simulation control.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Example: Waiting for a Condition
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>while (!done) begin
+
+    @(posedge clk);
+
+end</code></pre>
+
+<p class="mb-0">
+
+This waits for clock edges until <strong>done</strong> becomes
+<strong>1</strong>. This style is commonly useful in verification
+testbenches.
+
+</p>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Common Mistake: Infinite Loop
+
+</h4>
+
+<p>
+
+A while loop can become an infinite loop if the condition never becomes
+false.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>integer i;
+
+initial begin
+
+    i = 0;
+
+    while (i &lt; 4) begin
+
+        // i is never changed
+
+    end
+
+end</code></pre>
+
+<p>
+
+Here, <strong>i</strong> remains 0 forever, so
+<strong>i &lt; 4</strong> always remains true.
+
+The loop never terminates.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+How to Avoid Infinite Loops
+
+</h4>
+
+<ul class="mb-0">
+
+<li>Make sure the loop condition can eventually become false.</li>
+
+<li>Update the variable controlling the condition.</li>
+
+<li>For testbench loops, make sure simulation time can advance when required.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Interview Question
+
+</h4>
+
+<p>
+
+<strong>What is the difference between a for loop and a while loop?</strong>
+
+</p>
+
+<p>
+
+A <strong>for loop</strong> is generally convenient when the number of
+iterations is known or follows a predictable range.
+
+A <strong>while loop</strong> is controlled primarily by a condition and
+is useful when repetition depends on whether that condition remains
+true.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+Remember
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+Check condition → Execute → Update condition → Repeat
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+    
 
 <!-- ========================= -->
 <!-- Coming Next -->
