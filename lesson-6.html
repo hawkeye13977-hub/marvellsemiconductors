@@ -1,1 +1,3385 @@
+<!DOCTYPE html>
+<html lang="en">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1">
+
+<title>Lesson 6 - Finite State Machines | SemiCore</title>
+
+<meta name="description"
+content="Learn Finite State Machines using Verilog RTL, including Moore and Mealy FSMs, state transitions, state diagrams, coding styles and practical RTL design.">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="style.css">
+
+</head>
+
+<body>
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold text-info"
+href="index.html">
+
+⚡ SemiCore
+
+</a>
+
+<button class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse"
+id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link"
+href="index.html">
+Home
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link"
+href="tutorials.html">
+Tutorials
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link"
+href="news.html">
+News
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link"
+href="about.html">
+About
+</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link"
+href="contact.html">
+Contact
+</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+
+<!-- ========================= -->
+<!-- Breadcrumb -->
+<!-- ========================= -->
+
+<section class="container pt-5 mt-5">
+
+<nav aria-label="breadcrumb">
+
+<ol class="breadcrumb">
+
+<li class="breadcrumb-item">
+
+<a href="index.html"
+class="text-info text-decoration-none">
+
+Home
+
+</a>
+
+</li>
+
+<li class="breadcrumb-item">
+
+<a href="tutorials.html"
+class="text-info text-decoration-none">
+
+Tutorials
+
+</a>
+
+</li>
+
+<li class="breadcrumb-item">
+
+<a href="rtl-design.html"
+class="text-info text-decoration-none">
+
+RTL Design
+
+</a>
+
+</li>
+
+<li class="breadcrumb-item active text-light">
+
+Lesson 6
+
+</li>
+
+</ol>
+
+</nav>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Hero -->
+<!-- ========================= -->
+
+<section class="course-hero">
+
+<div class="container text-center">
+
+<span class="badge bg-success fs-6 mb-3">
+
+Lesson 6
+
+</span>
+
+<h1>
+
+Finite State Machines
+
+</h1>
+
+<p>
+
+Learn how to design and implement FSM-based control logic using
+Verilog RTL.
+
+</p>
+
+<div class="mt-4">
+
+<div class="progress"
+style="height:10px;">
+
+<div class="progress-bar bg-info"
+role="progressbar"
+style="width:15%;">
+
+</div>
+
+</div>
+
+<small class="text-secondary">
+
+Course Progress: Lesson 6 of 40 (15%)
+
+</small>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Lesson Information -->
+<!-- ========================= -->
+
+<section class="container py-4">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="row text-center">
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+
+📖 Lesson
+
+</h5>
+
+<p>
+
+6 of 40
+
+</p>
+
+</div>
+
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+
+⏱ Duration
+
+</h5>
+
+<p>
+
+45 Minutes
+
+</p>
+
+</div>
+
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+
+🎯 Level
+
+</h5>
+
+<p>
+
+Beginner
+
+</p>
+
+</div>
+
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+
+📘 Prerequisite
+
+</h5>
+
+<p>
+
+Lesson 5
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Introduction -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+What is a Finite State Machine?
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how digital systems move between defined states.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A <strong>Finite State Machine (FSM)</strong> is a digital design
+model used to describe a system that can exist in a finite number of
+defined states.
+
+</p>
+
+<p>
+
+The FSM changes from one state to another based on:
+
+</p>
+
+<ul>
+
+<li>Current state</li>
+
+<li>Input conditions</li>
+
+<li>Clock events</li>
+
+</ul>
+
+<p>
+
+FSMs are commonly used to implement control logic in digital systems.
+
+</p>
+
+<p>
+
+Examples include:
+
+</p>
+
+<ul>
+
+<li>Protocol controllers</li>
+
+<li>Bus controllers</li>
+
+<li>Traffic light controllers</li>
+
+<li>UART controllers</li>
+
+<li>Memory controllers</li>
+
+<li>SoC control logic</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+An FSM represents control behavior as a set of states and
+transitions between those states.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
+<!-- Learning Objectives -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Learning Objectives
+
+</h2>
+
+<p class="text-secondary">
+
+After completing this lesson you will be able to:
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<ul>
+
+<li>Understand what an FSM is.</li>
+
+<li>Understand states and state transitions.</li>
+
+<li>Understand FSM state diagrams.</li>
+
+<li>Understand Moore and Mealy machines.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<ul>
+
+<li>Identify current state and next state logic.</li>
+
+<li>Write a basic FSM in Verilog.</li>
+
+<li>Understand FSM coding structure.</li>
+
+<li>Simulate an FSM using EDA Playground.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- States and Transitions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+States, Transitions & State Diagrams
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how an FSM represents the behavior of a digital system.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a State?
+
+</h4>
+
+<p>
+
+A <strong>state</strong> represents a particular condition or mode
+of operation of a digital system.
+
+For example, a simple controller might have three states:
+
+</p>
+
+<ul>
+
+<li><strong>IDLE</strong> — waiting for an operation to begin.</li>
+
+<li><strong>ACTIVE</strong> — performing the operation.</li>
+
+<li><strong>DONE</strong> — indicating that the operation has completed.</li>
+
+</ul>
+
+<p>
+
+At any given time, the FSM has one
+<strong>current state</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+What is a State Transition?
+
+</h4>
+
+<p>
+
+A <strong>state transition</strong> is the movement of an FSM from
+one state to another.
+
+The transition normally depends on an input condition and occurs
+according to the FSM's clocked behavior.
+
+</p>
+
+<p>
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+IDLE → ACTIVE → DONE
+</code></pre>
+
+<p>
+
+If the required input condition is not satisfied, the FSM may remain
+in its current state.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+State Diagram
+
+</h4>
+
+<p>
+
+A <strong>state diagram</strong> is a visual representation of the
+states and transitions in an FSM.
+
+A simple controller can be represented as:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+             start
+       ┌───────────────┐
+       │               ↓
+    ┌──────┐        ┌────────┐
+    │ IDLE │ ─────→ │ ACTIVE │
+    └──────┘        └────────┘
+                         │
+                         │ done
+                         ↓
+                     ┌──────┐
+                     │ DONE │
+                     └──────┘
+                         │
+                         │ next
+                         ↓
+                       IDLE
+</code></pre>
+
+<p>
+
+The arrows represent possible transitions between states.
+
+The conditions written on the transitions determine when the FSM
+moves from one state to another.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Current State and Next State
+
+</h4>
+
+<p>
+
+FSM logic can be divided into two important concepts:
+
+</p>
+
+<div class="row g-4 mt-2">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Current State
+
+</h4>
+
+<p>
+
+The state in which the FSM is currently operating.
+
+</p>
+
+<p class="mb-0">
+
+It is stored using sequential logic such as flip-flops.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Next State
+
+</h4>
+
+<p>
+
+The state that the FSM will enter after the next active clock edge.
+
+</p>
+
+<p class="mb-0">
+
+It is determined by the current state and input conditions.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Basic FSM Concept
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+              ┌───────────────────┐
+              │                   │
+              │   Current State   │
+              │                   │
+              └─────────┬─────────┘
+                        │
+                        ↓
+                 Input Conditions
+                        │
+                        ↓
+              ┌───────────────────┐
+              │                   │
+              │    Next State     │
+              │      Logic        │
+              │                   │
+              └─────────┬─────────┘
+                        │
+                        ↓
+                    Clock Edge
+                        │
+                        ↓
+              ┌───────────────────┐
+              │                   │
+              │   State Register  │
+              │                   │
+              └───────────────────┘
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Current state + inputs → next state
+
+</strong>
+
+<br><br>
+
+The state register stores the current state, while the next-state
+logic determines which state the FSM should enter next.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Moore vs Mealy FSM -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Moore vs Mealy FSM
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the two common ways FSM outputs are generated.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<!-- Moore -->
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h3 class="text-info">
+
+Moore Machine
+
+</h3>
+
+<p>
+
+In a <strong>Moore FSM</strong>, the output depends only on the
+<strong>current state</strong>.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+Output = f(Current State)
+</code></pre>
+
+<p>
+
+The output does not directly depend on the input.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+Example
+
+</h5>
+
+<p>
+
+Suppose an FSM has these states:
+
+</p>
+
+<ul>
+
+<li>IDLE → output = 0</li>
+
+<li>ACTIVE → output = 1</li>
+
+<li>DONE → output = 0</li>
+
+</ul>
+
+<p>
+
+The output is determined by whichever state the FSM is currently in.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h5 class="text-info">
+
+Key Point
+
+</h5>
+
+<p class="mb-0">
+
+<strong>
+
+Moore output depends only on the current state.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Mealy -->
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h3 class="text-info">
+
+Mealy Machine
+
+</h3>
+
+<p>
+
+In a <strong>Mealy FSM</strong>, the output depends on both the
+<strong>current state</strong> and the <strong>input</strong>.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+Output = f(Current State, Input)
+</code></pre>
+
+<p>
+
+Therefore, a change in the input can affect the output without
+necessarily requiring a state change.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+Example
+
+</h5>
+
+<p>
+
+Suppose an FSM is in the ACTIVE state.
+
+If:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+done = 1
+</code></pre>
+
+<p>
+
+the output could immediately indicate completion according to the
+combinational output logic.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h5 class="text-info">
+
+Key Point
+
+</h5>
+
+<p class="mb-0">
+
+<strong>
+
+Mealy output depends on the current state and input.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Comparison -->
+
+<div class="row justify-content-center mt-5">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Moore vs Mealy Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Moore</th>
+
+<th>Mealy</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Output depends on</td>
+
+<td>Current state</td>
+
+<td>Current state + input</td>
+
+</tr>
+
+<tr>
+
+<td>Output equation</td>
+
+<td><code>Output = f(State)</code></td>
+
+<td><code>Output = f(State, Input)</code></td>
+
+</tr>
+
+<tr>
+
+<td>Input directly affects output?</td>
+
+<td>No</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>Typical output behavior</td>
+
+<td>Changes with state</td>
+
+<td>Can respond to input changes</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+FSM Block View
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+             ┌─────────────────┐
+             │ State Register  │
+             └────────┬────────┘
+                      │
+                      ↓
+                Current State
+                      │
+             ┌────────┴────────┐
+             │                 │
+             ↓                 ↓
+       Next-State Logic   Output Logic
+             ↑                 ↑
+             │                 │
+           Input          State / Input
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Interview Tip
+
+</h4>
+
+<p class="mb-0">
+
+Remember:
+
+<strong>
+
+Moore → output depends on State.
+
+</strong>
+
+<br><br>
+
+<strong>
+
+Mealy → output depends on State + Input.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FSM Design Structure -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM Design Structure
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the main building blocks used to implement an FSM in RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Three Main Parts of an FSM
+
+</h4>
+
+<p>
+
+A typical synchronous FSM can be divided into three major parts:
+
+</p>
+
+<div class="row g-4 mt-2">
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+1. State Register
+
+</h4>
+
+<p>
+
+Stores the current state of the FSM.
+
+</p>
+
+<p class="mb-0">
+
+Implemented using sequential logic and a clock.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+2. Next-State Logic
+
+</h4>
+
+<p>
+
+Determines the next state based on the current state and inputs.
+
+</p>
+
+<p class="mb-0">
+
+Usually implemented using combinational logic.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="card feature-card h-100">
+
+<div class="card-body text-center">
+
+<h4 class="text-info">
+
+3. Output Logic
+
+</h4>
+
+<p>
+
+Determines the FSM outputs.
+
+</p>
+
+<p class="mb-0">
+
+The exact dependency depends on whether the FSM is Moore or Mealy.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Basic FSM Architecture
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+                    Inputs
+                       │
+                       ↓
+              ┌─────────────────┐
+              │  Next-State     │
+              │     Logic       │
+              └────────┬────────┘
+                       │
+                       ↓
+                 Next State
+                       │
+                       ↓
+              ┌─────────────────┐
+              │ State Register  │
+              │      + CLK      │
+              └────────┬────────┘
+                       │
+                       ↓
+                Current State
+                  │         │
+                  │         │
+                  ↓         ↓
+           Next-State    Output Logic
+              Logic           │
+                  ↑           ↓
+                  │        Outputs
+                  │
+                Inputs
+</code></pre>
+
+<h4 class="text-info mt-5">
+
+State Register
+
+</h4>
+
+<p>
+
+The state register stores the current state and updates it on the
+active clock edge.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    state &lt;= next_state;
+
+end</code></pre>
+
+<p>
+
+This means that the FSM's state changes synchronously with the clock.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Next-State Logic
+
+</h4>
+
+<p>
+
+The next-state logic determines which state should be entered next.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    case (state)
+
+        IDLE:
+            if (start)
+                next_state = ACTIVE;
+            else
+                next_state = IDLE;
+
+        ACTIVE:
+            if (done)
+                next_state = DONE;
+            else
+                next_state = ACTIVE;
+
+        DONE:
+            next_state = IDLE;
+
+        default:
+            next_state = IDLE;
+
+    endcase
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Output Logic
+
+</h4>
+
+<p>
+
+The output logic determines the value of the FSM's outputs.
+
+For a simple Moore FSM, the output can be based only on the current
+state:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    case (state)
+
+        IDLE:
+            busy = 1'b0;
+
+        ACTIVE:
+            busy = 1'b1;
+
+        DONE:
+            busy = 1'b0;
+
+        default:
+            busy = 1'b0;
+
+    endcase
+
+end</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important RTL Concept
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+State register → sequential logic
+
+</strong>
+
+<br><br>
+
+<strong>
+
+Next-state logic → combinational logic
+
+</strong>
+
+<br><br>
+
+<strong>
+
+Output logic → combinational logic or registered logic depending on
+the design
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FSM State Encoding -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM State Encoding
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how symbolic FSM states are represented using binary values.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is State Encoding?
+
+</h4>
+
+<p>
+
+An FSM contains symbolic states such as
+<strong>IDLE</strong>, <strong>ACTIVE</strong> and <strong>DONE</strong>.
+
+Hardware cannot directly store these names. The states must be
+represented using binary values stored in flip-flops.
+
+</p>
+
+<p>
+
+For example, a three-state FSM could use:
+
+</p>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>State</th>
+
+<th>Binary Encoding</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>IDLE</td>
+
+<td>00</td>
+
+</tr>
+
+<tr>
+
+<td>ACTIVE</td>
+
+<td>01</td>
+
+</tr>
+
+<tr>
+
+<td>DONE</td>
+
+<td>10</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Common State Encoding Styles
+
+</h4>
+
+<p>
+
+Several encoding styles can be used when implementing FSMs.
+
+The commonly discussed styles are:
+
+</p>
+
+<ul>
+
+<li><strong>Binary Encoding</strong></li>
+
+<li><strong>One-Hot Encoding</strong></li>
+
+<li><strong>Gray Encoding</strong></li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+1. Binary Encoding
+
+</h4>
+
+<p>
+
+Binary encoding uses the minimum number of bits required to represent
+the states.
+
+For <strong>N</strong> states, approximately
+<strong>log₂(N)</strong> bits are required.
+
+</p>
+
+<p>
+
+For example, four states can be represented using two bits:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+IDLE   = 2'b00
+ACTIVE = 2'b01
+DONE   = 2'b10
+ERROR  = 2'b11
+</code></pre>
+
+<p>
+
+Binary encoding uses fewer flip-flops, but the decoding logic can
+become more complex depending on the FSM.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+2. One-Hot Encoding
+
+</h4>
+
+<p>
+
+In one-hot encoding, each state is represented by a separate bit.
+
+Only one bit is normally set to <strong>1</strong> at a time.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+IDLE   = 4'b0001
+ACTIVE = 4'b0010
+DONE   = 4'b0100
+ERROR  = 4'b1000
+</code></pre>
+
+<p>
+
+For four states, four flip-flops are used.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+3. Gray Encoding
+
+</h4>
+
+<p>
+
+Gray encoding uses values where adjacent states differ by only one bit.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+00
+01
+11
+10
+</code></pre>
+
+<p>
+
+Gray-style encoding can be useful in designs where reducing the number
+of changing state bits between transitions is desirable.
+
+</p>
+
+<h4 class="text-info mt-5">
+
+Encoding Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Encoding</th>
+
+<th>Flip-Flops</th>
+
+<th>Main Characteristic</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Binary</td>
+
+<td>Fewer</td>
+
+<td>Compact representation</td>
+
+</tr>
+
+<tr>
+
+<td>One-Hot</td>
+
+<td>One per state</td>
+
+<td>Simple state decoding</td>
+
+</tr>
+
+<tr>
+
+<td>Gray</td>
+
+<td>Depends on state count</td>
+
+<td>Adjacent states differ by one bit</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+SystemVerilog State Representation
+
+</h4>
+
+<p>
+
+SystemVerilog provides <strong>enum</strong>, which can make FSM state
+definitions easier to read and maintain.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>typedef enum logic [1:0] {
+
+    IDLE   = 2'b00,
+    ACTIVE = 2'b01,
+    DONE   = 2'b10
+
+} state_t;</code></pre>
+
+<p>
+
+We will study SystemVerilog enumerations in much greater detail in the
+dedicated <strong>SystemVerilog course</strong>. Here, the example is
+only to show how symbolic state names can be represented.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Interview Tip
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Binary encoding uses fewer state bits, while one-hot encoding uses
+one bit per state. The best encoding depends on the target technology,
+design requirements and synthesis strategy.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Simple FSM Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Simple FSM Example
+
+</h2>
+
+<p class="text-secondary">
+
+Build a basic three-state controller using Verilog RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Controller Requirements
+
+</h4>
+
+<p>
+
+Let's design a simple controller with three states:
+
+</p>
+
+<ul>
+
+<li><strong>IDLE</strong> — waiting for a start request.</li>
+
+<li><strong>ACTIVE</strong> — performing an operation.</li>
+
+<li><strong>DONE</strong> — operation has completed.</li>
+
+</ul>
+
+<p>
+
+The controller uses two inputs:
+
+</p>
+
+<ul>
+
+<li><strong>start</strong> — requests the operation to begin.</li>
+
+<li><strong>done</strong> — indicates that the operation has completed.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+State Transition
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+             start = 1
+        ┌─────────────────┐
+        │                 ↓
+     ┌──────┐          ┌────────┐
+     │ IDLE │          │ ACTIVE │
+     └──────┘          └────────┘
+        ↑                  │
+        │                  │ done = 1
+        │                  ↓
+        │              ┌────────┐
+        └──────────────│  DONE  │
+                       └────────┘
+</code></pre>
+
+<p>
+
+The transitions are:
+
+</p>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Current State</th>
+
+<th>Condition</th>
+
+<th>Next State</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>IDLE</td>
+
+<td>start = 0</td>
+
+<td>IDLE</td>
+
+</tr>
+
+<tr>
+
+<td>IDLE</td>
+
+<td>start = 1</td>
+
+<td>ACTIVE</td>
+
+</tr>
+
+<tr>
+
+<td>ACTIVE</td>
+
+<td>done = 0</td>
+
+<td>ACTIVE</td>
+
+</tr>
+
+<tr>
+
+<td>ACTIVE</td>
+
+<td>done = 1</td>
+
+<td>DONE</td>
+
+</tr>
+
+<tr>
+
+<td>DONE</td>
+
+<td>Any condition</td>
+
+<td>IDLE</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-5">
+
+Verilog Implementation
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module simple_fsm (
+
+    input clk,
+    input reset,
+
+    input start,
+    input done,
+
+    output reg busy
+
+);
+
+reg [1:0] state;
+reg [1:0] next_state;
+
+localparam IDLE   = 2'b00;
+localparam ACTIVE = 2'b01;
+localparam DONE   = 2'b10;
+
+
+<!-- // State Register -->
+
+always @(posedge clk) begin
+
+    if (reset)
+        state &lt;= IDLE;
+    else
+        state &lt;= next_state;
+
+end
+
+
+<!-- // Next-State Logic -->
+
+always @(*) begin
+
+    next_state = state;
+
+    case (state)
+
+        IDLE: begin
+
+            if (start)
+                next_state = ACTIVE;
+            else
+                next_state = IDLE;
+
+        end
+
+        ACTIVE: begin
+
+            if (done)
+                next_state = DONE;
+            else
+                next_state = ACTIVE;
+
+        end
+
+        DONE: begin
+
+            next_state = IDLE;
+
+        end
+
+        default: begin
+
+            next_state = IDLE;
+
+        end
+
+    endcase
+
+end
+
+
+<!-- // Output Logic -->
+
+always @(*) begin
+
+    case (state)
+
+        IDLE:
+            busy = 1'b0;
+
+        ACTIVE:
+            busy = 1'b1;
+
+        DONE:
+            busy = 1'b0;
+
+        default:
+            busy = 1'b0;
+
+    endcase
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Understanding the RTL
+
+</h4>
+
+<ul>
+
+<li>
+<strong>state</strong> stores the current FSM state.
+</li>
+
+<li>
+<strong>next_state</strong> determines the state that will be stored
+at the next clock edge.
+</li>
+
+<li>
+The first <strong>always</strong> block implements the state register.
+</li>
+
+<li>
+The second <strong>always</strong> block implements next-state logic.
+</li>
+
+<li>
+The third <strong>always</strong> block implements the Moore output
+logic.
+</li>
+
+<li>
+The reset places the FSM into the known <strong>IDLE</strong> state.
+</li>
+
+</ul>
+
+<h4 class="text-info mt-5">
+
+Why Use Three Blocks?
+
+</h4>
+
+<p>
+
+Separating the FSM into state-register, next-state and output logic
+makes the RTL easier to understand, debug and maintain.
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+Block 1
+State Register
+     ↓
+Current State
+
+Block 2
+Next-State Logic
+     ↓
+Next State
+
+Block 3
+Output Logic
+     ↓
+Output
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Use non-blocking assignments for clocked state updates and blocking
+assignments for combinational next-state and output logic.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- FSM State Transition Table -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM State Transition Table
+
+</h2>
+
+<p class="text-secondary">
+
+Use a transition table to describe exactly how the FSM behaves for
+each input condition.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a State Transition Table?
+
+</h4>
+
+<p>
+
+A <strong>state transition table</strong> lists the current state,
+input conditions and the resulting next state.
+
+It provides a systematic way to convert an FSM specification into
+RTL.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example: Simple Controller
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Current State</th>
+
+<th>start</th>
+
+<th>done</th>
+
+<th>Next State</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>IDLE</td>
+
+<td>0</td>
+
+<td>X</td>
+
+<td>IDLE</td>
+
+</tr>
+
+<tr>
+
+<td>IDLE</td>
+
+<td>1</td>
+
+<td>X</td>
+
+<td>ACTIVE</td>
+
+</tr>
+
+<tr>
+
+<td>ACTIVE</td>
+
+<td>X</td>
+
+<td>0</td>
+
+<td>ACTIVE</td>
+
+</tr>
+
+<tr>
+
+<td>ACTIVE</td>
+
+<td>X</td>
+
+<td>1</td>
+
+<td>DONE</td>
+
+</tr>
+
+<tr>
+
+<td>DONE</td>
+
+<td>X</td>
+
+<td>X</td>
+
+<td>IDLE</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<p class="text-secondary mt-3">
+
+<strong>X</strong> means that the particular input does not affect
+the transition for that row.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+From Specification to RTL
+
+</h4>
+
+<p>
+
+A common FSM design process is:
+
+</p>
+
+<ol>
+
+<li>Understand the functional requirement.</li>
+
+<li>Identify all required states.</li>
+
+<li>Determine the conditions for each transition.</li>
+
+<li>Create the state transition table.</li>
+
+<li>Create the state diagram.</li>
+
+<li>Choose an appropriate state encoding.</li>
+
+<li>Implement the state register.</li>
+
+<li>Implement next-state logic.</li>
+
+<li>Implement output logic.</li>
+
+<li>Simulate and verify the FSM.</li>
+
+</ol>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Design Tip
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Before writing RTL, make sure the state diagram and transition
+conditions are completely defined.
+
+</strong>
+
+<br><br>
+
+A clear specification makes FSM implementation and debugging much
+easier.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Mealy FSM Implementation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Mealy FSM Implementation
+
+</h2>
+
+<p class="text-secondary">
+
+Implementing an FSM whose output depends on the current state and input.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Mealy FSM Example
+
+</h4>
+
+<p>
+
+Let's modify the previous controller so that the output
+<strong>done_pulse</strong> is generated when the FSM is in the
+<strong>ACTIVE</strong> state and the <strong>done</strong> input is
+asserted.
+
+Therefore:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+done_pulse = ACTIVE AND done
+</code></pre>
+
+<p>
+
+Because the output depends on both the current state and the input,
+this is a <strong>Mealy FSM</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Verilog Implementation
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module mealy_fsm (
+
+    input clk,
+    input reset,
+
+    input start,
+    input done,
+
+    output reg done_pulse
+
+);
+
+reg [1:0] state;
+reg [1:0] next_state;
+
+localparam IDLE   = 2'b00;
+localparam ACTIVE = 2'b01;
+
+// State Register
+
+always @(posedge clk) begin
+
+    if (reset)
+        state &lt;= IDLE;
+    else
+        state &lt;= next_state;
+
+end
+
+// Next-State Logic
+
+always @(*) begin
+
+    next_state = state;
+
+    case (state)
+
+        IDLE: begin
+
+            if (start)
+                next_state = ACTIVE;
+            else
+                next_state = IDLE;
+
+        end
+
+        ACTIVE: begin
+
+            if (done)
+                next_state = IDLE;
+            else
+                next_state = ACTIVE;
+
+        end
+
+        default: begin
+
+            next_state = IDLE;
+
+        end
+
+    endcase
+
+end
+
+// Output Logic
+
+always @(*) begin
+
+    done_pulse = 1'b0;
+
+    case (state)
+
+        ACTIVE: begin
+
+            if (done)
+                done_pulse = 1'b1;
+
+        end
+
+        default: begin
+
+            done_pulse = 1'b0;
+
+        end
+
+    endcase
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Understanding the Output Logic
+
+</h4>
+
+<p>
+
+The output is generated using:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>done_pulse = 1'b0;
+
+if (state == ACTIVE &amp;&amp; done)
+    done_pulse = 1'b1;</code></pre>
+
+<p>
+
+Therefore, the output depends on:
+
+</p>
+
+<ul>
+
+<li>Current state = <strong>ACTIVE</strong></li>
+
+<li>Input <strong>done = 1</strong></li>
+
+</ul>
+
+<p>
+
+If either condition is false, the output remains zero.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Moore vs Mealy in This Example
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>FSM Type</th>
+
+<th>Output Depends On</th>
+
+<th>Example</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Moore</td>
+
+<td>Current State</td>
+
+<td>
+<code>busy = (state == ACTIVE)</code>
+</td>
+
+</tr>
+
+<tr>
+
+<td>Mealy</td>
+
+<td>Current State + Input</td>
+
+<td>
+<code>done_pulse = (state == ACTIVE) &amp;&amp; done</code>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+A Mealy output can respond to an input change while the FSM remains
+in the same state because the input is part of the output logic.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Interview Tip
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Moore:
+
+Output = function(Current State)
+
+</strong>
+
+<br><br>
+
+<strong>
+
+Mealy:
+
+Output = function(Current State, Input)
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FSM Reset and Default State -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM Reset and Default State
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how an FSM starts in a known state and handles unexpected states.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Why Does an FSM Need Reset?
+
+</h4>
+
+<p>
+
+An FSM should normally start from a known state when the system begins
+operation.
+
+A reset signal is commonly used to place the FSM into a defined initial
+state.
+
+</p>
+
+<p>
+
+For example, our controller can start in:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+IDLE
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Reset in the State Register
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    if (reset)
+        state &lt;= IDLE;
+    else
+        state &lt;= next_state;
+
+end</code></pre>
+
+<p>
+
+When <strong>reset = 1</strong> at the active clock edge, the FSM
+moves into the <strong>IDLE</strong> state.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Why Use a Default Case?
+
+</h4>
+
+<p>
+
+The <strong>default</strong> branch provides a defined behavior if the
+FSM state does not match any of the expected states.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    next_state = state;
+
+    case (state)
+
+        IDLE:
+            next_state = ACTIVE;
+
+        ACTIVE:
+            next_state = DONE;
+
+        DONE:
+            next_state = IDLE;
+
+        default:
+            next_state = IDLE;
+
+    endcase
+
+end</code></pre>
+
+<p>
+
+If the FSM reaches an unexpected state, the
+<strong>default</strong> branch directs it back to
+<strong>IDLE</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Reset and Default State Comparison
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Reset</th>
+
+<th>Default Case</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Purpose</td>
+
+<td>Initialize the FSM</td>
+
+<td>Handle an unexpected state</td>
+
+</tr>
+
+<tr>
+
+<td>Typical location</td>
+
+<td>State register</td>
+
+<td>Next-state/output logic</td>
+
+</tr>
+
+<tr>
+
+<td>Example action</td>
+
+<td>Set state to IDLE</td>
+
+<td>Return next state to IDLE</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Complete Concept
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+                 Reset
+                   │
+                   ↓
+              ┌─────────┐
+              │  IDLE   │
+              └────┬────┘
+                   │
+                   ↓
+              Normal FSM
+               Operation
+                   │
+                   ↓
+             Unexpected
+                State
+                   │
+                   ↓
+              ┌─────────┐
+              │ Default │
+              │ → IDLE  │
+              └─────────┘
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Tip
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Reset establishes the initial state, while a default branch provides
+defined behavior for states that are not explicitly handled.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FSM Design Workflow -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM Design Workflow
+
+</h2>
+
+<p class="text-secondary">
+
+A systematic process for converting a functional requirement into FSM RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Step 1 — Understand the Requirement
+
+</h4>
+
+<p>
+
+Start by understanding exactly what the controller needs to do.
+
+Identify:
+
+</p>
+
+<ul>
+
+<li>Inputs</li>
+
+<li>Outputs</li>
+
+<li>Operating conditions</li>
+
+<li>Required behavior</li>
+
+<li>Reset behavior</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Step 2 — Identify the States
+
+</h4>
+
+<p>
+
+Break the required behavior into distinct operating conditions.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+IDLE
+ACTIVE
+DONE
+</code></pre>
+
+<p>
+
+Each state should represent a meaningful condition of the system.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Step 3 — Define Transitions
+
+</h4>
+
+<p>
+
+Determine what condition causes the FSM to move from one state to
+another.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+IDLE + start → ACTIVE
+
+ACTIVE + done → DONE
+
+DONE → IDLE
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Step 4 — Create the State Diagram
+
+</h4>
+
+<p>
+
+Draw the states and connect them using arrows that represent the
+transition conditions.
+
+This provides a visual representation of the controller behavior.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Step 5 — Create the Transition Table
+
+</h4>
+
+<p>
+
+List the current state, input conditions and next state.
+
+This helps identify missing conditions and unexpected transitions
+before writing RTL.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Step 6 — Choose State Encoding
+
+</h4>
+
+<p>
+
+Choose an encoding such as:
+
+</p>
+
+<ul>
+
+<li>Binary encoding</li>
+
+<li>One-hot encoding</li>
+
+<li>Gray encoding</li>
+
+</ul>
+
+<p>
+
+The appropriate choice depends on the design requirements and target
+implementation.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Step 7 — Implement the State Register
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    if (reset)
+        state &lt;= IDLE;
+    else
+        state &lt;= next_state;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Step 8 — Implement Next-State Logic
+
+</h4>
+
+<p>
+
+Use combinational logic to determine the next state.
+
+A <strong>case</strong> statement is commonly used:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(*) begin
+
+    next_state = state;
+
+    case (state)
+
+        IDLE:
+            ...
+
+        ACTIVE:
+            ...
+
+        DONE:
+            ...
+
+        default:
+            next_state = IDLE;
+
+    endcase
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+Step 9 — Implement Output Logic
+
+</h4>
+
+<p>
+
+Determine whether the design requires Moore or Mealy output behavior.
+
+</p>
+
+<ul>
+
+<li>
+<strong>Moore:</strong> output depends on current state.
+</li>
+
+<li>
+<strong>Mealy:</strong> output depends on current state and inputs.
+</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Step 10 — Verify the FSM
+
+</h4>
+
+<p>
+
+Finally, simulate the design and verify:
+
+</p>
+
+<ul>
+
+<li>Reset behavior</li>
+
+<li>Every state transition</li>
+
+<li>Every input condition</li>
+
+<li>Output behavior</li>
+
+<li>Unexpected or invalid conditions</li>
+
+<li>Return-to-IDLE behavior</li>
+
+</ul>
+
+<h4 class="text-info mt-5">
+
+Complete FSM Design Flow
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+Requirement
+     ↓
+Identify Inputs / Outputs
+     ↓
+Identify States
+     ↓
+Define Transitions
+     ↓
+State Diagram
+     ↓
+Transition Table
+     ↓
+State Encoding
+     ↓
+State Register
+     ↓
+Next-State Logic
+     ↓
+Output Logic
+     ↓
+Simulation & Verification
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Interview Tip
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+When asked to design an FSM in an interview, don't immediately start
+writing Verilog. First explain the states, transitions and output
+behavior, then convert the design into RTL.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- FSM Simulation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+FSM Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Run the FSM and observe state transitions using a waveform.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Try It Yourself
+
+</h4>
+
+<p>
+
+Open the preloaded EDA Playground project and simulate the
+traffic-light FSM.
+
+Observe how the FSM moves through the states
+<strong>RED → GREEN → YELLOW → RED</strong> when
+<strong>timer_done</strong> is asserted.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+What to Observe
+
+</h5>
+
+<ul>
+
+<li>The FSM starts in the <strong>RED</strong> state after reset.</li>
+
+<li>The state changes on the rising edge of the clock.</li>
+
+<li><strong>timer_done</strong> controls the state transitions.</li>
+
+<li>RED, GREEN and YELLOW outputs correspond to the current state.</li>
+
+<li>The FSM returns to RED after the YELLOW state.</li>
+
+</ul>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Run the Simulation
+
+</h5>
+
+<a href="https://edaplayground.com/x/mC88"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Open EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+
+Run the simulation and inspect the waveform to verify the FSM state
+transitions and output behavior.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
