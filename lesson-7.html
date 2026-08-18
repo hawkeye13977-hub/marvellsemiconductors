@@ -1,0 +1,4710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>Lesson 7 — Datapath Design | SemiCore</title>
+
+<meta name="description"
+      content="Learn Datapath Design from the fundamentals, including registers, multiplexers, ALU, control signals, RTL implementation and practical examples.">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold text-info"
+   href="index.html">
+
+⚡ SemiCore
+
+</a>
+
+
+<button class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+
+<div class="collapse navbar-collapse"
+     id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="index.html">
+
+Home
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="tutorials.html">
+
+Tutorials
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="news.html">
+
+News
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="about.html">
+
+About
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="contact.html">
+
+Contact
+
+</a>
+
+</li>
+
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Hero -->
+<!-- ========================= -->
+
+<section class="course-hero">
+
+<div class="container text-center">
+
+
+<span class="badge bg-success fs-6 mb-3">
+
+Lesson 7
+
+</span>
+
+
+<h1>
+
+Datapath Design
+
+</h1>
+
+
+<p>
+
+Understand how registers, multiplexers, ALUs and control logic
+work together to process and move data.
+
+</p>
+
+
+<p class="text-info mt-3">
+
+📘 RTL Design • 💻 Verilog • 🧠 Digital Design
+
+</p>
+
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Breadcrumb -->
+<!-- ========================= -->
+
+<section class="container pt-4">
+
+<nav aria-label="breadcrumb">
+
+<ol class="breadcrumb">
+
+<li class="breadcrumb-item">
+
+<a href="index.html"
+   class="text-info">
+
+Home
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item">
+
+<a href="tutorials.html"
+   class="text-info">
+
+Tutorials
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item">
+
+<a href="rtl-design.html"
+   class="text-info">
+
+RTL Design
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item active text-secondary"
+    aria-current="page">
+
+Lesson 7
+
+</li>
+
+</ol>
+
+</nav>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Introduction -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+
+<h2 class="fw-bold text-info">
+
+Lesson Introduction
+
+</h2>
+
+
+<p class="text-secondary">
+
+Learn how a datapath stores, moves and processes digital data.
+
+</p>
+
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+
+<div class="card feature-card">
+
+<div class="card-body p-4">
+
+
+<p>
+
+A datapath is one of the fundamental building blocks of a digital
+system.
+
+It contains the hardware responsible for storing, transferring and
+processing data.
+
+</p>
+
+
+<p>
+
+In this lesson, we will gradually build an understanding of datapath
+components and then combine them into practical RTL designs.
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Learning Objectives -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+
+<div class="text-center mb-5">
+
+
+<h2 class="fw-bold text-info">
+
+Learning Objectives
+
+</h2>
+
+
+<p class="text-secondary">
+
+By the end of this lesson, you should be able to:
+
+</p>
+
+
+</div>
+
+
+<div class="row g-4">
+
+
+<div class="col-md-6">
+
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+
+<h4>
+
+🧠 Understand Datapaths
+
+</h4>
+
+
+<p>
+
+Explain what a datapath is and why it is required in digital
+systems.
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div class="col-md-6">
+
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+
+<h4>
+
+📦 Identify Components
+
+</h4>
+
+
+<p>
+
+Understand the role of registers, multiplexers, ALUs, buses and
+other datapath components.
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div class="col-md-6">
+
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+
+<h4>
+
+⚡ Understand Data Movement
+
+</h4>
+
+
+<p>
+
+Understand how data moves between registers and processing units.
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+
+<div class="col-md-6">
+
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+
+<h4>
+
+💻 Write RTL
+
+</h4>
+
+
+<p>
+
+Implement basic datapath structures using synthesizable Verilog RTL.
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Step 1 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+
+<div class="text-center mb-5">
+
+
+<h2 class="fw-bold text-info">
+
+1. What is a Datapath?
+
+</h2>
+
+
+<p class="text-secondary">
+
+Understanding how digital systems move and process data.
+
+</p>
+
+
+</div>
+
+
+<div class="row justify-content-center">
+
+
+<div class="col-lg-10">
+
+
+<div class="card feature-card">
+
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Definition
+
+</h4>
+
+
+<p>
+
+A <strong>datapath</strong> is the part of a digital system that
+stores, moves and processes data.
+
+</p>
+
+
+<p>
+
+It is typically built using components such as registers,
+multiplexers, arithmetic units and logic units.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Datapath Concept
+
+</h4>
+
+
+<pre><code>
+        Input Data
+             |
+             v
+      +-------------+
+      |   Register  |
+      +-------------+
+             |
+             v
+      +-------------+
+      |     ALU     |
+      +-------------+
+             |
+             v
+      +-------------+
+      |   Register  |
+      +-------------+
+             |
+             v
+        Output Data
+</code></pre>
+
+
+<p>
+
+For example, a datapath could read two values from registers,
+perform an addition using an ALU, and store the result in another
+register.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Typical Datapath Components
+
+</h4>
+
+
+<ul>
+
+<li>
+
+<strong>Registers</strong> — store data.
+
+</li>
+
+
+<li>
+
+<strong>Multiplexers</strong> — select between different data
+sources.
+
+</li>
+
+
+<li>
+
+<strong>ALU</strong> — performs arithmetic and logical operations.
+
+</li>
+
+
+<li>
+
+<strong>Shifters</strong> — shift or rotate data.
+
+</li>
+
+
+<li>
+
+<strong>Buses</strong> — carry data between components.
+
+</li>
+
+
+</ul>
+
+
+<div class="card feature-card mt-4">
+
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+
+<p class="mb-0">
+
+<strong>
+
+The datapath is responsible for storing, moving and processing
+data.
+
+</strong>
+
+
+<br><br>
+
+
+Control logic determines how the datapath should operate.
+
+</p>
+
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 2 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+2. Datapath vs Control Path
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the difference between data processing and control logic.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is the Datapath?
+
+</h4>
+
+<p>
+
+The <strong>datapath</strong> contains the hardware that stores,
+moves and processes data.
+
+It performs operations such as addition, subtraction, comparison,
+shifting and logical operations.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+What is the Control Path?
+
+</h4>
+
+<p>
+
+The <strong>control path</strong> generates control signals that
+determine how the datapath should operate.
+
+It decides which operation should be performed and when data should
+be transferred between different components.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Simple View
+
+</h4>
+
+<pre><code>
+                 Control Inputs
+                       |
+                       v
+               +---------------+
+               | Control Logic |
+               +---------------+
+                       |
+                Control Signals
+                       |
+                       v
+               +---------------+
+               |    Datapath   |
+               |               |
+Input Data --->| Registers     |
+               | MUX           |
+               | ALU           |
+               | Registers     |
+               +---------------+
+                       |
+                       v
+                  Output Data
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Suppose a processor needs to perform:
+
+</p>
+
+<pre><code>
+R3 = R1 + R2
+</code></pre>
+
+<p>
+
+The <strong>datapath</strong> contains the registers and ALU required
+to perform the addition.
+
+The <strong>control path</strong> generates signals that select
+<strong>R1</strong> and <strong>R2</strong>, select the addition
+operation and enable the destination register <strong>R3</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Datapath and Control Path Relationship
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Datapath</th>
+
+<th>Control Path</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Stores data</td>
+
+<td>Generates control signals</td>
+
+</tr>
+
+<tr>
+
+<td>Processes data</td>
+
+<td>Determines which operation occurs</td>
+
+</tr>
+
+<tr>
+
+<td>Contains registers and ALU</td>
+
+<td>Controls datapath components</td>
+
+</tr>
+
+<tr>
+
+<td>Moves data</td>
+
+<td>Controls when data moves</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Datapath = What happens to the data.
+
+<br><br>
+
+Control Path = When and how it happens.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 3 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+3. Basic Datapath Components
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the fundamental building blocks used to construct a datapath.
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+📦 Registers
+
+</h4>
+
+<p>
+
+Registers are clocked storage elements used to hold data inside a
+digital system.
+
+They can store operands, intermediate results and final results.
+
+</p>
+
+<pre><code>
+        Clock
+          |
+          v
+     +----------+
+Data | Register | Data
+---->|          |---->
+     +----------+
+</code></pre>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🔀 Multiplexer (MUX)
+
+</h4>
+
+<p>
+
+A multiplexer selects one of several input data sources and forwards
+the selected value to its output.
+
+</p>
+
+<pre><code>
+A --------\
+           \
+B ----------> MUX ----> Output
+           /
+C --------/
+
+       Select
+</code></pre>
+
+<p>
+
+The control signal determines which input is selected.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+➕ Arithmetic Logic Unit (ALU)
+
+</h4>
+
+<p>
+
+The ALU performs arithmetic and logical operations on data.
+
+Typical operations include:
+
+</p>
+
+<ul>
+
+<li>Addition</li>
+
+<li>Subtraction</li>
+
+<li>AND</li>
+
+<li>OR</li>
+
+<li>XOR</li>
+
+<li>Comparison</li>
+
+</ul>
+
+<pre><code>
+        A --------\
+                   \
+                    +------+
+        B ----------|  ALU  |----> Result
+                    +------+
+                         ^
+                         |
+                    Operation
+</code></pre>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🔄 Shifter
+
+</h4>
+
+<p>
+
+A shifter moves the bits of a data value to the left or right.
+
+It can be used for operations such as logical shifts, arithmetic
+shifts and rotations.
+
+</p>
+
+<pre><code>
+Data
+  |
+  v
++---------+
+| Shifter |
++---------+
+  |
+  v
+Shifted Data
+</code></pre>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🚌 Buses
+
+</h4>
+
+<p>
+
+A bus is a group of wires used to transfer multiple bits of data
+between components.
+
+For example, a 32-bit datapath commonly uses 32-bit data paths
+between its major components.
+
+</p>
+
+<pre><code>
+Register A
+    |
+    | 32-bit bus
+    |
+    v
+   ALU
+    |
+    | 32-bit bus
+    |
+    v
+Register B
+</code></pre>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🎛 Control Signals
+
+</h4>
+
+<p>
+
+Control signals determine how datapath components operate.
+
+Examples include:
+
+</p>
+
+<ul>
+
+<li>Register enable</li>
+
+<li>MUX select</li>
+
+<li>ALU operation select</li>
+
+<li>Register write enable</li>
+
+<li>Load enable</li>
+
+</ul>
+
+<p>
+
+These signals are generally generated by the control logic.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="card feature-card mt-5">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Putting the Components Together
+
+</h4>
+
+<pre><code>
+                 Control Signals
+                       |
+                       v
+       +--------------------------------+
+       |                                |
+       |           DATAPATH             |
+       |                                |
+       |  +------+       +------+       |
+       |  | Reg A|------>|      |       |
+       |  +------+       |      |       |
+       |                  | ALU  |------> Result
+       |  +------+       |      |       |
+       |  | Reg B|------>|      |       |
+       |  +------+       +------+       |
+       |                                |
+       +--------------------------------+
+</code></pre>
+
+<p>
+
+A practical datapath combines these components so that data can be
+stored, selected, processed and transferred according to the control
+signals.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A datapath is not a single hardware block. It is a collection of
+interconnected components that work together to process data.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 4 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+4. Registers in a Datapath
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how registers store and transfer data in a datapath.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Register?
+
+</h4>
+
+<p>
+
+A <strong>register</strong> is a group of flip-flops used to store
+multiple bits of digital data.
+
+For example, a 32-bit register contains 32 storage elements and can
+hold a 32-bit value.
+
+</p>
+
+<pre><code>
+             Clock
+               |
+               v
+        +-------------+
+Data -->|  32-bit     |--> Output
+        |  Register   |
+        +-------------+
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Why Are Registers Important?
+
+</h4>
+
+<p>
+
+Registers provide storage points within a datapath.
+
+They allow data to be captured on a clock edge and used during later
+clock cycles.
+
+</p>
+
+<p>
+
+For example:
+
+</p>
+
+<pre><code>
+Clock Cycle 1:
+
+R1 = 10
+R2 = 20
+
+
+Clock Cycle 2:
+
+ALU performs:
+
+R1 + R2 = 30
+
+
+Clock Cycle 3:
+
+R3 = 30
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Register Enable
+
+</h4>
+
+<p>
+
+A register may have an <strong>enable</strong> signal that determines
+whether new data should be captured.
+
+</p>
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (enable)
+        data_reg <= data_in;
+
+end
+</code></pre>
+
+<p>
+
+When <strong>enable = 1</strong>, the register captures the input data
+at the active clock edge.
+
+When <strong>enable = 0</strong>, the register retains its previous
+value.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Register with Reset
+
+</h4>
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset)
+        data_reg <= 8'b0;
+
+    else if (enable)
+        data_reg <= data_in;
+
+end
+</code></pre>
+
+<p>
+
+Here, reset initializes the register to zero.
+
+The enable signal then controls whether new data is stored.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Registers in a Datapath
+
+</h4>
+
+<pre><code>
+             +--------+
+             |  Reg A |
+             +--------+
+                  |
+                  |
+                  v
+             +---------+
+             |   ALU   |
+             +---------+
+                  |
+                  |
+                  v
+             +--------+
+             |  Reg B |
+             +--------+
+</code></pre>
+
+<p>
+
+The first register can provide an operand to the ALU, while another
+register can capture the ALU result.
+
+This creates a clocked data-processing path.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Register vs Combinational Logic
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Register</th>
+
+<th>Combinational Logic</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Stores data</td>
+
+<td>Processes data</td>
+
+</tr>
+
+<tr>
+
+<td>Controlled by a clock</td>
+
+<td>No storage</td>
+
+</tr>
+
+<tr>
+
+<td>Output changes according to stored value</td>
+
+<td>Output depends on current inputs</td>
+
+</tr>
+
+<tr>
+
+<td>Used between processing stages</td>
+
+<td>Used for operations such as addition and selection</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Registers provide the storage points that separate datapath
+operations across clock cycles.
+
+</strong>
+
+<br><br>
+
+They are fundamental to building synchronous RTL datapaths.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 5 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+5. Multiplexers in a Datapath
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how multiplexers select data paths inside a digital system.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Multiplexer?
+
+</h4>
+
+<p>
+
+A <strong>multiplexer (MUX)</strong> is a combinational circuit that
+selects one input from multiple data sources and connects the selected
+input to its output.
+
+The selection is controlled by one or more <strong>select signals</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+2-to-1 Multiplexer
+
+</h4>
+
+<pre><code>
+             +---------+
+A ---------->|         |
+             |   MUX   |------> Y
+B ---------->|         |
+             +---------+
+                  ^
+                  |
+               Select
+</code></pre>
+
+<p>
+
+For a 2-to-1 MUX:
+
+</p>
+
+<pre><code>
+Select = 0  →  Y = A
+
+Select = 1  →  Y = B
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Verilog Implementation
+
+</h4>
+
+<pre><code>
+module mux2to1 (
+
+    input  wire a,
+    input  wire b,
+    input  wire sel,
+
+    output wire y
+
+);
+
+assign y = sel ? b : a;
+
+endmodule
+</code></pre>
+
+<p>
+
+The conditional operator provides a simple way to describe a
+2-to-1 multiplexer.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+MUX in a Datapath
+
+</h4>
+
+<p>
+
+A multiplexer becomes especially important in a datapath because
+multiple sources may need to provide data to the same processing unit.
+
+</p>
+
+<pre><code>
+              +--------+
+Reg A -------->|        |
+               |        |
+Reg B -------->|  MUX   |------> ALU Input
+               |        |
+Constant ----->|        |
+              +--------+
+                   ^
+                   |
+              Select Signal
+</code></pre>
+
+<p>
+
+The control logic determines which source is connected to the ALU.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Suppose an ALU can receive either the value from register
+<strong>R1</strong> or register <strong>R2</strong>.
+
+</p>
+
+<pre><code>
+sel = 0  →  ALU input = R1
+
+sel = 1  →  ALU input = R2
+</code></pre>
+
+<p>
+
+Changing the select signal changes which register supplies the data.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+4-to-1 Multiplexer
+
+</h4>
+
+<p>
+
+A larger datapath may need to select one of four different sources.
+
+A 4-to-1 MUX requires two select bits.
+
+</p>
+
+<pre><code>
+             +---------+
+A ---------->|         |
+B ---------->|         |
+C ---------->|   MUX   |------> Y
+D ---------->|         |
+             +---------+
+                ^   ^
+                |   |
+              S1   S0
+</code></pre>
+
+<div class="table-responsive mt-4">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>S1</th>
+
+<th>S0</th>
+
+<th>Selected Input</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>A</td>
+
+</tr>
+
+<tr>
+
+<td>0</td>
+
+<td>1</td>
+
+<td>B</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>C</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>D</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Why MUXes Matter in Datapaths
+
+</h4>
+
+<ul>
+
+<li>Select between different registers.</li>
+
+<li>Select between different ALU operands.</li>
+
+<li>Select between immediate values and register values.</li>
+
+<li>Select between different result sources.</li>
+
+<li>Control the movement of data through the datapath.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A multiplexer controls which data source is connected to a datapath
+operation.
+
+</strong>
+
+<br><br>
+
+The <strong>control path</strong> provides the select signals, while
+the <strong>datapath</strong> carries the selected data.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 6 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+6. Arithmetic Logic Unit (ALU)
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the processing unit at the center of many datapaths.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is an ALU?
+
+</h4>
+
+<p>
+
+An <strong>Arithmetic Logic Unit (ALU)</strong> is a combinational
+circuit that performs arithmetic and logical operations on input data.
+
+The operation performed by the ALU is selected using control signals.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic ALU Structure
+
+</h4>
+
+<pre><code>
+             A --------\
+                        \
+                         +---------+
+             B -------->|   ALU   |-----> Result
+                         +---------+
+                              ^
+                              |
+                         Operation
+                         Select
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Common ALU Operations
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Operation</th>
+
+<th>Example</th>
+
+<th>Result</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>ADD</td>
+
+<td>10 + 5</td>
+
+<td>15</td>
+
+</tr>
+
+<tr>
+
+<td>SUB</td>
+
+<td>10 - 5</td>
+
+<td>5</td>
+
+</tr>
+
+<tr>
+
+<td>AND</td>
+
+<td>1010 &amp; 1100</td>
+
+<td>1000</td>
+
+</tr>
+
+<tr>
+
+<td>OR</td>
+
+<td>1010 | 1100</td>
+
+<td>1110</td>
+
+</tr>
+
+<tr>
+
+<td>XOR</td>
+
+<td>1010 ^ 1100</td>
+
+<td>0110</td>
+
+</tr>
+
+<tr>
+
+<td>Compare</td>
+
+<td>A == B</td>
+
+<td>Condition</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+ALU Operation Select
+
+</h4>
+
+<p>
+
+The ALU can use an operation-select signal to determine which
+operation should be performed.
+
+For example, a simple 3-bit control signal could represent:
+
+</p>
+
+<pre><code>
+000 → ADD
+
+001 → SUB
+
+010 → AND
+
+011 → OR
+
+100 → XOR
+</code></pre>
+
+<p>
+
+The exact encoding is a design choice and can vary between different
+architectures.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Simple Verilog ALU
+
+</h4>
+
+<pre><code>
+module simple_alu (
+
+    input  wire [7:0] a,
+    input  wire [7:0] b,
+    input  wire [2:0] op,
+
+    output reg [7:0] result
+
+);
+
+always @(*) begin
+
+    case (op)
+
+        3'b000:
+            result = a + b;
+
+        3'b001:
+            result = a - b;
+
+        3'b010:
+            result = a &amp; b;
+
+        3'b011:
+            result = a | b;
+
+        3'b100:
+            result = a ^ b;
+
+        default:
+            result = 8'b0;
+
+    endcase
+
+end
+
+endmodule
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+ALU Inside a Datapath
+
+</h4>
+
+<p>
+
+The ALU usually works together with registers and multiplexers.
+
+Registers provide operands, multiplexers select the appropriate
+inputs, and the ALU performs the requested operation.
+
+</p>
+
+<pre><code>
+          +--------+
+          | Reg A  |
+          +--------+
+               |
+               v
+            +-----+
+            | MUX |
+            +-----+
+               |
+               v
+          +---------+
+          |   ALU   |------> Result
+          +---------+
+               ^
+               |
+            +-----+
+            | MUX |
+            +-----+
+               ^
+               |
+          +--------+
+          | Reg B  |
+          +--------+
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+ALU and Control Path
+
+</h4>
+
+<p>
+
+The control path generates the ALU operation-select signal.
+
+For example:
+
+</p>
+
+<pre><code>
+Control Logic
+      |
+      | ALU Operation
+      v
+     +-----+
+     | ALU |
+     +-----+
+       |
+       v
+    Result
+</code></pre>
+
+<p>
+
+This allows the same ALU hardware to perform different operations
+depending on the control signals.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+The ALU performs the actual arithmetic and logical processing,
+while the control path determines which operation the ALU performs.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 7 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+7. Register + ALU Datapath
+
+</h2>
+
+<p class="text-secondary">
+
+Combining registers, multiplexing and an ALU into a simple datapath.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Building the Datapath
+
+</h4>
+
+<p>
+
+A practical datapath combines multiple hardware components so that
+data can be stored, selected, processed and stored again.
+
+A simple example contains two source registers, an ALU and a
+destination register.
+
+</p>
+
+<pre><code>
+              +---------+
+              |  Reg A  |
+              +---------+
+                   |
+                   |
+                   v
+              +---------+
+              |         |
+              |   ALU   |-------> ALU Result
+              |         |
+              +---------+
+                   ^
+                   |
+              +---------+
+              |  Reg B  |
+              +---------+
+                   
+                   |
+                   v
+
+              +---------+
+              |  Reg C  |
+              +---------+
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example Operation
+
+</h4>
+
+<p>
+
+Suppose:
+
+</p>
+
+<pre><code>
+Reg A = 10
+
+Reg B = 20
+
+Operation = ADD
+</code></pre>
+
+<p>
+
+The ALU receives the two operands and performs:
+
+</p>
+
+<pre><code>
+10 + 20 = 30
+</code></pre>
+
+<p>
+
+The result can then be captured into the destination register:
+
+</p>
+
+<pre><code>
+Reg C = 30
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Clocked Operation
+
+</h4>
+
+<p>
+
+The ALU itself is combinational logic, while the registers are
+clocked storage elements.
+
+Therefore, the datapath can operate across clock cycles.
+
+</p>
+
+<pre><code>
+Clock Cycle 1
+
+Reg A = 10
+Reg B = 20
+
+
+        ↓
+
+
+Clock Cycle 2
+
+ALU calculates:
+
+10 + 20 = 30
+
+
+        ↓
+
+
+Clock Cycle 3
+
+Reg C captures:
+
+Reg C = 30
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Simple RTL Example
+
+</h4>
+
+<pre><code>
+module register_alu_datapath (
+
+    input wire clk,
+    input wire reset,
+    input wire enable,
+
+    input wire [7:0] data_a,
+    input wire [7:0] data_b,
+
+    output reg [7:0] result
+
+);
+
+reg [7:0] reg_a;
+reg [7:0] reg_b;
+
+wire [7:0] alu_result;
+
+
+// Input Registers
+
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        reg_a &lt;= 8'b0;
+        reg_b &lt;= 8'b0;
+
+    end
+
+    else if (enable) begin
+
+        reg_a &lt;= data_a;
+        reg_b &lt;= data_b;
+
+    end
+
+end
+
+
+// ALU
+
+assign alu_result = reg_a + reg_b;
+
+
+// Result Register
+
+always @(posedge clk) begin
+
+    if (reset)
+
+        result &lt;= 8'b0;
+
+    else if (enable)
+
+        result &lt;= alu_result;
+
+end
+
+endmodule
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+How the RTL Works
+
+</h4>
+
+<ol>
+
+<li>
+
+<strong>reg_a</strong> stores the first input value.
+
+</li>
+
+<li>
+
+<strong>reg_b</strong> stores the second input value.
+
+</li>
+
+<li>
+
+The combinational ALU performs the addition.
+
+</li>
+
+<li>
+
+<strong>alu_result</strong> contains the calculated result.
+
+</li>
+
+<li>
+
+The result register captures the ALU output on the clock edge when
+<strong>enable</strong> is active.
+
+</li>
+
+</ol>
+
+<h4 class="text-info mt-4">
+
+Datapath View
+
+</h4>
+
+<pre><code>
+ data_a ──> [Reg A] ──┐
+                      │
+                      v
+                    [ ALU ] ──> [Result Reg] ──> result
+                      ^
+                      │
+ data_b ──> [Reg B] ──┘
+
+                     ^
+                     |
+                  Control
+                 (enable)
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important RTL Concept
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Combinational logic performs the calculation, while registers
+provide clocked storage between datapath operations.
+
+</strong>
+
+<br><br>
+
+This combination of <strong>registers + combinational logic +
+registers</strong> is one of the fundamental structures used in
+synchronous RTL design.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 8 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+8. Data Movement Between Registers
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how data is transferred between registers through a datapath.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Register-to-Register Data Transfer
+
+</h4>
+
+<p>
+
+In a synchronous datapath, data is commonly transferred from one
+register to another on a clock edge.
+
+Combinational logic such as an ALU or multiplexer may be present
+between the registers.
+
+</p>
+
+<pre><code>
+        +---------+
+        |  Reg A  |
+        +---------+
+             |
+             v
+       Combinational
+          Logic
+             |
+             v
+        +---------+
+        |  Reg B  |
+        +---------+
+</code></pre>
+
+<p>
+
+The first register provides data to the combinational logic.
+
+The resulting value is then captured by the destination register on
+the active clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Simple Register Transfer
+
+</h4>
+
+<p>
+
+Consider the operation:
+
+</p>
+
+<pre><code>
+R2 &lt;= R1;
+</code></pre>
+
+<p>
+
+At the active clock edge, the value stored in <strong>R1</strong> is
+captured by <strong>R2</strong>.
+
+</p>
+
+<pre><code>
+Before clock edge:
+
+R1 = 25
+R2 = 10
+
+
+After clock edge:
+
+R1 = 25
+R2 = 25
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Verilog Example
+
+</h4>
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset)
+
+        r2 &lt;= 8'b0;
+
+    else if (enable)
+
+        r2 &lt;= r1;
+
+end
+</code></pre>
+
+<p>
+
+The nonblocking assignment is used because this is sequential logic
+that operates on a clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Register Transfer Through an ALU
+
+</h4>
+
+<p>
+
+Data can also be modified before being stored in the destination
+register.
+
+For example:
+
+</p>
+
+<pre><code>
+R3 &lt;= R1 + R2;
+</code></pre>
+
+<p>
+
+The datapath performs the following operation:
+
+</p>
+
+<pre><code>
+        R1 --------\
+                    \
+                     +---------+
+        R2 -------->|   ALU   |------> R3
+                     +---------+
+                         ^
+                         |
+                       ADD
+</code></pre>
+
+<p>
+
+Here:
+
+</p>
+
+<ul>
+
+<li>R1 provides the first operand.</li>
+
+<li>R2 provides the second operand.</li>
+
+<li>The ALU performs the addition.</li>
+
+<li>R3 captures the result.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Register Transfer Through a MUX
+
+</h4>
+
+<p>
+
+A multiplexer can allow a destination register to receive data from
+different sources.
+
+</p>
+
+<pre><code>
+R1 --------\
+            \
+R2 ----------> MUX -----> Destination Register
+            /
+ALU Result -/
+
+              ^
+              |
+           Select
+</code></pre>
+
+<p>
+
+The select signal determines which source reaches the destination
+register.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example RTL
+
+</h4>
+
+<pre><code>
+always @(*) begin
+
+    case (sel)
+
+        2'b00:
+            next_data = r1;
+
+        2'b01:
+            next_data = r2;
+
+        2'b10:
+            next_data = alu_result;
+
+        default:
+            next_data = 8'b0;
+
+    endcase
+
+end
+
+
+always @(posedge clk) begin
+
+    if (reset)
+
+        destination &lt;= 8'b0;
+
+    else if (enable)
+
+        destination &lt;= next_data;
+
+end
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Clock-to-Clock Data Movement
+
+</h4>
+
+<pre><code>
+Clock Cycle N
+
+        R1
+         |
+         v
+      Combinational
+         Logic
+         |
+         v
+
+Clock Cycle N+1
+
+        R2
+</code></pre>
+
+<p>
+
+This clocked structure is fundamental to synchronous RTL design.
+
+The combinational logic calculates the next value, while the
+destination register captures that value at the clock edge.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Datapath operations are often described as register-transfer
+operations: data moves from source registers, passes through
+combinational logic, and is captured by destination registers.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 9 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+9. Control Signals and Datapath
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how control logic directs datapath operations.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Why Does a Datapath Need Control Signals?
+
+</h4>
+
+<p>
+
+A datapath contains several components that can perform different
+operations.
+
+Control signals tell these components <strong>what to do</strong> and
+<strong>when to do it</strong>.
+
+For example, control logic may determine:
+
+</p>
+
+<ul>
+
+<li>Which register should provide data.</li>
+
+<li>Which MUX input should be selected.</li>
+
+<li>Which ALU operation should be performed.</li>
+
+<li>Which register should capture a result.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Control Signals in a Simple Datapath
+
+</h4>
+
+<pre><code>
+                    Control Logic
+                         |
+          +--------------+--------------+
+          |              |              |
+          v              v              v
+      MUX Select     ALU Operation   Reg Enable
+          |              |              |
+          +--------------+--------------+
+                         |
+                         v
+                  +-------------+
+                  |   DATAPATH  |
+                  |             |
+                  | Registers   |
+                  | MUX         |
+                  | ALU         |
+                  +-------------+
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Common Datapath Control Signals
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Control Signal</th>
+
+<th>Purpose</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Register Enable</td>
+
+<td>Allows a register to capture new data.</td>
+
+</tr>
+
+<tr>
+
+<td>MUX Select</td>
+
+<td>Selects which data source reaches the next stage.</td>
+
+</tr>
+
+<tr>
+
+<td>ALU Operation</td>
+
+<td>Selects the arithmetic or logical operation.</td>
+
+</tr>
+
+<tr>
+
+<td>Load Enable</td>
+
+<td>Controls when data is loaded into a storage element.</td>
+
+</tr>
+
+<tr>
+
+<td>Write Enable</td>
+
+<td>Controls whether a destination register or memory location is written.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Example: R3 = R1 + R2
+
+</h4>
+
+<p>
+
+Suppose the required operation is:
+
+</p>
+
+<pre><code>
+R3 &lt;= R1 + R2;
+</code></pre>
+
+<p>
+
+The control logic must configure the datapath so that:
+
+</p>
+
+<ol>
+
+<li>Select R1 as the first ALU operand.</li>
+
+<li>Select R2 as the second ALU operand.</li>
+
+<li>Select ADD as the ALU operation.</li>
+
+<li>Enable R3 to capture the result.</li>
+
+</ol>
+
+<pre><code>
+             Control Logic
+                  |
+       +----------+----------+
+       |          |          |
+       v          v          v
+    Select A   ALU Op    Reg Enable
+       |          |          |
+       v          v          v
+     +-------------------------+
+     |                         |
+R1 ->|                         |
+     |          ALU            |----> R3
+R2 ->|                         |
+     |                         |
+     +-------------------------+
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Control Path + Datapath
+
+</h4>
+
+<p>
+
+A useful way to think about the relationship is:
+
+</p>
+
+<pre><code>
+        Control Path
+             |
+             | Control Signals
+             v
+      +----------------+
+      |    Datapath    |
+      |                |
+      | Reg → MUX → ALU |
+      |       → Reg    |
+      +----------------+
+             |
+             v
+        Processed Data
+</code></pre>
+
+<p>
+
+The control path does not normally perform the arithmetic itself.
+Instead, it configures the datapath to perform the required operation.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Connection to FSMs
+
+</h4>
+
+<p>
+
+The FSM concepts from Lesson 6 are directly useful here.
+
+A controller can use different states to generate different control
+signals for different datapath operations.
+
+For example:
+
+</p>
+
+<pre><code>
+IDLE
+  |
+  v
+LOAD
+  |
+  v
+EXECUTE
+  |
+  v
+WRITE
+  |
+  v
+IDLE
+</code></pre>
+
+<p>
+
+Each state can activate a different set of control signals.
+
+This creates a common architecture where:
+
+</p>
+
+<pre><code>
+             +----------------+
+             |  Control FSM   |
+             +----------------+
+                     |
+              Control Signals
+                     |
+                     v
+             +----------------+
+             |    Datapath    |
+             +----------------+
+                     |
+                  Result
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+The datapath performs the operation, while the control logic
+configures and sequences that operation.
+
+</strong>
+
+<br><br>
+
+This <strong>control + datapath</strong> relationship is fundamental
+to many RTL designs, processors and SoC blocks.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 10 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+10. Single-Cycle Datapath Concept
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how a complete datapath operation can occur within one clock cycle.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Single-Cycle Datapath?
+
+</h4>
+
+<p>
+
+In a single-cycle design, a complete operation is performed within
+one clock cycle.
+
+The required datapath components are arranged so that data can travel
+from the source registers through the required combinational logic and
+reach the destination before the next active clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Concept
+
+</h4>
+
+<pre><code>
+        Source Register
+              |
+              v
+             MUX
+              |
+              v
+             ALU
+              |
+              v
+        Destination Register
+              |
+              v
+        Next Clock Edge
+</code></pre>
+
+<p>
+
+The combinational logic between the registers determines how much
+time is required for the operation to complete.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Consider the operation:
+
+</p>
+
+<pre><code>
+R3 &lt;= R1 + R2;
+</code></pre>
+
+<p>
+
+During the clock cycle:
+
+</p>
+
+<ol>
+
+<li>R1 provides the first operand.</li>
+
+<li>R2 provides the second operand.</li>
+
+<li>The ALU performs the addition.</li>
+
+<li>The result propagates through the combinational logic.</li>
+
+<li>R3 captures the result at the next active clock edge.</li>
+
+</ol>
+
+<pre><code>
+        R1 --------\
+                    \
+                     +---------+
+        R2 -------->|   ALU   |------> R3
+                     +---------+
+                         |
+                         |
+                  Combinational
+                    Operation
+
+        |------------- One Clock Cycle -------------|
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Clock Perspective
+
+</h4>
+
+<pre><code>
+Clock:
+
+     ↑                 ↑
+     |                 |
+-----|-----------------|-----
+     |                 |
+     |<-- One Cycle -->|
+     
+     R1/R2             R3
+     values            captures
+     available         result
+          \           /
+           \         /
+            \       /
+             ALU
+</code></pre>
+
+<p>
+
+The source registers provide stable values during the cycle.
+
+The combinational datapath processes those values, and the
+destination register captures the result at the next clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Critical Path
+
+</h4>
+
+<p>
+
+The longest combinational path between two registers is called the
+<strong>critical path</strong>.
+
+For example:
+
+</p>
+
+<pre><code>
+Register
+   |
+   v
+  MUX
+   |
+   v
+  ALU
+   |
+   v
+Register
+</code></pre>
+
+<p>
+
+If the MUX and ALU together form the longest combinational delay,
+they can determine the minimum clock period for that datapath.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Single-Cycle Advantage
+
+</h4>
+
+<ul>
+
+<li>Simple control structure.</li>
+
+<li>Each operation completes in one clock cycle.</li>
+
+<li>Easy to understand conceptually.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Single-Cycle Limitation
+
+</h4>
+
+<ul>
+
+<li>The clock period must accommodate the longest operation.</li>
+
+<li>Short operations may still use the same long clock period.</li>
+
+<li>Large combinational paths can limit the maximum clock frequency.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Relationship to RTL
+
+</h4>
+
+<p>
+
+At the RTL level, a single-cycle datapath can still contain both
+sequential and combinational logic.
+
+Registers provide the clocked boundaries, while the logic between them
+performs the operation.
+
+</p>
+
+<pre><code>
+       Sequential       Combinational       Sequential
+
+       +--------+       +-------------+       +--------+
+       | Source | ----> | MUX + ALU   | ----> | Dest.  |
+       | Regs   |       |             |       | Reg    |
+       +--------+       +-------------+       +--------+
+            |                                      |
+            +-------------- Clock -----------------+
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+In a single-cycle datapath, the complete combinational operation must
+fit between two clocked register boundaries within one clock cycle.
+
+</strong>
+
+<br><br>
+
+The longest combinational delay affects the minimum clock period.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 11 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+11. Multi-Cycle Datapath Concept
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how a complex operation can be divided across multiple clock cycles.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+What is a Multi-Cycle Datapath?
+
+</h4>
+
+<p>
+
+In a <strong>multi-cycle datapath</strong>, a complete operation is
+divided into multiple smaller steps.
+
+Each step can execute during a different clock cycle.
+
+This allows hardware resources to be reused across different
+operations and can reduce the amount of combinational logic required
+in a single cycle.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Simple Concept
+
+</h4>
+
+<pre><code>
+Clock Cycle 1
+     |
+     v
+Load Data
+     |
+     v
+Clock Cycle 2
+     |
+     v
+Process Data
+     |
+     v
+Clock Cycle 3
+     |
+     v
+Store Result
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Consider:
+
+</p>
+
+<pre><code>
+R3 &lt;= R1 + R2;
+</code></pre>
+
+<p>
+
+A simplified multi-cycle implementation could divide the operation
+into:
+
+</p>
+
+<ol>
+
+<li>Read or load the first operand.</li>
+
+<li>Read or load the second operand.</li>
+
+<li>Perform the ALU operation.</li>
+
+<li>Store the result.</li>
+
+</ol>
+
+<p>
+
+The exact number of cycles depends on the architecture and design
+requirements.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Multi-Cycle Datapath Example
+
+</h4>
+
+<pre><code>
+             +-------------+
+             |  Registers  |
+             +-------------+
+                    |
+                    v
+             +-------------+
+             |     MUX     |
+             +-------------+
+                    |
+                    v
+             +-------------+
+             |     ALU     |
+             +-------------+
+                    |
+                    v
+             +-------------+
+             |   Register  |
+             +-------------+
+
+        Control FSM
+             |
+             v
+      Control Signals
+</code></pre>
+
+<p>
+
+The control FSM can generate different control signals during each
+cycle.
+
+For example:
+
+</p>
+
+<pre><code>
+Cycle 1 → LOAD
+
+Cycle 2 → EXECUTE
+
+Cycle 3 → WRITE
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Connection Between FSM and Datapath
+
+</h4>
+
+<p>
+
+This is where the concepts from Lesson 6 become especially useful.
+
+The <strong>FSM acts as the control path</strong>, while the
+datapath performs the actual data operations.
+
+</p>
+
+<pre><code>
+             +----------------+
+             |   Control FSM  |
+             +----------------+
+                     |
+                     |
+              Control Signals
+                     |
+                     v
+             +----------------+
+             |    Datapath    |
+             |                |
+             | Registers      |
+             | MUXes          |
+             | ALU            |
+             +----------------+
+                     |
+                     v
+                   Result
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Single-Cycle vs Multi-Cycle
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Single-Cycle</th>
+
+<th>Multi-Cycle</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Operation completes in one cycle.</td>
+
+<td>Operation is divided across multiple cycles.</td>
+
+</tr>
+
+<tr>
+
+<td>Can require a long combinational path.</td>
+
+<td>Can use shorter combinational paths per cycle.</td>
+
+</tr>
+
+<tr>
+
+<td>Control can be simpler.</td>
+
+<td>Requires sequencing across multiple cycles.</td>
+
+</tr>
+
+<tr>
+
+<td>Hardware may need to support the complete operation in one cycle.</td>
+
+<td>Hardware resources can potentially be reused.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Why Use Multi-Cycle Datapaths?
+
+</h4>
+
+<ul>
+
+<li>Break complex operations into smaller steps.</li>
+
+<li>Reduce the amount of combinational logic active in one cycle.</li>
+
+<li>Allow hardware resources to be reused.</li>
+
+<li>Provide more flexibility in controlling complex operations.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A multi-cycle datapath divides a larger operation into smaller
+clocked steps, with a control FSM coordinating the datapath during
+each cycle.
+
+</strong>
+
+<br><br>
+
+This creates a direct connection between the
+<strong>FSM concepts from Lesson 6</strong> and the
+<strong>datapath concepts in this lesson</strong>.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 12 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+12. Datapath RTL Example
+
+</h2>
+
+<p class="text-secondary">
+
+Putting registers, an ALU and control signals together in synthesizable Verilog RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Datapath Specification
+
+</h4>
+
+<p>
+
+Let's design a simple 8-bit datapath that can perform basic
+arithmetic and logical operations.
+
+The datapath will contain:
+
+</p>
+
+<ul>
+
+<li>Two 8-bit input registers.</li>
+
+<li>An ALU.</li>
+
+<li>An 8-bit result register.</li>
+
+<li>An operation-select signal.</li>
+
+<li>A register enable signal.</li>
+
+<li>A reset signal.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Supported Operations
+
+</h4>
+
+<pre><code>
+000 → ADD
+
+001 → SUB
+
+010 → AND
+
+011 → OR
+
+100 → XOR
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Datapath Architecture
+
+</h4>
+
+<pre><code>
+              data_a
+                 |
+                 v
+             +-------+
+             | Reg A |
+             +-------+
+                 |
+                 |
+                 v
+              +-----+
+              |     |
+              |     |
+              | ALU |-----> ALU Result
+              |     |
+              |     |
+              +-----+
+                 ^
+                 |
+             +-------+
+             | Reg B |
+             +-------+
+                 ^
+                 |
+              data_b
+
+
+             ALU Result
+                  |
+                  v
+             +----------+
+             | Result   |
+             | Register |
+             +----------+
+                  |
+                  v
+                result
+
+            Control
+               |
+               +----> ALU Operation
+               |
+               +----> Register Enable
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Complete Verilog RTL
+
+</h4>
+
+<pre><code>
+module simple_datapath (
+
+    input wire clk,
+    input wire reset,
+    input wire enable,
+
+    input wire [7:0] data_a,
+    input wire [7:0] data_b,
+
+    input wire [2:0] alu_op,
+
+    output reg [7:0] result
+
+);
+
+reg [7:0] reg_a;
+reg [7:0] reg_b;
+
+reg [7:0] alu_result;
+
+
+// =====================================
+// Input Registers
+// =====================================
+
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        reg_a &lt;= 8'b0;
+        reg_b &lt;= 8'b0;
+
+    end
+
+    else if (enable) begin
+
+        reg_a &lt;= data_a;
+        reg_b &lt;= data_b;
+
+    end
+
+end
+
+
+// =====================================
+// ALU
+// =====================================
+
+always @(*) begin
+
+    case (alu_op)
+
+        3'b000:
+            alu_result = reg_a + reg_b;
+
+        3'b001:
+            alu_result = reg_a - reg_b;
+
+        3'b010:
+            alu_result = reg_a &amp; reg_b;
+
+        3'b011:
+            alu_result = reg_a | reg_b;
+
+        3'b100:
+            alu_result = reg_a ^ reg_b;
+
+        default:
+            alu_result = 8'b0;
+
+    endcase
+
+end
+
+
+// =====================================
+// Result Register
+// =====================================
+
+always @(posedge clk) begin
+
+    if (reset)
+
+        result &lt;= 8'b0;
+
+    else if (enable)
+
+        result &lt;= alu_result;
+
+end
+
+endmodule
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+How the RTL Works
+
+</h4>
+
+<ol>
+
+<li>
+
+At reset, the input registers and result register are cleared.
+
+</li>
+
+<li>
+
+When <strong>enable = 1</strong>, the input values are captured into
+<strong>reg_a</strong> and <strong>reg_b</strong>.
+
+</li>
+
+<li>
+
+The combinational ALU continuously calculates the result according
+to <strong>alu_op</strong>.
+
+</li>
+
+<li>
+
+On the next active clock edge, the calculated ALU result is captured
+into the result register.
+
+</li>
+
+</ol>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<pre><code>
+data_a = 10
+
+data_b = 5
+
+alu_op = 000
+
+enable = 1
+</code></pre>
+
+<p>
+
+The ALU operation is ADD:
+
+</p>
+
+<pre><code>
+10 + 5 = 15
+</code></pre>
+
+<p>
+
+The result register will capture the calculated value on the
+appropriate clock edge.
+
+Therefore:
+
+</p>
+
+<pre><code>
+result = 15
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Important RTL Observation
+
+</h4>
+
+<p>
+
+Notice that the <strong>ALU is combinational</strong>, while the
+<strong>registers are sequential</strong>.
+
+This separation is a fundamental RTL design pattern:
+
+</p>
+
+<pre><code>
+Sequential Logic
+      |
+      v
+   Registers
+      |
+      v
+Combinational Logic
+      |
+      v
+   ALU Result
+      |
+      v
+Sequential Logic
+      |
+      v
+   Register
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A datapath combines sequential storage elements with combinational
+processing logic to move and transform data across clock cycles.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 13 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+13. Datapath Timing
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how clock period, propagation delay and setup time affect datapath operation.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Why Timing Matters
+
+</h4>
+
+<p>
+
+A synchronous datapath must complete its combinational operation
+within the available clock period.
+
+The receiving register must have enough time to capture the result
+correctly at the next active clock edge.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Timing Path
+
+</h4>
+
+<pre><code>
+Source Register
+      |
+      | Clock-to-Q Delay
+      v
+Combinational Logic
+      |
+      | Propagation Delay
+      v
+Destination Register
+      |
+      | Setup Time
+      v
+Next Clock Edge
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example Datapath
+
+</h4>
+
+<pre><code>
+     +--------+       +-----------+       +--------+
+     | Reg A  | ----> |    ALU    | ----> | Reg B  |
+     +--------+       +-----------+       +--------+
+         |                  |
+         |                  |
+     Clock-to-Q        Combinational
+                         Delay
+</code></pre>
+
+<p>
+
+The data launched by the source register must propagate through the
+combinational logic and arrive at the destination register early
+enough to satisfy its setup-time requirement.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Simplified Timing Requirement
+
+</h4>
+
+<pre><code>
+Clock Period ≥
+
+Clock-to-Q Delay
++
+Combinational Logic Delay
++
+Setup Time
++
+Timing Margin
+</code></pre>
+
+<p>
+
+For a simplified example, suppose:
+
+</p>
+
+<ul>
+
+<li>Clock-to-Q delay = 1 ns</li>
+
+<li>ALU and other combinational delay = 5 ns</li>
+
+<li>Setup time = 1 ns</li>
+
+<li>Timing margin = 1 ns</li>
+
+</ul>
+
+<p>
+
+Then the minimum clock period would need to be approximately:
+
+</p>
+
+<pre><code>
+1 ns + 5 ns + 1 ns + 1 ns
+
+= 8 ns
+</code></pre>
+
+<p>
+
+This corresponds to a theoretical maximum frequency of approximately:
+
+</p>
+
+<pre><code>
+Frequency = 1 / Clock Period
+
+          = 1 / 8 ns
+
+          = 125 MHz
+</code></pre>
+
+<h4 class="text-info mt-4">
+
+Critical Path
+
+</h4>
+
+<p>
+
+In a datapath containing multiple register-to-register paths, the
+<strong>critical path</strong> is the path with the largest timing
+delay.
+
+</p>
+
+<pre><code>
+             Path 1
+Reg ----> MUX ----> Reg
+          2 ns
+
+             Path 2
+Reg ----> MUX ----> ALU ----> Reg
+          2 ns      5 ns
+
+             Path 3
+Reg ----> ALU ----> Reg
+          4 ns
+</code></pre>
+
+<p>
+
+In this example, Path 2 has the largest combinational delay and is
+therefore the likely critical path.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+What Happens If the Path Is Too Slow?
+
+</h4>
+
+<p>
+
+If data does not arrive at the destination register before the setup
+requirement, a <strong>setup timing violation</strong> can occur.
+
+This means the design may not operate reliably at the intended clock
+frequency.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+How Can Datapath Timing Be Improved?
+
+</h4>
+
+<ul>
+
+<li>Reduce unnecessary combinational logic.</li>
+
+<li>Optimize arithmetic operations.</li>
+
+<li>Reduce multiplexer depth.</li>
+
+<li>Use pipelining to divide long paths.</li>
+
+<li>Optimize the critical path.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Connection to Pipelining
+
+</h4>
+
+<p>
+
+If a combinational path is too long, pipeline registers can divide
+the operation into multiple stages.
+
+</p>
+
+<pre><code>
+Without Pipeline:
+
+Reg --------> MUX ----> ALU ----> Logic --------> Reg
+
+
+With Pipeline:
+
+Reg ----> MUX ----> Reg ----> ALU ----> Reg
+                     ^
+                     |
+                 Pipeline
+                 Register
+</code></pre>
+
+<p>
+
+Pipelining can reduce the amount of combinational work performed in
+each clock cycle, allowing a shorter clock period.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A datapath must satisfy timing requirements between its sequential
+elements. The longest register-to-register path often determines the
+maximum operating frequency.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 14 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+14. Datapath Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Run the datapath RTL and observe the results using console output and waveforms.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Try It Yourself
+
+</h4>
+
+<p>
+
+The EDA Playground project contains the complete datapath RTL and
+testbench.
+
+The design includes:
+
+</p>
+
+<ul>
+
+<li>Input registers</li>
+
+<li>ALU</li>
+
+<li>Result register</li>
+
+<li>Reset and enable control</li>
+
+<li>Multiple ALU operations</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Operations to Verify
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Operation</th>
+
+<th>ALU Code</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>ADD</td>
+
+<td>000</td>
+
+</tr>
+
+<tr>
+
+<td>SUB</td>
+
+<td>001</td>
+
+</tr>
+
+<tr>
+
+<td>AND</td>
+
+<td>010</td>
+
+</tr>
+
+<tr>
+
+<td>OR</td>
+
+<td>011</td>
+
+</tr>
+
+<tr>
+
+<td>XOR</td>
+
+<td>100</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+What to Observe
+
+</h4>
+
+<ul>
+
+<li>Reset clears the registers and result.</li>
+
+<li>Input values are captured when enable is asserted.</li>
+
+<li>The ALU performs the operation selected by <strong>alu_op</strong>.</li>
+
+<li>The result register captures the ALU result on the clock edge.</li>
+
+<li>Observe the register → ALU → register datapath in the waveform.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Console Output
+
+</h4>
+
+<p>
+
+The testbench prints the input values, ALU operation and result during
+simulation.
+
+This allows you to quickly check whether the expected operation was
+performed.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Waveform
+
+</h4>
+
+<p>
+
+Open the waveform viewer and observe:
+
+</p>
+
+<ul>
+
+<li><strong>clk</strong></li>
+
+<li><strong>reset</strong></li>
+
+<li><strong>enable</strong></li>
+
+<li><strong>data_a</strong></li>
+
+<li><strong>data_b</strong></li>
+
+<li><strong>alu_op</strong></li>
+
+<li><strong>result</strong></li>
+
+</ul>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Run the Datapath Simulation
+
+</h5>
+
+<a href="https://edaplayground.com/x/r2eG"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Open EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+
+Run the simulation, check the console output and inspect the waveform
+to verify the datapath operation.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- Lesson Navigation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+
+<div class="d-flex justify-content-between align-items-center">
+
+
+<a href="lesson-6.html"
+   class="btn btn-outline-light">
+
+← Previous Lesson
+
+</a>
+
+
+<a href="#"
+   class="btn btn-info">
+
+Next Section →
+
+</a>
+
+
+</div>
+
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Bootstrap JS -->
+<!-- ========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+</html>
+
