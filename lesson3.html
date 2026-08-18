@@ -1113,3 +1113,531 @@ Y follows A when SEL = 0 and B when SEL = 1.
 </div>
 
 </section>  
+
+<!-- ========================= -->
+<!-- always @(*) Combinational Logic -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Combinational Logic Using always @(*)
+
+</h2>
+
+<p class="text-secondary">
+
+Another common way to describe combinational logic in Verilog.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+Combinational logic can also be described using an
+<strong>always @(*)</strong> block.
+
+The block executes whenever any signal used inside the block changes.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module and_gate(
+
+input a,
+input b,
+
+output reg y
+
+);
+
+always @(*) begin
+
+    y = a &amp; b;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Why use always @(*)?
+
+</h4>
+
+<ul>
+
+<li>Useful for describing more complex combinational logic.</li>
+
+<li>Allows multiple statements inside one combinational block.</li>
+
+<li>The <strong>*</strong> automatically includes signals used by the block in its sensitivity list.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Important RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+When describing combinational logic using
+<strong>always @(*)</strong>, make sure every output is assigned for
+all possible conditions. Otherwise, unintended latches can be inferred.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- assign vs always @(*) -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+assign vs always @(*)
+
+</h2>
+
+<p class="text-secondary">
+
+Two common ways to describe combinational logic in Verilog.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+<th>assign</th>
+<th>always @(*)</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Type</td>
+<td>Continuous assignment</td>
+<td>Procedural block</td>
+
+</tr>
+
+<tr>
+
+<td>Best suited for</td>
+<td>Simple logic equations</td>
+<td>More complex combinational logic</td>
+
+</tr>
+
+<tr>
+
+<td>Example</td>
+
+<td><code>assign y = a &amp; b;</code></td>
+
+<td><code>always @(*)</code></td>
+
+</tr>
+
+<tr>
+
+<td>Output type</td>
+<td>Typically wire</td>
+<td>Typically reg in Verilog</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Design Tip
+
+</h4>
+
+<p class="mb-0">
+
+For simple Boolean relationships, <strong>assign</strong> is often the
+clearest choice. For combinational logic containing multiple conditions
+or statements, <strong>always @(*)</strong> can make the RTL easier to
+organize.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+  
+<!-- ========================= -->
+<!-- Hands-on Practice -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Hands-on Practice
+
+</h2>
+
+<p class="text-secondary">
+
+Apply what you learned by designing a simple combinational circuit.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Exercise: 2-Input OR Gate
+
+</h4>
+
+<p>
+
+Design a 2-input OR gate using Verilog and verify its behavior for all
+four possible input combinations.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+Requirements
+
+</h5>
+
+<ul>
+
+<li>Create a module named <strong>or_gate</strong>.</li>
+
+<li>Use inputs <strong>a</strong> and <strong>b</strong>.</li>
+
+<li>Create output <strong>y</strong>.</li>
+
+<li>Implement the logic using <strong>assign</strong>.</li>
+
+<li>Create a testbench to verify all four input combinations.</li>
+
+</ul>
+
+<h5 class="text-info mt-4">
+
+Bonus Challenge
+
+</h5>
+
+<p class="mb-0">
+
+Implement the same OR gate using
+<strong>always @(*)</strong> instead of <strong>assign</strong>.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Lesson Summary -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Lesson Summary
+
+</h2>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>Combinational logic depends only on the current input values.</li>
+
+<li>The <strong>assign</strong> statement is useful for simple combinational logic.</li>
+
+<li>A 2:1 MUX selects one of two inputs using a select signal.</li>
+
+<li><strong>always @(*)</strong> can be used to describe more complex combinational logic.</li>
+
+<li>All outputs in a combinational <strong>always @(*)</strong> block must be assigned to avoid unintended latches.</li>
+
+<li>Combinational RTL can be verified using a testbench and simulation.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Interview Questions
+
+</h2>
+
+<p class="text-secondary">
+
+Test your understanding of combinational logic and basic Verilog.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ol>
+
+<li class="mb-3">
+What is combinational logic?
+</li>
+
+<li class="mb-3">
+What is the difference between combinational and sequential logic?
+</li>
+
+<li class="mb-3">
+What is a continuous assignment in Verilog?
+</li>
+
+<li class="mb-3">
+What is the purpose of the <strong>assign</strong> statement?
+</li>
+
+<li class="mb-3">
+What is a 2:1 multiplexer?
+</li>
+
+<li class="mb-3">
+How does the select signal control a multiplexer?
+</li>
+
+<li class="mb-3">
+What is the difference between <strong>assign</strong> and
+<strong>always @(*)</strong>?
+</li>
+
+<li class="mb-3">
+Why can an incomplete combinational <strong>always @(*)</strong>
+block infer a latch?
+</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Key Takeaways
+
+</h2>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>Combinational logic has no memory and depends only on current inputs.</li>
+
+<li>Verilog <strong>assign</strong> is useful for simple combinational equations.</li>
+
+<li>A 2:1 MUX selects between two inputs using a select signal.</li>
+
+<li><strong>always @(*)</strong> can describe procedural combinational logic.</li>
+
+<li>Every output in a combinational <strong>always @(*)</strong> block should be assigned for all possible conditions.</li>
+
+<li>Simulation and testbenches help verify that the RTL behaves as expected.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Coming Next -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h3 class="text-info">
+
+Coming Next
+
+</h3>
+
+<p class="mb-0">
+
+In <strong>Lesson 4</strong>, you'll learn the fundamentals of
+<strong>Sequential Logic</strong>, including flip-flops, registers,
+clocks, and how digital circuits store state.
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+  
