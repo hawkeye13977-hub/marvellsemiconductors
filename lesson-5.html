@@ -10814,6 +10814,1310 @@ forever → execute indefinitely
 
 </section>
 
+<section class="lesson-section">
+    <h2>Arrays and Memories</h2>
+
+    <p>
+        In digital designs, we frequently need to work with multiple
+        bits or multiple words of data. Verilog provides arrays to
+        represent these structures.
+    </p>
+
+    <p>Arrays are especially important when modeling:</p>
+
+    <ul>
+        <li>Registers</li>
+        <li>Memory</li>
+        <li>Register files</li>
+        <li>Buffers</li>
+        <li>Lookup tables</li>
+        <li>Storage structures</li>
+    </ul>
+
+    <h3>Packed Arrays</h3>
+
+    <p>
+        A packed array represents a group of bits that are stored
+        together as one vector.
+    </p>
+
+    <pre><code>reg [7:0] data;</code></pre>
+
+    <p>
+        This creates an 8-bit vector. Each bit can be accessed
+        individually.
+    </p>
+
+    <pre><code>data[0]
+data[1]
+data[7]</code></pre>
+
+    <h3>Unpacked Arrays</h3>
+
+    <p>
+        An unpacked array is a collection of separate elements.
+    </p>
+
+    <pre><code>reg [7:0] memory [0:15];</code></pre>
+
+    <p>This represents:</p>
+
+    <ul>
+        <li>16 memory locations</li>
+        <li>Each location stores 8 bits</li>
+        <li>Total storage = 16 × 8 = 128 bits</li>
+    </ul>
+
+    <h3>Packed vs Unpacked</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Declaration</th>
+                <th>Meaning</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td><code>reg [7:0] data;</code></td>
+                <td>One 8-bit vector</td>
+            </tr>
+
+            <tr>
+                <td><code>reg [7:0] memory [0:15];</code></td>
+                <td>16 elements, each 8 bits</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>What is a Memory?</h3>
+
+    <p>
+        A memory can be modeled as an array of storage locations.
+        Each location is identified using an address.
+    </p>
+
+    <pre><code>reg [7:0] memory [0:15];</code></pre>
+
+    <p>
+        This memory has a depth of 16 locations and a width of
+        8 bits per location.
+    </p>
+
+    <p>
+        <strong>Memory Size = Depth × Width</strong>
+    </p>
+
+    <p>
+        16 × 8 = 128 bits
+    </p>
+
+    <h3>Writing to Memory</h3>
+
+    <p>
+        A memory location can be written by specifying its address.
+    </p>
+
+    <pre><code>memory[3] = 8'b10101010;</code></pre>
+
+    <p>
+        This stores the value <code>10101010</code> in memory
+        location 3.
+    </p>
+
+    <h3>Reading from Memory</h3>
+
+    <p>
+        A memory location can be read using its address.
+    </p>
+
+    <pre><code>data = memory[3];</code></pre>
+
+    <p>
+        The contents of memory location 3 are assigned to
+        <code>data</code>.
+    </p>
+</section>
+
+<section class="lesson-section">
+    <h2>Memory Read and Write Operations</h2>
+
+    <p>
+        A memory contains multiple storage locations. Each location
+        is identified by an address.
+    </p>
+
+    <p>A typical memory interface contains:</p>
+
+    <ul>
+        <li><strong>Address</strong> — selects the memory location.</li>
+        <li><strong>Write Data</strong> — data to be stored.</li>
+        <li><strong>Read Data</strong> — data obtained from memory.</li>
+        <li><strong>Write Enable</strong> — controls whether a write occurs.</li>
+        <li><strong>Clock</strong> — controls synchronous writes.</li>
+    </ul>
+
+    <h3>Write Operation</h3>
+
+    <p>
+        For a synchronous memory, the write occurs at the active
+        clock edge.
+    </p>
+
+    <pre><code>always @(posedge clk) begin
+    if (we)
+        memory[address] &lt;= write_data;
+end</code></pre>
+
+    <p>
+        For example, if the address is 5, the write data is
+        <code>8'hA5</code>, and <code>we = 1</code>, then at the
+        rising clock edge:
+    </p>
+
+    <pre><code>memory[5] = 8'hA5;</code></pre>
+
+    <h3>Read Operation</h3>
+
+    <p>
+        A combinational read returns the contents of the selected
+        memory location.
+    </p>
+
+    <pre><code>always @(*) begin
+    read_data = memory[address];
+end</code></pre>
+
+    <p>
+        With this type of read, changing the address changes the
+        selected memory location without waiting for a clock edge.
+    </p>
+
+    <h3>Synchronous Write + Combinational Read</h3>
+
+    <p>
+        A simple memory can combine synchronous writing with
+        combinational reading.
+    </p>
+
+    <pre><code>module memory_16x8 (
+    input clk,
+    input we,
+    input [3:0] address,
+    input [7:0] write_data,
+    output reg [7:0] read_data
+);
+
+reg [7:0] memory [0:15];
+
+always @(posedge clk) begin
+    if (we)
+        memory[address] &lt;= write_data;
+end
+
+always @(*) begin
+    read_data = memory[address];
+end
+
+endmodule</code></pre>
+
+    <h3>Understanding the RTL</h3>
+
+    <ul>
+        <li><code>memory [0:15]</code> creates 16 locations.</li>
+        <li>Each location stores 8 bits.</li>
+        <li><code>address[3:0]</code> selects one of the 16 locations.</li>
+        <li><code>we</code> enables writing.</li>
+        <li>The write occurs on the rising clock edge.</li>
+        <li><code>read_data</code> continuously reflects the selected location.</li>
+    </ul>
+
+    <h3>Write vs Read</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Operation</th>
+                <th>Clock Required?</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Write</td>
+                <td>Yes</td>
+                <td><code>posedge clk</code></td>
+            </tr>
+
+            <tr>
+                <td>Combinational Read</td>
+                <td>No</td>
+                <td><code>memory[address]</code></td>
+            </tr>
+        </tbody>
+    </table>
+</section>    
+
+<section class="lesson-section">
+    <h2>EDA Playground Practice</h2>
+
+    <p>
+        Let's verify both writing and reading from a simple
+        16 × 8 memory.
+    </p>
+
+    <h3>Design Code</h3>
+
+    <pre><code>module memory_16x8 (
+    input clk,
+    input we,
+    input [3:0] address,
+    input [7:0] write_data,
+    output reg [7:0] read_data
+);
+
+reg [7:0] memory [0:15];
+
+always @(posedge clk) begin
+    if (we)
+        memory[address] &lt;= write_data;
+end
+
+always @(*) begin
+    read_data = memory[address];
+end
+
+endmodule</code></pre>
+
+    <h3>Testbench Code</h3>
+
+    <pre><code>module tb;
+
+reg clk;
+reg we;
+reg [3:0] address;
+reg [7:0] write_data;
+wire [7:0] read_data;
+
+memory_16x8 dut (
+    .clk(clk),
+    .we(we),
+    .address(address),
+    .write_data(write_data),
+    .read_data(read_data)
+);
+
+initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+end
+
+initial begin
+    we = 0;
+    address = 0;
+    write_data = 0;
+
+    // Write AA to address 3
+    #2;
+    we = 1;
+    address = 4'd3;
+    write_data = 8'hAA;
+
+    #10;
+
+    // Write 55 to address 7
+    address = 4'd7;
+    write_data = 8'h55;
+
+    #10;
+
+    // Read address 3
+    we = 0;
+    address = 4'd3;
+
+    #2;
+
+    $display(
+        "TIME=%0t READ ADDR=%0d DATA=%h",
+        $time,
+        address,
+        read_data
+    );
+
+    #8;
+
+    // Read address 7
+    address = 4'd7;
+
+    #2;
+
+    $display(
+        "TIME=%0t READ ADDR=%0d DATA=%h",
+        $time,
+        address,
+        read_data
+    );
+
+    #8;
+
+    $display("Simulation complete");
+    $finish;
+end
+
+initial begin
+    $monitor(
+        "TIME=%0t CLK=%b WE=%b ADDR=%0d WD=%h RD=%h",
+        $time,
+        clk,
+        we,
+        address,
+        write_data,
+        read_data
+    );
+end
+
+endmodule</code></pre>
+
+    <h3>Expected Results</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Operation</th>
+                <th>Address</th>
+                <th>Write Data</th>
+                <th>Expected Read Data</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Write</td>
+                <td>3</td>
+                <td><code>AA</code></td>
+                <td><code>AA</code></td>
+            </tr>
+
+            <tr>
+                <td>Write</td>
+                <td>7</td>
+                <td><code>55</code></td>
+                <td><code>55</code></td>
+            </tr>
+
+            <tr>
+                <td>Read</td>
+                <td>3</td>
+                <td>—</td>
+                <td><code>AA</code></td>
+            </tr>
+
+            <tr>
+                <td>Read</td>
+                <td>7</td>
+                <td>—</td>
+                <td><code>55</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Waveform Signals</h3>
+
+    <p>Add these signals to the waveform viewer:</p>
+
+    <ul>
+        <li><code>clk</code></li>
+        <li><code>we</code></li>
+        <li><code>address[3:0]</code></li>
+        <li><code>write_data[7:0]</code></li>
+        <li><code>read_data[7:0]</code></li>
+    </ul>
+
+    <h3>What to Observe</h3>
+
+    <p>
+        When <code>WE = 1</code> and a rising clock edge occurs,
+        the selected memory location is written.
+    </p>
+
+    <pre><code>WE = 1
+Address = 3
+Write Data = AA
+        ↓
+Rising Clock Edge
+        ↓
+memory[3] = AA</code></pre>
+
+    <p>
+        Then repeat the same process for address 7 with
+        <code>8'h55</code>.
+    </p>
+
+    <h3>Common Mistakes</h3>
+
+    <ul>
+        <li>Changing the address and expecting a synchronous read immediately.</li>
+        <li>Forgetting that the write happens at the clock edge.</li>
+        <li>Keeping <code>WE</code> high unintentionally.</li>
+        <li>Using an address width that cannot represent every memory location.</li>
+        <li>Confusing memory depth with memory width.</li>
+    </ul>
+</section>
+
+<section class="lesson-section">
+    <h2>Parameters and localparam</h2>
+
+    <p>
+        In real RTL designs, we often want the same module to work
+        with different widths, sizes, or configurations. Verilog
+        parameters allow us to make modules reusable and configurable.
+    </p>
+
+    <h3>What is a Parameter?</h3>
+
+    <p>
+        A parameter is a constant value that can be used to configure
+        a module.
+    </p>
+
+    <pre><code>module counter #(
+    parameter WIDTH = 8
+) (
+    input clk,
+    input reset,
+    output reg [WIDTH-1:0] count
+);</code></pre>
+
+    <p>
+        Here, <code>WIDTH</code> controls the size of the counter.
+    </p>
+
+    <ul>
+        <li><code>WIDTH = 8</code> → <code>count[7:0]</code></li>
+        <li><code>WIDTH = 16</code> → <code>count[15:0]</code></li>
+    </ul>
+
+    <h3>Why Use Parameters?</h3>
+
+    <ul>
+        <li>Make RTL reusable.</li>
+        <li>Avoid duplicate modules.</li>
+        <li>Make designs configurable.</li>
+        <li>Make verification easier.</li>
+        <li>Allow the same RTL to support different hardware sizes.</li>
+    </ul>
+
+    <h3>Parameterized Counter</h3>
+
+    <pre><code>module counter #(
+    parameter WIDTH = 8
+) (
+    input clk,
+    input reset,
+    output reg [WIDTH-1:0] count
+);
+
+always @(posedge clk) begin
+    if (reset)
+        count &lt;= {WIDTH{1'b0}};
+    else
+        count &lt;= count + 1'b1;
+end
+
+endmodule</code></pre>
+
+    <p>
+        The expression <code>{WIDTH{1'b0}}</code> creates a vector
+        containing <code>WIDTH</code> zeros.
+    </p>
+
+    <pre><code>WIDTH = 4
+{WIDTH{1'b0}}
+↓
+0000</code></pre>
+
+    <pre><code>WIDTH = 8
+{WIDTH{1'b0}}
+↓
+00000000</code></pre>
+
+    <h3>Parameter Override</h3>
+
+    <p>
+        A parameter can be overridden when instantiating the module.
+    </p>
+
+    <pre><code>counter #(
+    .WIDTH(4)
+) counter_4bit (
+    .clk(clk),
+    .reset(reset),
+    .count(count)
+);</code></pre>
+
+    <p>
+        Another instance can use a different width while using the
+        same RTL module.
+    </p>
+
+    <pre><code>counter #(
+    .WIDTH(16)
+) counter_16bit (
+    .clk(clk),
+    .reset(reset),
+    .count(count)
+);</code></pre>
+
+    <h3>What is localparam?</h3>
+
+    <p>
+        A <code>localparam</code> is similar to a parameter, but it is
+        intended to be an internal constant that cannot be overridden
+        from outside the module.
+    </p>
+
+    <pre><code>module example #(
+    parameter WIDTH = 8
+);
+
+localparam MAX_VALUE = (1 &lt;&lt; WIDTH) - 1;
+
+endmodule</code></pre>
+
+    <ul>
+        <li><code>WIDTH</code> can be configured by the module user.</li>
+        <li><code>MAX_VALUE</code> is derived internally.</li>
+        <li>The module user should not override <code>MAX_VALUE</code>.</li>
+    </ul>
+
+    <h3>parameter vs localparam</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>parameter</th>
+                <th>localparam</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Constant value</td>
+                <td>Yes</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Configurable</td>
+                <td>Yes</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>Can be overridden</td>
+                <td>Yes</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>Typical use</td>
+                <td>Configurable width/size</td>
+                <td>Internal constants</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Key Idea</h3>
+
+    <pre><code>parameter  → configurable constant
+localparam → internal constant
+parameter  → set during elaboration
+parameterized RTL → reusable RTL</code></pre>
+</section>
+
+<section class="lesson-section">
+    <h2>EDA Playground Practice — Parameterized Counter</h2>
+
+    <p>
+        Let's verify a parameterized counter using a configurable
+        width and maximum count.
+    </p>
+
+    <h3>Design Code</h3>
+
+    <pre><code>module counter_limit #(
+    parameter WIDTH = 4,
+    parameter MAX_COUNT = 9
+) (
+    input clk,
+    input reset,
+    output reg [WIDTH-1:0] count
+);
+
+always @(posedge clk) begin
+    if (reset)
+        count &lt;= 0;
+    else if (count == MAX_COUNT)
+        count &lt;= 0;
+    else
+        count &lt;= count + 1'b1;
+end
+
+endmodule</code></pre>
+
+    <h3>Testbench Code</h3>
+
+    <pre><code>module tb;
+
+reg clk;
+reg reset;
+wire [3:0] count;
+
+counter_limit #(
+    .WIDTH(4),
+    .MAX_COUNT(9)
+) dut (
+    .clk(clk),
+    .reset(reset),
+    .count(count)
+);
+
+initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+end
+
+initial begin
+    reset = 1;
+
+    #12;
+    reset = 0;
+
+    #110;
+
+    $display("Simulation complete");
+    $finish;
+end
+
+initial begin
+    $monitor(
+        "TIME=%0t CLK=%b RESET=%b COUNT=%0d",
+        $time,
+        clk,
+        reset,
+        count
+    );
+end
+
+endmodule</code></pre>
+
+    <h3>Expected Behavior</h3>
+
+    <p>
+        After reset is released, the counter should count from
+        0 through 9.
+    </p>
+
+    <pre><code>0
+1
+2
+3
+4
+5
+6
+7
+8
+9
+0
+1
+...</code></pre>
+
+    <p>
+        When the counter reaches <code>9</code>, the next rising
+        clock edge returns it to <code>0</code>.
+    </p>
+
+    <h3>Waveform Signals</h3>
+
+    <ul>
+        <li><code>clk</code></li>
+        <li><code>reset</code></li>
+        <li><code>count[3:0]</code></li>
+    </ul>
+
+    <h3>Practice Exercise</h3>
+
+    <p>
+        Modify the testbench to instantiate the same counter with:
+    </p>
+
+    <ul>
+        <li><code>WIDTH = 8</code></li>
+        <li><code>MAX_COUNT = 20</code></li>
+    </ul>
+
+    <p>The expected sequence should be:</p>
+
+    <pre><code>0
+1
+2
+3
+...
+19
+20
+0
+1
+...</code></pre>
+
+    <h3>Common Mistakes</h3>
+
+    <ul>
+        <li>Confusing parameters with runtime signals.</li>
+        <li>Trying to change a parameter during simulation.</li>
+        <li>Using an insufficient signal width for the parameter value.</li>
+        <li>Forgetting that a parameter is a compile/elaboration-time constant.</li>
+        <li>Using a parameter when the value should actually be a runtime input.</li>
+    </ul>
+
+    <h3>Interview Questions</h3>
+
+    <ol>
+        <li>What is a parameter in Verilog?</li>
+        <li>Why are parameters useful in RTL design?</li>
+        <li>How do you override a parameter during module instantiation?</li>
+        <li>What is the difference between parameter and localparam?</li>
+        <li>Can a parameter change during simulation?</li>
+        <li>How would you create a parameterized N-bit counter?</li>
+        <li>Why are parameterized modules useful in large SoC designs?</li>
+    </ol>
+</section>
+
+<section class="lesson-section">
+    <h2>Generate Blocks</h2>
+
+    <p>
+        A generate block is used to create hardware structures
+        repeatedly or conditionally during elaboration.
+    </p>
+
+    <p>
+        Instead of manually writing the same hardware multiple times,
+        a generate block allows the RTL designer to describe the
+        repetition once.
+    </p>
+
+    <h3>Why Use Generate Blocks?</h3>
+
+    <ul>
+        <li>Create repeated hardware automatically.</li>
+        <li>Reduce duplicate RTL code.</li>
+        <li>Make parameterized designs scalable.</li>
+        <li>Improve RTL readability.</li>
+        <li>Support configurable hardware structures.</li>
+        <li>Create arrays of identical components.</li>
+    </ul>
+
+    <h3>Generate-for Loop</h3>
+
+    <p>
+        The most common form is a generate-for loop. It uses a
+        <code>genvar</code> to create multiple hardware instances.
+    </p>
+
+    <pre><code>genvar i;
+
+generate
+    for (i = 0; i &lt; 4; i = i + 1) begin : gen_block
+        // Hardware generated here
+    end
+endgenerate</code></pre>
+
+    <h3>What Does genvar Do?</h3>
+
+    <p>
+        If the loop runs four times, the elaborator creates four
+        copies of the hardware structure.
+    </p>
+
+    <pre><code>i = 0 → Hardware 0
+i = 1 → Hardware 1
+i = 2 → Hardware 2
+i = 3 → Hardware 3</code></pre>
+
+    <div class="note">
+        <strong>Important:</strong>
+        A generate loop is not a runtime loop. It is evaluated during
+        elaboration and is used to create hardware structures.
+    </div>
+
+    <h3>Generate Loop vs Procedural for Loop</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Generate Loop</th>
+                <th>Procedural for Loop</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>Elaboration time</td>
+                <td>Procedural execution</td>
+            </tr>
+
+            <tr>
+                <td>Creates hardware structures</td>
+                <td>Repeats procedural statements</td>
+            </tr>
+
+            <tr>
+                <td>Uses <code>genvar</code></td>
+                <td>Uses an integer variable</td>
+            </tr>
+
+            <tr>
+                <td>Commonly used for instances</td>
+                <td>Commonly used inside <code>always</code> blocks</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Example: Four AND Gates</h3>
+
+    <p>
+        Suppose we want to create four identical AND gates.
+    </p>
+
+    <p>Without generate:</p>
+
+    <pre><code>and (y[0], a[0], b[0]);
+and (y[1], a[1], b[1]);
+and (y[2], a[2], b[2]);
+and (y[3], a[3], b[3]);</code></pre>
+
+    <p>Using generate:</p>
+
+    <pre><code>genvar i;
+
+generate
+    for (i = 0; i &lt; 4; i = i + 1) begin : gen_and
+        assign y[i] = a[i] &amp; b[i];
+    end
+endgenerate</code></pre>
+
+    <p>
+        The result is equivalent to creating four AND operations:
+    </p>
+
+    <pre><code>y[0] = a[0] &amp; b[0]
+y[1] = a[1] &amp; b[1]
+y[2] = a[2] &amp; b[2]
+y[3] = a[3] &amp; b[3]</code></pre>
+
+    <h3>Parameterized AND Array</h3>
+
+    <p>
+        Generate blocks become especially useful when combined with
+        parameters.
+    </p>
+
+    <pre><code>module and_array #(
+    parameter WIDTH = 4
+) (
+    input [WIDTH-1:0] a,
+    input [WIDTH-1:0] b,
+    output [WIDTH-1:0] y
+);
+
+genvar i;
+
+generate
+    for (i = 0; i &lt; WIDTH; i = i + 1) begin : gen_and
+        assign y[i] = a[i] &amp; b[i];
+    end
+endgenerate
+
+endmodule</code></pre>
+
+    <p>Now the same module can create different sizes:</p>
+
+    <ul>
+        <li><code>WIDTH = 4</code> → 4 AND gates</li>
+        <li><code>WIDTH = 8</code> → 8 AND gates</li>
+        <li><code>WIDTH = 32</code> → 32 AND gates</li>
+        <li><code>WIDTH = 64</code> → 64 AND gates</li>
+    </ul>
+
+    <h3>Generate with Parameters</h3>
+
+    <p>
+        A parameter determines the size, while the generate loop
+        creates the required number of hardware structures.
+    </p>
+
+    <pre><code>WIDTH
+  ↓
+Generate Loop
+  ↓
+Gate 0 → Gate 1 → Gate 2 → ... → Gate N
+  ↓
+Output Vector</code></pre>
+
+    <h3>Conditional Generate</h3>
+
+    <p>
+        Generate blocks can also conditionally create hardware.
+    </p>
+
+    <pre><code>generate
+
+    if (WIDTH == 8) begin : gen_8bit
+        // 8-bit implementation
+    end
+
+    else begin : gen_other
+        // Other implementation
+    end
+
+endgenerate</code></pre>
+
+    <p>
+        The condition is evaluated during elaboration. The unused
+        branch does not become part of the resulting hardware structure.
+    </p>
+
+    <h3>Key Idea</h3>
+
+    <pre><code>generate → creates hardware structures
+genvar   → controls generate-for
+parameter + generate → scalable RTL
+generate → elaboration time</code></pre>
+</section>
+
+<section class="lesson-section">
+    <h2>Practical Example — Parameterized D Flip-Flop Array</h2>
+
+    <p>
+        A generate block can be used to create multiple identical
+        flip-flops. If <code>WIDTH</code> is 4, the generate block
+        creates four D flip-flop structures.
+    </p>
+
+    <pre><code>module dff_array #(
+    parameter WIDTH = 4
+) (
+    input clk,
+    input reset,
+    input [WIDTH-1:0] d,
+    output [WIDTH-1:0] q
+);
+
+genvar i;
+
+generate
+    for (i = 0; i &lt; WIDTH; i = i + 1) begin : gen_dff
+
+        reg q_bit;
+
+        always @(posedge clk) begin
+            if (reset)
+                q_bit &lt;= 1'b0;
+            else
+                q_bit &lt;= d[i];
+        end
+
+        assign q[i] = q_bit;
+
+    end
+endgenerate
+
+endmodule</code></pre>
+
+    <h3>What Does This Create?</h3>
+
+    <p>
+        For <code>WIDTH = 4</code>, the generate loop creates four
+        separate sequential storage elements.
+    </p>
+
+    <pre><code>d[0] → DFF → q[0]
+d[1] → DFF → q[1]
+d[2] → DFF → q[2]
+d[3] → DFF → q[3]</code></pre>
+
+    <p>
+        If <code>WIDTH</code> is changed to 8, the same RTL creates
+        eight D flip-flop structures.
+    </p>
+
+    <h3>Important RTL Concept</h3>
+
+    <p>
+        Generate loops describe hardware replication during
+        elaboration. They do not represent software-style runtime
+        iteration.
+    </p>
+
+    <h3>Generate vs Procedural for Loop</h3>
+
+    <pre><code>Generate Loop
+→ Hardware creation during elaboration
+→ Uses genvar
+→ Commonly used for repeated hardware structures
+
+Procedural for Loop
+→ Procedural execution
+→ Commonly used inside always blocks
+→ Repeats procedural statements</code></pre>
+
+    <h3>Key Takeaway</h3>
+
+    <p>
+        Generate blocks are especially useful when a design contains
+        repeated hardware structures whose size depends on a parameter.
+    </p>
+</section>
+
+<section class="lesson-section">
+    <h2>EDA Playground Practice — D Flip-Flop Array</h2>
+
+    <p>
+        Let's verify the parameterized D flip-flop array using an
+        EDA Playground testbench.
+    </p>
+
+    <h3>Design Code</h3>
+
+    <pre><code>module dff_array #(
+    parameter WIDTH = 4
+) (
+    input clk,
+    input reset,
+    input [WIDTH-1:0] d,
+    output [WIDTH-1:0] q
+);
+
+genvar i;
+
+generate
+    for (i = 0; i &lt; WIDTH; i = i + 1) begin : gen_dff
+
+        reg q_bit;
+
+        always @(posedge clk) begin
+            if (reset)
+                q_bit &lt;= 1'b0;
+            else
+                q_bit &lt;= d[i];
+        end
+
+        assign q[i] = q_bit;
+
+    end
+endgenerate
+
+endmodule</code></pre>
+
+    <h3>Testbench Code</h3>
+
+    <pre><code>module tb;
+
+reg clk;
+reg reset;
+reg [3:0] d;
+wire [3:0] q;
+
+dff_array #(
+    .WIDTH(4)
+) dut (
+    .clk(clk),
+    .reset(reset),
+    .d(d),
+    .q(q)
+);
+
+initial begin
+    clk = 0;
+    forever #5 clk = ~clk;
+end
+
+initial begin
+    reset = 1;
+    d = 4'b0000;
+
+    #12;
+    reset = 0;
+
+    d = 4'b1010;
+    #10;
+
+    d = 4'b0101;
+    #10;
+
+    d = 4'b1111;
+    #10;
+
+    d = 4'b0011;
+    #10;
+
+    $display("Simulation complete");
+    $finish;
+end
+
+initial begin
+    $monitor(
+        "TIME=%0t CLK=%b RESET=%b D=%b Q=%b",
+        $time,
+        clk,
+        reset,
+        d,
+        q
+    );
+end
+
+endmodule</code></pre>
+
+    <h3>Expected Behavior</h3>
+
+    <p>
+        The output <code>Q</code> should capture the input
+        <code>D</code> on each rising clock edge after reset is released.
+    </p>
+
+    <pre><code>Reset
+↓
+Q = 0000
+
+D = 1010
+↓
+Rising Edge
+↓
+Q = 1010
+
+D = 0101
+↓
+Rising Edge
+↓
+Q = 0101
+
+D = 1111
+↓
+Rising Edge
+↓
+Q = 1111
+
+D = 0011
+↓
+Rising Edge
+↓
+Q = 0011</code></pre>
+
+    <h3>Waveform Signals</h3>
+
+    <p>Add these signals to the waveform viewer:</p>
+
+    <ul>
+        <li><code>clk</code></li>
+        <li><code>reset</code></li>
+        <li><code>d[3:0]</code></li>
+        <li><code>q[3:0]</code></li>
+    </ul>
+
+    <h3>Practice Exercise</h3>
+
+    <p>Modify the design so that:</p>
+
+    <ol>
+        <li><code>WIDTH</code> becomes 8.</li>
+        <li>Apply <code>8'b10101010</code> to D.</li>
+        <li>Apply <code>8'b01010101</code> on the next cycle.</li>
+        <li>Observe Q in the waveform.</li>
+        <li>Verify the values using <code>$monitor</code>.</li>
+    </ol>
+
+    <h3>Expected Sequence</h3>
+
+    <pre><code>Reset → Q = 00000000
+
+D = 10101010
+Clock edge
+Q = 10101010
+
+D = 01010101
+Clock edge
+Q = 01010101</code></pre>
+
+    <h3>Common Mistakes</h3>
+
+    <ul>
+        <li>Thinking a generate loop executes repeatedly during simulation.</li>
+        <li>Forgetting to use <code>genvar</code> for a generate-for loop.</li>
+        <li>Using runtime signals as generate conditions.</li>
+        <li>Forgetting that generate constructs create hardware during elaboration.</li>
+        <li>Using generate when a simple vector operation would be clearer.</li>
+    </ul>
+</section>
+
+<section class="lesson-section">
+    <h2>Lesson 5 Interview Questions</h2>
+
+    <ol>
+        <li>What is a generate block in Verilog?</li>
+        <li>What is the purpose of <code>genvar</code>?</li>
+        <li>When does a generate block execute?</li>
+        <li>What is the difference between a generate-for loop and a procedural for loop?</li>
+        <li>Why are generate blocks useful with parameterized RTL?</li>
+        <li>What is a conditional generate?</li>
+        <li>Can a runtime signal be used directly as a generate condition?</li>
+        <li>Give an example where generate blocks are useful in an SoC design.</li>
+    </ol>
+
+    <h3>Remember</h3>
+
+    <div class="key-points">
+        <p><strong>generate</strong> → creates hardware structures</p>
+        <p><strong>genvar</strong> → controls generate-for</p>
+        <p><strong>parameter + generate</strong> → scalable RTL</p>
+        <p><strong>generate</strong> → elaboration time</p>
+        <p><strong>procedural loop</strong> → procedural execution</p>
+    </div>
+</section>
+
+<section class="lesson-summary">
+    <h2>Lesson 5 Complete</h2>
+
+    <p>
+        You have completed Lesson 5 on Verilog Procedural Blocks and
+        Coding Styles.
+    </p>
+
+    <h3>What You Learned</h3>
+
+    <ul>
+        <li>Procedural blocks and <code>always</code> blocks</li>
+        <li>Blocking and non-blocking assignments</li>
+        <li>Combinational and sequential RTL coding styles</li>
+        <li><code>if / else</code> and <code>case</code> statements</li>
+        <li><code>casez</code> and <code>casex</code></li>
+        <li>Verilog loops</li>
+        <li>Arrays and memories</li>
+        <li>Memory read and write operations</li>
+        <li>Parameters and <code>localparam</code></li>
+        <li>Generate blocks and <code>genvar</code></li>
+        <li>Parameterized hardware structures</li>
+        <li>EDA Playground verification exercises</li>
+    </ul>
+
+    <div class="key-points">
+        <p><strong>Combinational RTL:</strong> <code>always @(*)</code> + <code>=</code></p>
+        <p><strong>Sequential RTL:</strong> <code>always @(posedge clk)</code> + <code>&lt;=</code></p>
+        <p><strong>Memory:</strong> address selects the storage location</p>
+        <p><strong>parameter:</strong> configurable constant</p>
+        <p><strong>localparam:</strong> internal constant</p>
+        <p><strong>generate:</strong> creates repeated hardware during elaboration</p>
+    </div>
+</section>
+
     
     
 <!-- ========================= -->
