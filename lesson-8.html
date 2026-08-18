@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1">
+
+<title>Lesson 8 — Pipeline Design | SemiCore</title>
+
+<meta name="description"
+      content="Learn RTL Pipeline Design including pipeline stages, registers, latency, throughput, timing and practical Verilog examples.">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet">
+
+<link rel="stylesheet"
+      href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold text-info"
+   href="index.html">
+
+⚡ SemiCore
+
+</a>
+
+
+<button class="navbar-toggler"
+        type="button"
+        data-bs-toggle="collapse"
+        data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+
+<div class="collapse navbar-collapse"
+     id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="index.html">
+
+Home
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="tutorials.html">
+
+Tutorials
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="news.html">
+
+News
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="about.html">
+
+About
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link"
+   href="contact.html">
+
+Contact
+
+</a>
+
+</li>
+
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Hero -->
+<!-- ========================= -->
+
+<section class="course-hero">
+
+<div class="container text-center">
+
+
+<span class="badge bg-success fs-6 mb-3">
+
+Lesson 8
+
+</span>
+
+
+<h1>
+
+Pipeline Design
+
+</h1>
+
+
+<p>
+
+Learn how pipelining divides long datapath operations into multiple
+stages to improve timing and throughput.
+
+</p>
+
+
+<p class="text-info mt-3">
+
+📘 RTL Design • ⏱ Timing • 💻 Verilog
+
+</p>
+
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Breadcrumb -->
+<!-- ========================= -->
+
+<section class="container pt-4">
+
+<nav aria-label="breadcrumb">
+
+<ol class="breadcrumb">
+
+<li class="breadcrumb-item">
+
+<a href="index.html"
+   class="text-info">
+
+Home
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item">
+
+<a href="tutorials.html"
+   class="text-info">
+
+Tutorials
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item">
+
+<a href="rtl-design.html"
+   class="text-info">
+
+RTL Design
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item active text-secondary"
+    aria-current="page">
+
+Lesson 8
+
+</li>
+
+</ol>
+
+</nav>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Introduction -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Lesson Introduction
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how pipeline stages and registers improve datapath timing
+and throughput.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body p-4">
+
+<p>
+
+As datapaths become more complex, a large amount of combinational
+logic may exist between two registers.
+
+A long combinational path can limit the maximum operating frequency.
+
+</p>
+
+
+<p>
+
+<strong>Pipelining</strong> solves this problem by dividing the
+combinational logic into smaller stages separated by registers.
+
+</p>
+
+
+<p>
+
+In this lesson, we'll learn how pipeline stages work, how latency and
+throughput differ, how pipeline timing is analyzed and how to
+implement a basic pipeline using Verilog RTL.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Learning Objectives -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Learning Objectives
+
+</h2>
+
+<p class="text-secondary">
+
+By the end of this lesson, you should be able to:
+
+</p>
+
+</div>
+
+
+<div class="row g-4">
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>
+
+🧠 Understand Pipelining
+
+</h4>
+
+<p>
+
+Explain what pipelining is and why it is used in digital hardware
+design.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>
+
+📊 Analyze Performance
+
+</h4>
+
+<p>
+
+Understand latency, throughput, clock period and pipeline timing.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>
+
+⏱ Timing Analysis
+
+</h4>
+
+<p>
+
+Identify critical paths and understand how pipeline registers divide
+combinational delays.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4>
+
+💻 Write Pipeline RTL
+
+</h4>
+
+<p>
+
+Implement basic pipelined datapaths using synthesizable Verilog.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Step 1 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+1. What is Pipelining?
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the fundamental idea behind pipeline architecture.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Definition
+
+</h4>
+
+<p>
+
+<strong>Pipelining</strong> is a technique used to divide a large
+combinational operation into multiple smaller stages separated by
+registers.
+
+</p>
+
+
+<p>
+
+Instead of performing the entire operation in one long clock cycle,
+the work is divided across multiple stages.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Without Pipelining
+
+</h4>
+
+<pre><code>
+Register
+   |
+   v
++------+    +------+    +------+    +------+
+| Logic| -> | Logic| -> | Logic| -> | Logic|
++------+    +------+    +------+    +------+
+                                      |
+                                      v
+                                   Register
+</code></pre>
+
+
+<p>
+
+All of the combinational logic lies between the two registers.
+
+This can create a long critical path.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+With Pipelining
+
+</h4>
+
+<pre><code>
+Register
+   |
+   v
++------+      +------+
+| Logic| ---> | Reg  |
++------+      +------+
+                 |
+                 v
+              +------+
+              | Logic|
+              +------+
+                 |
+                 v
+              +------+
+              | Reg  |
+              +------+
+                 |
+                 v
+              +------+
+              | Logic|
+              +------+
+                 |
+                 v
+              Register
+</code></pre>
+
+
+<p>
+
+Pipeline registers divide the long combinational path into smaller
+sections.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Example
+
+</h4>
+
+<p>
+
+Suppose a datapath contains three major operations:
+
+</p>
+
+<pre><code>
+Operation 1 → Operation 2 → Operation 3
+</code></pre>
+
+<p>
+
+Without pipelining, all three operations may need to complete within
+one clock cycle.
+
+With pipelining, they can be divided into three stages:
+
+</p>
+
+<pre><code>
+Stage 1 → Register → Stage 2 → Register → Stage 3
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Use Pipelining?
+
+</h4>
+
+<ul>
+
+<li>Reduce the amount of combinational logic per clock cycle.</li>
+
+<li>Allow a shorter clock period.</li>
+
+<li>Increase the potential operating frequency.</li>
+
+<li>Improve throughput for repeated operations.</li>
+
+</ul>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipelining divides a long datapath into smaller stages using
+registers, allowing multiple operations to be processed
+simultaneously at different stages.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 2 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+2. Why Do We Need Pipelining?
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding why long combinational paths can limit RTL performance.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+The Problem with Long Combinational Paths
+
+</h4>
+
+<p>
+
+In a synchronous RTL design, data typically travels from one
+register through combinational logic and is captured by another
+register on the next clock edge.
+
+</p>
+
+<pre><code>
+Source Register
+      |
+      v
++-------------+
+| Combinational|
+|    Logic     |
++-------------+
+      |
+      v
+Destination Register
+</code></pre>
+
+<p>
+
+If the combinational logic becomes very large, the data may take too
+long to reach the destination register.
+
+This limits how fast the clock can operate.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example of a Long Datapath
+
+</h4>
+
+<pre><code>
+Register
+   |
+   v
+  MUX
+   |
+   v
+  ALU
+   |
+   v
+ Comparator
+   |
+   v
+ Shifter
+   |
+   v
+Register
+</code></pre>
+
+<p>
+
+All of these operations may create a long combinational delay if they
+are placed between the same two registers.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Effect on Clock Frequency
+
+</h4>
+
+<p>
+
+The clock period must be long enough for the slowest register-to-register
+path to complete.
+
+A simplified relationship is:
+
+</p>
+
+<pre><code>
+Clock Period ≥
+
+Clock-to-Q Delay
++
+Combinational Logic Delay
++
+Setup Time
+</code></pre>
+
+<p>
+
+Therefore, reducing the combinational delay between registers can
+allow the design to operate at a higher frequency.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+How Pipelining Helps
+
+</h4>
+
+<p>
+
+Pipelining inserts registers between sections of combinational logic.
+
+Instead of one long path:
+
+</p>
+
+<pre><code>
+Register
+   |
+   v
+MUX → ALU → Comparator → Shifter
+   |
+   v
+Register
+</code></pre>
+
+<p>
+
+we can divide the logic into multiple stages:
+
+</p>
+
+<pre><code>
+Register
+   |
+   v
+MUX → ALU
+   |
+   v
+Pipeline Register
+   |
+   v
+Comparator → Shifter
+   |
+   v
+Pipeline Register
+</code></pre>
+
+<p>
+
+Each stage now performs less combinational work during one clock
+cycle.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Higher Frequency
+
+</h4>
+
+<p>
+
+If the longest combinational delay is reduced, the clock period can
+potentially become shorter.
+
+For example:
+
+</p>
+
+<pre><code>
+Without Pipeline:
+
+10 ns combinational delay
+
+Maximum frequency ≈ 100 MHz
+
+
+With Pipeline:
+
+5 ns per stage
+
+Maximum frequency ≈ 200 MHz
+</code></pre>
+
+<p>
+
+This is a simplified example. Real designs also include register
+delays, setup time, clock uncertainty and other timing effects.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Pipelining Improves Throughput
+
+</h4>
+
+<p>
+
+Pipelining is particularly useful when many operations must be
+processed continuously.
+
+Multiple pieces of data can occupy different pipeline stages at the
+same time.
+
+</p>
+
+<pre><code>
+Cycle 1:
+
+Data A → Stage 1
+
+
+Cycle 2:
+
+Data A → Stage 2
+Data B → Stage 1
+
+
+Cycle 3:
+
+Data A → Stage 3
+Data B → Stage 2
+Data C → Stage 1
+</code></pre>
+
+<p>
+
+After the pipeline becomes full, multiple results can be produced at
+regular clock intervals.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Important Trade-Off
+
+</h4>
+
+<p>
+
+Pipelining does not necessarily make one individual operation finish
+in fewer stages.
+
+Instead, it can improve the rate at which completed operations are
+produced.
+
+This distinction leads to two important concepts:
+
+</p>
+
+<ul>
+
+<li><strong>Latency</strong> — how long one operation takes to travel through the pipeline.</li>
+
+<li><strong>Throughput</strong> — how frequently completed operations can be produced.</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipelining divides long combinational paths into smaller stages so
+that the design can potentially operate at a higher clock frequency
+and process a continuous stream of operations with higher throughput.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
