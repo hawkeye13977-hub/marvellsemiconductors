@@ -6926,7 +6926,7 @@ EDA Playground.
 
 </p>
 
-<a href="YOUR_EDA_PLAYGROUND_LINK"
+<a href="https://edaplayground.com/x/bde3"
    target="_blank"
    class="btn btn-info btn-lg">
 
@@ -6952,4 +6952,903 @@ waveform viewer to verify the pipeline stages.
 
 </div>
 
+</section>     
+
+<!-- ========================= -->
+<!-- Step 17 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+17. Hands-on Pipeline Exercise
+
+</h2>
+
+<p class="text-secondary">
+
+Design and verify your own pipelined arithmetic datapath.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Exercise: 3-Stage Arithmetic Pipeline
+
+</h4>
+
+<p>
+
+Design a three-stage pipeline that performs the following operation:
+
+</p>
+
+
+<pre><code>
+Result = ((A + B) × C) - D
+</code></pre>
+
+
+<p>
+
+The operation must be divided into three pipeline stages.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Required Pipeline Structure
+
+</h4>
+
+
+<pre><code>
+Stage 1:
+
+A + B
+
+      ↓
+
+Pipeline Register
+
+      ↓
+
+Stage 2:
+
+Stage 1 Result × C
+
+      ↓
+
+Pipeline Register
+
+      ↓
+
+Stage 3:
+
+Stage 2 Result - D
+
+      ↓
+
+Output Register
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Requirements
+
+</h4>
+
+<ul>
+
+<li>Use an 8-bit input for A.</li>
+
+<li>Use an 8-bit input for B.</li>
+
+<li>Use an 8-bit input for C.</li>
+
+<li>Use an 8-bit input for D.</li>
+
+<li>Use a clock input.</li>
+
+<li>Use a reset input.</li>
+
+<li>Use pipeline registers between stages.</li>
+
+<li>Use nonblocking assignments in sequential logic.</li>
+
+<li>Produce the final result after the pipeline latency.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Your Tasks
+
+</h4>
+
+
+<ol>
+
+<li>Draw the three-stage pipeline architecture.</li>
+
+<li>Identify the combinational logic in each stage.</li>
+
+<li>Identify the pipeline registers.</li>
+
+<li>Write the Verilog RTL.</li>
+
+<li>Write a testbench.</li>
+
+<li>Generate a clock.</li>
+
+<li>Apply reset.</li>
+
+<li>Apply multiple input transactions.</li>
+
+<li>Verify the pipeline latency.</li>
+
+<li>Check the console output.</li>
+
+<li>Inspect the waveform.</li>
+
+</ol>
+
+
+<h4 class="text-info mt-4">
+
+Test Cases
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Test</th>
+
+<th>A</th>
+
+<th>B</th>
+
+<th>C</th>
+
+<th>D</th>
+
+<th>Expected Result</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>2</td>
+
+<td>3</td>
+
+<td>4</td>
+
+<td>5</td>
+
+<td>15</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>10</td>
+
+<td>5</td>
+
+<td>3</td>
+
+<td>4</td>
+
+<td>41</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>20</td>
+
+<td>10</td>
+
+<td>2</td>
+
+<td>15</td>
+
+<td>45</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>7</td>
+
+<td>8</td>
+
+<td>5</td>
+
+<td>10</td>
+
+<td>65</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Think About Pipeline Timing
+
+</h4>
+
+<p>
+
+If Test 1 enters the pipeline first and Test 2 enters on the next
+cycle, both transactions should be present in different pipeline
+stages at the same time.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Test 1 → Stage 1
+
+
+Cycle 2:
+
+Test 1 → Stage 2
+Test 2 → Stage 1
+
+
+Cycle 3:
+
+Test 1 → Stage 3
+Test 2 → Stage 2
+Test 3 → Stage 1
+
+
+Cycle 4:
+
+Test 1 → Output
+Test 2 → Stage 3
+Test 3 → Stage 2
+Test 4 → Stage 1
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Verification Challenge
+
+</h4>
+
+<p>
+
+Do not only check the final result.
+
+Verify the intermediate pipeline registers as well.
+
+</p>
+
+
+<ul>
+
+<li>Does <strong>stage1</strong> contain A + B?</li>
+
+<li>Does <strong>stage2</strong> contain stage1 × C?</li>
+
+<li>Does <strong>result</strong> contain stage2 - D?</li>
+
+<li>Does each value appear at the correct clock cycle?</li>
+
+<li>Does reset clear the pipeline?</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Challenge
+
+</h4>
+
+<p>
+
+Open the waveform and identify the movement of one transaction through
+all three stages.
+
+For example:
+
+</p>
+
+
+<pre><code>
+A = 2
+B = 3
+C = 4
+D = 5
+
+Stage 1:
+
+2 + 3 = 5
+
+
+Stage 2:
+
+5 × 4 = 20
+
+
+Stage 3:
+
+20 - 5 = 15
+</code></pre>
+
+
+<p>
+
+Follow the values <strong>5 → 20 → 15</strong> through the waveform.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Challenge Question
+
+</h4>
+
+<p>
+
+Why does the result not appear immediately when A, B, C and D are
+changed?
+
+</p>
+
+<p class="mb-0">
+
+Think about the pipeline registers and the number of clocked stages
+that the data must pass through.
+
+</p>
+
+</div>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Bonus Challenge
+
+</h4>
+
+<p>
+
+Modify the testbench so that new transactions are applied on
+consecutive clock cycles.
+
+Then verify that the pipeline can produce one completed result per
+clock cycle after the pipeline becomes full.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Goal
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Don't just make the RTL compile.
+
+Prove that the pipeline works correctly using both console output and
+waveform analysis.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+ </section>      
+
+<!-- ========================= -->
+<!-- Step 18 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+18. Lesson Summary
+
+</h2>
+
+<p class="text-secondary">
+
+Review the key concepts covered in this lesson on pipelining.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What We Learned
+
+</h4>
+
+
+<ul>
+
+<li>
+A pipeline divides a large computation into smaller stages.
+</li>
+
+<li>
+Pipeline registers separate the processing stages.
+</li>
+
+<li>
+Combinational logic performs the computation within each stage.
+</li>
+
+<li>
+Latency represents the time required for one transaction to pass
+through the pipeline.
+</li>
+
+<li>
+Throughput represents how frequently completed results can be
+produced.
+</li>
+
+<li>
+Multiple transactions can occupy different pipeline stages
+simultaneously.
+</li>
+
+<li>
+Pipeline timing diagrams help visualize data movement across clock
+cycles.
+</li>
+
+<li>
+The slowest pipeline stage can limit the maximum clock frequency.
+</li>
+
+<li>
+Pipeline stages should be reasonably balanced for good timing
+performance.
+</li>
+
+<li>
+Data dependencies can create pipeline hazards.
+</li>
+
+<li>
+Hazards can require techniques such as forwarding, stalling or
+bubble insertion.
+</li>
+
+<li>
+Valid signals can be used to identify meaningful transactions inside
+a pipeline.
+</li>
+
+<li>
+Data and associated control information must remain aligned as they
+move through the pipeline.
+</li>
+
+<li>
+Pipelined RTL normally uses nonblocking assignments for sequential
+logic.
+</li>
+
+<li>
+Simulation should verify both functional correctness and cycle-level
+pipeline behavior.
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Concept
+
+</h4>
+
+
+<pre><code>
+Input
+  |
+  v
++----------------+
+|    Stage 1     |
+| Combinational  |
+|     Logic      |
++----------------+
+  |
+  v
++----------------+
+| Pipeline Reg 1 |
++----------------+
+  |
+  v
++----------------+
+|    Stage 2     |
+| Combinational  |
+|     Logic      |
++----------------+
+  |
+  v
++----------------+
+| Pipeline Reg 2 |
++----------------+
+  |
+  v
++----------------+
+|    Stage 3     |
+| Combinational  |
+|     Logic      |
++----------------+
+  |
+  v
+Output
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Key Performance Trade-Off
+
+</h4>
+
+
+<pre><code>
+More Pipeline Stages
+        |
+        +----> Potentially Higher Frequency
+        |
+        +----> Higher Latency
+        |
+        +----> More Registers
+        |
+        +----> More Clock Power
+        |
+        +----> Greater Control Complexity
+</code></pre>
+
+
+<p>
+
+The goal of pipeline design is not simply to maximize the number of
+stages.
+
+The goal is to achieve the required combination of
+<strong>frequency, throughput, latency, area, power and
+correctness</strong>.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Final Takeaway
+
+</h4>
+
+<p>
+
+<strong>
+
+A pipeline allows different portions of a computation to operate
+concurrently on different data transactions.
+
+</strong>
+
+</p>
+
+<p class="mb-0">
+
+Understanding pipeline stages, registers, timing, latency,
+throughput, data dependencies and hazards is fundamental to designing
+high-performance RTL and SoC datapaths.
+
+</p>
+
+</div>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Before Moving On
+
+</h4>
+
+<p>
+
+Make sure you can explain these questions without looking at the
+lesson:
+
+</p>
+
+
+<ol>
+
+<li>What is a pipeline?</li>
+
+<li>Why are pipeline registers required?</li>
+
+<li>What is the difference between latency and throughput?</li>
+
+<li>Why should pipeline stages be balanced?</li>
+
+<li>What is a critical path?</li>
+
+<li>What is a pipeline hazard?</li>
+
+<li>What is a data dependency?</li>
+
+<li>Why are nonblocking assignments used in clocked RTL?</li>
+
+<li>Why is a valid signal useful?</li>
+
+<li>How can a waveform help debug a pipeline?</li>
+
+</ol>
+
+
+</div>
+
+</div>
+
+</div>
+
 </section>      
+
+<!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Key Takeaways
+
+</h2>
+
+<p class="text-secondary">
+
+The most important concepts to remember from this lesson.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<ul>
+
+<li>
+Pipelining divides a large computation into smaller stages.
+</li>
+
+<li>
+Pipeline registers separate consecutive stages.
+</li>
+
+<li>
+Combinational logic performs the work inside each stage.
+</li>
+
+<li>
+Latency is the time required for a transaction to pass through the
+pipeline.
+</li>
+
+<li>
+Throughput is the rate at which completed results are produced.
+</li>
+
+<li>
+Multiple transactions can be processed simultaneously in different
+pipeline stages.
+</li>
+
+<li>
+The slowest stage can determine the maximum operating frequency.
+</li>
+
+<li>
+Data dependencies can create pipeline hazards.
+</li>
+
+<li>
+Forwarding and stalling are common techniques for handling
+dependencies.
+</li>
+
+<li>
+Valid signals can identify meaningful transactions.
+</li>
+
+<li>
+Pipeline RTL normally uses nonblocking assignments in clocked logic.
+</li>
+
+<li>
+Waveform analysis is important for verifying cycle-by-cycle pipeline
+behavior.
+</li>
+
+</ul>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Remember
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A good pipeline balances frequency, throughput, latency, area,
+power and design complexity.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Navigation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<a href="lesson-7.html"
+   class="btn btn-outline-light">
+
+← Previous Lesson
+
+</a>
+
+
+<a href="lesson-9.html"
+   class="btn btn-info">
+
+Next Lesson →
+
+</a>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Bootstrap JS -->
+<!-- ========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>      
