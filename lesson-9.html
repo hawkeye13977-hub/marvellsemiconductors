@@ -10092,6 +10092,2455 @@ waveform at the same time as the corresponding register dependencies.
 </section>  
 
 <!-- ========================= -->
+<!-- Step 19 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      19. Pipeline Efficiency &amp; CPI
+    </h2>
+
+    <p class="text-secondary">
+      Understand latency, throughput, CPI, pipeline efficiency,
+      and the performance impact of stalls and bubbles.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            Why Pipeline Performance Matters
+          </h4>
+
+          <p>
+            A pipeline improves processor performance by allowing
+            multiple instructions or transactions to be processed
+            simultaneously in different stages.
+          </p>
+
+          <p>
+            To understand how efficiently a pipeline is operating,
+            we need to understand three important concepts:
+            <strong>latency</strong>,
+            <strong>throughput</strong>, and
+            <strong>CPI</strong>.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Latency -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Pipeline Latency
+          </h4>
+
+          <p>
+            <strong>Latency</strong> is the amount of time or number of
+            clock cycles required for one transaction to travel from
+            the beginning of the pipeline to the end.
+          </p>
+
+          <p>
+            Consider a simple three-stage pipeline:
+          </p>
+
+          <pre><code>
+Stage 1 → Stage 2 → Stage 3
+          </code></pre>
+
+          <p>
+            A transaction must pass through all three stages before
+            it reaches the output.
+          </p>
+
+          <pre><code>
+Cycle 1 → Stage 1
+
+Cycle 2 → Stage 2
+
+Cycle 3 → Stage 3
+          </code></pre>
+
+          <p>
+            Therefore, the basic pipeline latency is approximately
+            <strong>3 cycles</strong>, assuming one cycle per stage.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Throughput -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Pipeline Throughput
+          </h4>
+
+          <p>
+            <strong>Throughput</strong> describes how frequently
+            completed transactions can be produced.
+          </p>
+
+          <p>
+            A major advantage of pipelining is that latency and
+            throughput are different concepts.
+          </p>
+
+          <p>
+            A three-stage pipeline may take three cycles for one
+            transaction to travel through the pipeline, but once the
+            pipeline is full, it can potentially complete one
+            transaction every cycle.
+          </p>
+
+          <pre><code>
+Cycle 1:
+
+Transaction A → Stage 1
+
+
+Cycle 2:
+
+Transaction B → Stage 1
+Transaction A → Stage 2
+
+
+Cycle 3:
+
+Transaction C → Stage 1
+Transaction B → Stage 2
+Transaction A → Stage 3
+
+
+Cycle 4:
+
+Transaction D → Stage 1
+Transaction C → Stage 2
+Transaction B → Stage 3
+          </code></pre>
+
+          <p>
+            After the pipeline is filled, the ideal throughput is:
+          </p>
+
+          <pre><code>
+1 transaction / cycle
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Latency vs Throughput -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            Latency vs Throughput
+          </h4>
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Concept</th>
+                  <th>Meaning</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Latency</td>
+                  <td>
+                    Time required for one transaction to complete.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Throughput</td>
+                  <td>
+                    Rate at which transactions are completed.
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- CPI -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. CPI — Cycles Per Instruction
+          </h4>
+
+          <p>
+            <strong>CPI</strong> stands for
+            <strong>Cycles Per Instruction</strong>.
+          </p>
+
+          <p>
+            It represents the average number of clock cycles required
+            to complete one instruction.
+          </p>
+
+          <pre><code>
+CPI = Total Clock Cycles / Number of Instructions
+          </code></pre>
+
+          <p>
+            For an ideal pipeline, the steady-state CPI can approach:
+          </p>
+
+          <pre><code>
+CPI = 1
+          </code></pre>
+
+          <p>
+            This means the processor can ideally complete one
+            instruction every cycle after the pipeline is filled.
+          </p>
+
+          <p>
+            It does <strong>not</strong> mean that an individual
+            instruction takes only one cycle from start to finish.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- CPI Example -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            CPI Example
+          </h4>
+
+          <p>
+            Suppose a pipeline processes:
+          </p>
+
+          <pre><code>
+10 instructions
+          </code></pre>
+
+          <p>
+            and requires:
+          </p>
+
+          <pre><code>
+12 clock cycles
+          </code></pre>
+
+          <p>
+            Then:
+          </p>
+
+          <pre><code>
+CPI = Total Cycles / Instructions
+
+CPI = 12 / 10
+
+CPI = 1.2
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Effect of Stalls -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Effect of Stalls on CPI
+          </h4>
+
+          <p>
+            In an ideal pipeline, the CPI can approach 1.
+            However, hazards can introduce stalls and bubbles.
+          </p>
+
+          <pre><code>
+More Stalls
+     ↓
+More Clock Cycles
+     ↓
+Higher CPI
+     ↓
+Lower Performance
+          </code></pre>
+
+          <p>
+            For example, suppose 10 instructions require 10 ideal
+            cycles, but two additional stall cycles occur.
+          </p>
+
+          <pre><code>
+Ideal Cycles = 10
+
+Stall Cycles = 2
+
+Total Cycles = 12
+          </code></pre>
+
+          <p>
+            Therefore:
+          </p>
+
+          <pre><code>
+CPI = 12 / 10
+
+CPI = 1.2
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Pipeline Efficiency -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Pipeline Efficiency
+          </h4>
+
+          <p>
+            Pipeline efficiency gives us an indication of how much of
+            the available execution time is being used for useful
+            work.
+          </p>
+
+          <pre><code>
+Efficiency =
+Useful Execution Cycles
+-----------------------
+Total Execution Cycles
+          </code></pre>
+
+          <p>
+            Using the previous example:
+          </p>
+
+          <pre><code>
+Useful Cycles = 10
+
+Total Cycles = 12
+          </code></pre>
+
+          <pre><code>
+Efficiency = 10 / 12
+
+Efficiency ≈ 83.33%
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Bubbles -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Effect of Bubbles
+          </h4>
+
+          <p>
+            A bubble represents an empty or invalid pipeline slot.
+            Bubbles consume clock cycles without completing useful
+            work for a new transaction.
+          </p>
+
+          <pre><code>
+Without Bubble:
+
+A → B → C → D → E
+
+
+With Bubble:
+
+A → B → Bubble → C → D → E
+          </code></pre>
+
+          <p>
+            Therefore, frequent bubbles reduce effective throughput.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Performance Relationship -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Performance Relationship
+          </h4>
+
+          <pre><code>
+Hazard
+   ↓
+Stall / Bubble
+   ↓
+Additional Cycles
+   ↓
+Higher CPI
+   ↓
+Lower Throughput
+          </code></pre>
+
+          <p>
+            This is why techniques such as forwarding, branch
+            prediction and efficient resource management are important
+            in high-performance pipeline designs.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Improving Performance -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. How Can We Improve Pipeline Performance?
+          </h4>
+
+          <ul>
+
+            <li>
+              Reduce unnecessary stalls.
+            </li>
+
+            <li>
+              Use forwarding to resolve data dependencies.
+            </li>
+
+            <li>
+              Improve branch prediction.
+            </li>
+
+            <li>
+              Reduce structural resource conflicts.
+            </li>
+
+            <li>
+              Keep pipeline stages balanced.
+            </li>
+
+            <li>
+              Minimize unnecessary flushes and bubbles.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Comparison -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Ideal vs Actual Pipeline
+          </h4>
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Parameter</th>
+                  <th>Ideal Pipeline</th>
+                  <th>Actual Pipeline</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>CPI</td>
+                  <td>≈ 1</td>
+                  <td>Usually &gt; 1</td>
+                </tr>
+
+                <tr>
+                  <td>Stalls</td>
+                  <td>None</td>
+                  <td>Possible</td>
+                </tr>
+
+                <tr>
+                  <td>Bubbles</td>
+                  <td>Minimal</td>
+                  <td>Possible</td>
+                </tr>
+
+                <tr>
+                  <td>Throughput</td>
+                  <td>Maximum</td>
+                  <td>Reduced by hazards</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Calculation Exercise -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Calculation Exercise
+          </h4>
+
+          <p>
+            A pipeline executes 100 instructions.
+            The ideal execution requires 100 cycles.
+            The processor experiences 15 additional stall cycles.
+          </p>
+
+          <p>
+            Calculate:
+          </p>
+
+          <ol>
+
+            <li>Total execution cycles</li>
+
+            <li>Average CPI</li>
+
+            <li>Simple pipeline efficiency</li>
+
+          </ol>
+
+          <p>
+            Try solving it before looking at the answer.
+          </p>
+
+
+          <details class="mt-3">
+
+            <summary class="text-info fw-bold">
+              Show Answer
+            </summary>
+
+            <div class="mt-3">
+
+              <pre><code>
+Ideal Cycles = 100
+
+Stall Cycles = 15
+
+Total Cycles = 115
+
+
+CPI = 115 / 100
+
+CPI = 1.15
+
+
+Efficiency = 100 / 115
+
+Efficiency ≈ 86.96%
+              </code></pre>
+
+            </div>
+
+          </details>
+
+
+          <!-- ========================= -->
+          <!-- EDA Section -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. EDA Playground Verification
+          </h4>
+
+          <p>
+            In the EDA Playground simulation for this lesson, we
+            intentionally insert stall cycles into a simple pipeline.
+          </p>
+
+          <p>
+            Observe how the stall affects:
+          </p>
+
+          <ul>
+
+            <li>Pipeline valid signals</li>
+
+            <li>Pipeline data</li>
+
+            <li>Output timing</li>
+
+            <li>Total execution cycles</li>
+
+            <li>Number of completed transactions</li>
+
+          </ul>
+
+          <pre><code>
+Normal:
+
+A → B → C → D → E
+
+
+With Stall:
+
+A → B → STALL → C → D → E
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Pipeline latency tells us how long one transaction
+                  takes, while throughput tells us how frequently
+                  transactions can complete.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                An ideal pipeline can approach a CPI of 1, but stalls,
+                bubbles, hazards and flushes increase the number of
+                cycles required and therefore reduce effective
+                performance.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 20 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      20. Pipeline Performance Optimization
+    </h2>
+
+    <p class="text-secondary">
+      Learn how to reduce stalls, bubbles, flushes and structural
+      conflicts to improve pipeline performance.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            Why Optimize a Pipeline?
+          </h4>
+
+          <p>
+            A pipeline can be functionally correct but still perform
+            poorly if it frequently experiences stalls, bubbles,
+            flushes or resource conflicts.
+          </p>
+
+          <p>
+            The objective of pipeline optimization is to maintain
+            correctness while minimizing unnecessary delays and
+            maximizing useful work performed per clock cycle.
+          </p>
+
+
+          <pre><code>
+Ideal:
+
+A → B → C → D → E
+
+
+With frequent stalls:
+
+A → B → Stall → C → Stall → D → E
+          </code></pre>
+
+
+          <p>
+            Every unnecessary stall adds execution cycles and can
+            increase the effective CPI.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Forwarding
+          </h4>
+
+          <p>
+            Forwarding is one of the most important techniques for
+            reducing data-hazard stalls.
+          </p>
+
+
+          <p>
+            Without forwarding, a dependent instruction may need to
+            wait until the producer writes its result back.
+          </p>
+
+
+          <pre><code>
+Producer
+   ↓
+Write Back
+   ↓
+Register File
+   ↓
+Consumer
+          </code></pre>
+
+
+          <p>
+            With forwarding, an available result can be sent directly
+            to the dependent operation.
+          </p>
+
+
+          <pre><code>
+Producer
+   ↓
+Result
+   └────────────→ Consumer
+          </code></pre>
+
+
+          <p>
+            Forwarding can reduce stalls and improve throughput.
+            However, it requires additional datapaths, multiplexers
+            and control logic.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Branch Prediction
+          </h4>
+
+          <p>
+            Branches can create control hazards because the processor
+            may not immediately know which instruction should be
+            fetched next.
+          </p>
+
+
+          <p>
+            Without prediction, the pipeline may have to wait for the
+            branch decision.
+          </p>
+
+
+          <pre><code>
+Branch
+  ↓
+Wait
+  ↓
+Decision
+  ↓
+Continue
+          </code></pre>
+
+
+          <p>
+            With branch prediction, the processor predicts the likely
+            execution path and continues fetching instructions.
+          </p>
+
+
+          <pre><code>
+Branch
+  ↓
+Predict
+  ↓
+Continue Fetching
+          </code></pre>
+
+
+          <p>
+            If the prediction is correct, useful work can continue with
+            minimal disruption.
+          </p>
+
+
+          <p>
+            If the prediction is incorrect, wrong-path instructions
+            must be flushed.
+          </p>
+
+
+          <pre><code>
+Wrong Path
+    ↓
+Misprediction
+    ↓
+Flush
+    ↓
+Correct Target
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Structural Hazards -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Reducing Structural Hazards
+          </h4>
+
+          <p>
+            Structural hazards occur when multiple operations compete
+            for the same hardware resource.
+          </p>
+
+
+          <pre><code>
+Request A ──┐
+            ├──→ Shared Resource
+Request B ──┘
+          </code></pre>
+
+
+          <p>
+            One way to reduce the conflict is to provide additional
+            hardware resources.
+          </p>
+
+
+          <pre><code>
+Request A ──→ Resource 1
+
+Request B ──→ Resource 2
+          </code></pre>
+
+
+          <p>
+            Resource duplication can improve parallelism, but it may
+            increase area, power and design complexity.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Pipeline Balancing -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Pipeline Balancing
+          </h4>
+
+          <p>
+            Pipeline stages should ideally have reasonably balanced
+            workloads.
+          </p>
+
+
+          <p>
+            Consider:
+          </p>
+
+
+          <pre><code>
+Stage 1 = 1 ns
+Stage 2 = 1 ns
+Stage 3 = 1 ns
+          </code></pre>
+
+
+          <p>
+            This is relatively well balanced.
+          </p>
+
+
+          <p>
+            Now consider:
+          </p>
+
+
+          <pre><code>
+Stage 1 = 0.5 ns
+Stage 2 = 2.0 ns
+Stage 3 = 0.5 ns
+          </code></pre>
+
+
+          <p>
+            Stage 2 is significantly slower than the other stages and
+            can become the timing bottleneck.
+          </p>
+
+
+          <p>
+            Therefore:
+            <strong>
+              the slowest pipeline stage can limit the achievable
+              clock frequency.
+            </strong>
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Bubble Reduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Reducing Unnecessary Bubbles
+          </h4>
+
+          <p>
+            A bubble represents a pipeline slot in which useful work
+            is not being performed for a new transaction.
+          </p>
+
+
+          <pre><code>
+A → B → Bubble → C → D
+          </code></pre>
+
+
+          <p>
+            If the bubble is not required for correctness, removing it
+            can improve pipeline utilization.
+          </p>
+
+
+          <pre><code>
+A → B → C → D
+          </code></pre>
+
+
+          <p>
+            However, bubbles should never be removed if they are
+            required to resolve a real hazard.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Flush Reduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Reducing Flush Penalties
+          </h4>
+
+          <p>
+            A branch misprediction can cause instructions already in
+            the pipeline to be discarded.
+          </p>
+
+
+          <pre><code>
+Fetch
+  ↓
+Decode
+  ↓
+Wrong Path
+  ↓
+Misprediction
+  ↓
+Flush
+  ↓
+Restart
+          </code></pre>
+
+
+          <p>
+            Reducing misprediction frequency or reducing the cost of
+            branch recovery can improve performance.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Optimization Comparison -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Pipeline Optimization Techniques
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Technique</th>
+                  <th>Main Purpose</th>
+                  <th>Trade-Off</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Forwarding</td>
+                  <td>Reduce data stalls</td>
+                  <td>Additional hardware</td>
+                </tr>
+
+                <tr>
+                  <td>Branch Prediction</td>
+                  <td>Reduce control-flow delays</td>
+                  <td>Prediction complexity</td>
+                </tr>
+
+                <tr>
+                  <td>Resource Duplication</td>
+                  <td>Reduce structural conflicts</td>
+                  <td>Area and power</td>
+                </tr>
+
+                <tr>
+                  <td>Pipeline Balancing</td>
+                  <td>Improve clock frequency</td>
+                  <td>Design complexity</td>
+                </tr>
+
+                <tr>
+                  <td>Bubble Reduction</td>
+                  <td>Improve pipeline utilization</td>
+                  <td>More control complexity</td>
+                </tr>
+
+                <tr>
+                  <td>Flush Reduction</td>
+                  <td>Reduce lost pipeline work</td>
+                  <td>Additional control logic</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Optimization Flow -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Pipeline Optimization Flow
+          </h4>
+
+
+          <pre><code>
+Measure Performance
+        ↓
+Find Bottleneck
+        ↓
+Identify Stalls / Bubbles / Flushes
+        ↓
+Determine Root Cause
+        ↓
+Choose Optimization
+        ↓
+Verify Correctness
+        ↓
+Measure Again
+          </code></pre>
+
+
+          <p>
+            Optimization should be based on actual performance
+            measurements rather than assumptions.
+          </p>
+
+
+          <p>
+            For example, if most performance loss comes from data
+            hazards, improving branch prediction will not address the
+            main bottleneck.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Correctness vs Performance -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Correctness Comes First
+          </h4>
+
+          <p>
+            Pipeline optimization must never compromise functional
+            correctness.
+          </p>
+
+
+          <pre><code>
+Correctness
+     ↓
+Hazard Detection
+     ↓
+Safe Pipeline Operation
+     ↓
+Performance Optimization
+          </code></pre>
+
+
+          <p>
+            A faster pipeline that occasionally loses, duplicates or
+            corrupts transactions is not a successful design.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- SoC DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. SoC Design Verification Perspective
+          </h4>
+
+          <p>
+            From a Design Verification perspective, pipeline
+            optimization features must also be verified.
+          </p>
+
+
+          <ul>
+
+            <li>Forwarding conditions</li>
+
+            <li>Stall generation</li>
+
+            <li>Bubble insertion</li>
+
+            <li>Branch flush</li>
+
+            <li>Pipeline recovery</li>
+
+            <li>Valid and ready behavior</li>
+
+            <li>Backpressure</li>
+
+            <li>Transaction ordering</li>
+
+            <li>No transaction loss</li>
+
+            <li>No duplicate transactions</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Performance Relationship -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Performance Relationship
+          </h4>
+
+
+          <pre><code>
+More Stalls
+     ↓
+More Cycles
+     ↓
+Higher CPI
+     ↓
+Lower Throughput
+
+
+Optimization
+     ↓
+Fewer Stalls
+     ↓
+Fewer Wasted Cycles
+     ↓
+Lower CPI
+     ↓
+Higher Effective Throughput
+          </code></pre>
+
+      <!-- ========================= -->
+          <!-- Ideal vs Actual -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Ideal vs Actual Pipeline
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Parameter</th>
+                  <th>Ideal</th>
+                  <th>Actual</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>CPI</td>
+                  <td>≈ 1</td>
+                  <td>Usually &gt; 1</td>
+                </tr>
+
+                <tr>
+                  <td>Stalls</td>
+                  <td>None</td>
+                  <td>Possible</td>
+                </tr>
+
+                <tr>
+                  <td>Bubbles</td>
+                  <td>Minimal</td>
+                  <td>Possible</td>
+                </tr>
+
+                <tr>
+                  <td>Throughput</td>
+                  <td>Maximum</td>
+                  <td>Reduced by stalls</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Calculation Exercise -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Calculation Exercise
+          </h4>
+
+          <p>
+            A pipeline executes 100 instructions.
+            The ideal execution requires 100 cycles.
+            The processor experiences 15 additional stall cycles.
+          </p>
+
+
+          <p>
+            Calculate:
+          </p>
+
+
+          <ol>
+
+            <li>Total execution cycles</li>
+
+            <li>Average CPI</li>
+
+            <li>Simple pipeline efficiency</li>
+
+          </ol>
+
+
+          <details class="mt-3">
+
+            <summary class="text-info fw-bold">
+              Show Answer
+            </summary>
+
+
+            <div class="mt-3">
+
+              <pre><code>
+Ideal Cycles = 100
+
+Stall Cycles = 15
+
+Total Cycles = 115
+
+
+CPI = 115 / 100
+
+CPI = 1.15
+
+
+Efficiency = 100 / 115
+
+Efficiency ≈ 86.96%
+              </code></pre>
+
+            </div>
+
+          </details>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            12. EDA Playground — Pipeline Performance
+          </h4>
+
+
+          <p>
+            Now verify the pipeline performance concepts using an
+            actual RTL simulation.
+          </p>
+
+
+          <p>
+            The simulation contains a simple three-stage pipeline.
+            Transactions are sent through the pipeline and a stall is
+            intentionally introduced.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+
+              <p>
+                Paste the Design and Testbench code into EDA Playground,
+                run the simulation and inspect both the console output
+                and waveform.
+              </p>
+
+
+              <a href="https://edaplayground.com/x/ihrV"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Objective -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            EDA Simulation Objective
+          </h5>
+
+
+          <p>
+            The purpose of this simulation is to observe how a pipeline
+            behaves during normal operation and when a stall occurs.
+          </p>
+
+
+          <pre><code>
+Normal Operation:
+
+Input → Stage 1 → Stage 2 → Stage 3 → Output
+
+
+During Stall:
+
+Input → Stage 1 → HOLD
+                  ↓
+               Stage 2
+                  ↓
+               Stage 3
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>valid_in</li>
+
+            <li>data_in</li>
+
+            <li>valid_s1</li>
+
+            <li>valid_s2</li>
+
+            <li>valid_s3</li>
+
+            <li>s1_data</li>
+
+            <li>s2_data</li>
+
+            <li>result</li>
+
+            <li>stall</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Waveform -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Waveform Verification
+          </h5>
+
+
+          <p>
+            When <strong>stall = 1</strong>, verify that the pipeline
+            state remains unchanged.
+          </p>
+
+
+          <pre><code>
+stall = 1
+   ↓
+Pipeline Holds
+   ↓
+No New Pipeline Progress
+   ↓
+Stall Released
+   ↓
+Pipeline Resumes
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Console -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Console Verification
+          </h5>
+
+
+          <p>
+            The testbench prints the current cycle, valid signals,
+            pipeline data, output and stall status.
+          </p>
+
+
+          <pre><code>
+Cycle
+IN_VALID
+DATA
+S1
+S2
+S3
+RESULT
+STALL
+          </code></pre>
+
+
+          <p>
+            Compare the console output with the waveform to confirm
+            that the pipeline behaves consistently.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Verification Checklist -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Checklist
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Verify that valid signals propagate correctly.
+            </li>
+
+            <li>
+              Verify that transaction ordering is preserved.
+            </li>
+
+            <li>
+              Verify that the pipeline holds its state during a stall.
+            </li>
+
+            <li>
+              Verify that the pipeline resumes after the stall.
+            </li>
+
+            <li>
+              Verify that no transaction is lost.
+            </li>
+
+            <li>
+              Verify that no transaction is duplicated.
+            </li>
+
+            <li>
+              Compare waveform behavior with console output.
+            </li>
+
+          </ul>
+     
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Pipeline optimization is the process of improving
+                  throughput and reducing wasted cycles while
+                  preserving functional correctness.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                Forwarding, branch prediction, resource optimization,
+                balanced pipeline stages and reduced bubbles or
+                flushes can all improve performance, but each comes
+                with hardware or design trade-offs.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>   
+
+     
+
+<!-- ========================= -->
+<!-- Step 21 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      21. Pipeline Design Trade-offs
+    </h2>
+
+    <p class="text-secondary">
+      Understand the trade-offs between pipeline depth, frequency,
+      latency, area, power, complexity and performance.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            Why Are Pipeline Trade-offs Important?
+          </h4>
+
+          <p>
+            Increasing the number of pipeline stages can improve the
+            maximum operating frequency, but it can also increase
+            latency, control complexity, power consumption and the
+            penalty associated with pipeline flushes.
+          </p>
+
+          <p>
+            Therefore, pipeline design is not simply about making the
+            pipeline deeper.
+          </p>
+
+          <p>
+            The designer must find a suitable balance between
+            <strong>frequency, latency, throughput, area, power and
+            complexity</strong>.
+          </p>
+
+
+          <pre><code>
+                    Pipeline Design
+                          |
+        +-----------------+-----------------+
+        |        |        |        |        |
+        v        v        v        v        v
+    Frequency Latency    Area    Power  Complexity
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Pipeline Depth -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Pipeline Depth
+          </h4>
+
+          <p>
+            Pipeline depth refers to the number of stages through
+            which an instruction or transaction passes.
+          </p>
+
+
+          <pre><code>
+Shallow Pipeline:
+
+Stage 1 → Stage 2 → Stage 3
+
+
+Deeper Pipeline:
+
+Stage 1 → Stage 2 → Stage 3 → Stage 4
+        → Stage 5 → Stage 6 → Stage 7
+          </code></pre>
+
+
+          <p>
+            A deeper pipeline divides the work into smaller pieces.
+            This can potentially allow a shorter clock period.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Frequency -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Pipeline Depth vs Clock Frequency
+          </h4>
+
+          <p>
+            Consider a workload that requires approximately 9 ns of
+            combinational work.
+          </p>
+
+
+          <p>
+            With three balanced stages:
+          </p>
+
+
+          <pre><code>
+9 ns / 3 stages = 3 ns per stage
+          </code></pre>
+
+
+          <p>
+            With six balanced stages:
+          </p>
+
+
+          <pre><code>
+9 ns / 6 stages = 1.5 ns per stage
+          </code></pre>
+
+
+          <p>
+            Ignoring register and implementation overhead for this
+            simplified example, the deeper pipeline can potentially
+            operate at a higher frequency.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Latency -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Deeper Pipeline and Latency
+          </h4>
+
+          <p>
+            Although deeper pipelining can improve clock frequency,
+            an individual transaction may have to pass through more
+            stages.
+          </p>
+
+
+          <pre><code>
+3-stage pipeline:
+
+Input → S1 → S2 → S3 → Output
+
+
+6-stage pipeline:
+
+Input → S1 → S2 → S3 → S4 → S5 → S6 → Output
+          </code></pre>
+
+
+          <p>
+            Therefore, deeper pipelines can increase the number of
+            cycles of latency.
+          </p>
+
+
+          <p>
+            This illustrates an important distinction:
+          </p>
+
+
+          <pre><code>
+Higher Frequency
+       ≠
+Lower Latency
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Throughput -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Throughput
+          </h4>
+
+          <p>
+            Once a pipeline is full, a well-designed pipeline can
+            potentially complete one transaction per cycle.
+          </p>
+
+
+          <p>
+            Increasing the depth can therefore help achieve a higher
+            operating frequency and potentially increase throughput.
+          </p>
+
+
+          <pre><code>
+Higher Frequency
+       ↓
+More Clock Cycles per Second
+       ↓
+Potentially Higher Throughput
+          </code></pre>
+
+
+          <p>
+            However, this benefit can be reduced by additional stalls,
+            flushes and control overhead.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Penalty -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Branch Misprediction Penalty
+          </h4>
+
+          <p>
+            A deeper pipeline can have more instructions in flight
+            when a branch decision is resolved.
+          </p>
+
+
+          <pre><code>
+Branch
+  ↓
+Instructions in Flight
+  ↓
+Misprediction
+  ↓
+Flush
+  ↓
+Recovery
+          </code></pre>
+
+
+          <p>
+            Therefore, a deeper pipeline can potentially have a larger
+            branch recovery penalty.
+          </p>
+
+
+          <pre><code>
+Shallow Pipeline
+      ↓
+Smaller potential flush window
+
+
+Deep Pipeline
+      ↓
+Larger potential flush window
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding Complexity -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Forwarding Complexity
+          </h4>
+
+          <p>
+            More pipeline stages can increase the number of possible
+            locations from which a result may need to be forwarded.
+          </p>
+
+
+          <pre><code>
+             +----------+
+             | Consumer |
+             +----------+
+                ↑ ↑ ↑
+                | | |
+             Forwarding
+              Sources
+          </code></pre>
+
+
+          <p>
+            This can increase:
+          </p>
+
+
+          <ul>
+
+            <li>Multiplexer complexity</li>
+
+            <li>Comparison logic</li>
+
+            <li>Control logic</li>
+
+            <li>Verification effort</li>
+
+            <li>Timing complexity</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Area -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Area Trade-off
+          </h4>
+
+          <p>
+            Additional pipeline stages require additional pipeline
+            registers and associated control and data paths.
+          </p>
+
+
+          <pre><code>
+More Pipeline Stages
+        ↓
+More Pipeline Registers
+        ↓
+Potentially More Area
+          </code></pre>
+
+
+          <p>
+            Additional forwarding paths and duplicated resources can
+            further increase hardware area.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Power -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Power Trade-off
+          </h4>
+
+          <p>
+            Pipeline registers and control logic switch every cycle
+            when active.
+          </p>
+
+
+          <p>
+            Increasing the amount of hardware can therefore affect
+            dynamic power.
+          </p>
+
+
+          <pre><code>
+More Registers
+      +
+More Control Logic
+      +
+More Switching
+      ↓
+Potentially Higher Dynamic Power
+          </code></pre>
+
+
+          <p>
+            Clock distribution to a larger number of sequential
+            elements can also contribute to power and implementation
+            complexity.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Timing -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Timing Trade-off
+          </h4>
+
+          <p>
+            Pipeline stages must satisfy setup and hold requirements,
+            and the clock period must account for the combinational
+            delay and sequential overhead.
+          </p>
+
+
+          <pre><code>
+Clock Period
+
+≈
+
+Combinational Delay
++
+Register / Timing Overhead
+          </code></pre>
+
+
+          <p>
+            Simply dividing logic into more stages does not guarantee
+            unlimited frequency improvement because pipeline
+            registers themselves introduce overhead.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Comparison -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Shallow vs Deep Pipeline
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Characteristic</th>
+                  <th>Shallow Pipeline</th>
+                  <th>Deep Pipeline</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Number of Stages</td>
+                  <td>Lower</td>
+                  <td>Higher</td>
+                </tr>
+
+                <tr>
+                  <td>Potential Frequency</td>
+                  <td>Lower</td>
+                  <td>Higher</td>
+                </tr>
+
+                <tr>
+                  <td>Pipeline Latency</td>
+                  <td>Fewer cycles</td>
+                  <td>More cycles</td>
+                </tr>
+
+                <tr>
+                  <td>Control Complexity</td>
+                  <td>Lower</td>
+                  <td>Higher</td>
+                </tr>
+
+                <tr>
+                  <td>Forwarding Complexity</td>
+                  <td>Lower</td>
+                  <td>Higher</td>
+                </tr>
+
+                <tr>
+                  <td>Branch Penalty</td>
+                  <td>Potentially lower</td>
+                  <td>Potentially higher</td>
+                </tr>
+
+                <tr>
+                  <td>Pipeline Registers</td>
+                  <td>Fewer</td>
+                  <td>More</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Balanced Design -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Finding the Right Balance
+          </h4>
+
+          <p>
+            The best pipeline depth depends on the target workload,
+            frequency requirement, technology, area budget, power
+            budget and architecture.
+          </p>
+
+
+          <pre><code>
+                    Performance Goal
+                           |
+                           v
+                Choose Pipeline Depth
+                           |
+          +----------------+----------------+
+          |                |                |
+          v                v                v
+      Frequency         Latency          Power
+          |                |                |
+          +----------------+----------------+
+                           |
+                           v
+                    Final Architecture
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- SoC DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. SoC Design Verification Perspective
+          </h4>
+
+          <p>
+            Pipeline depth and optimization also affect verification
+            complexity.
+          </p>
+
+
+          <p>
+            A deeper pipeline may require verification of more
+            pipeline states and more complex interactions between
+            stages.
+          </p>
+
+
+          <ul>
+
+            <li>More pipeline states</li>
+
+            <li>More forwarding combinations</li>
+
+            <li>More stall scenarios</li>
+
+            <li>More flush scenarios</li>
+
+            <li>More corner cases</li>
+
+            <li>More waveform-debug complexity</li>
+
+            <li>More assertions and coverage points</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Design Decision -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            13. Design Decision Example
+          </h4>
+
+          <p>
+            Suppose a design requires a higher clock frequency.
+            Increasing pipeline depth may help reduce the
+            combinational delay per stage.
+          </p>
+
+
+          <p>
+            But before choosing a deeper pipeline, the designer should
+            also consider:
+          </p>
+
+
+          <ol>
+
+            <li>
+              Additional pipeline latency
+            </li>
+
+            <li>
+              Branch recovery cost
+            </li>
+
+            <li>
+              Forwarding complexity
+            </li>
+
+            <li>
+              Area increase
+            </li>
+
+            <li>
+              Power increase
+            </li>
+
+            <li>
+              Verification complexity
+            </li>
+
+          </ol>
+
+             <!-- ========================= -->
+<!-- EDA Playground -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-5">
+  14. EDA Playground — Pipeline Depth Comparison
+</h4>
+
+<p>
+  Now verify the pipeline-depth trade-off using an RTL simulation.
+  We will compare a 3-stage pipeline with a 6-stage pipeline.
+</p>
+
+<p>
+  The objective is to observe the difference in pipeline latency while
+  both pipelines continue processing transactions.
+</p>
+
+
+<div class="card feature-card mt-4">
+
+  <div class="card-body text-center">
+
+    <h5 class="text-info">
+      Hands-on Simulation
+    </h5>
+
+    <p>
+      Paste the Design and Testbench code into EDA Playground,
+      run the simulation and compare the waveform behavior.
+    </p>
+
+    <a href="https://edaplayground.com/x/EgRs"
+       target="_blank"
+       rel="noopener noreferrer"
+       class="btn btn-info btn-lg">
+
+      ▶ Open EDA Playground
+
+    </a>
+
+  </div>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- Simulation Architecture -->
+<!-- ========================= -->
+
+<h5 class="text-info mt-4">
+  Simulation Architecture
+</h5>
+
+<pre><code>
+                 Input
+                   |
+          +--------+--------+
+          |                 |
+          v                 v
+     3-Stage Pipeline   6-Stage Pipeline
+          |                 |
+          v                 v
+      Result 3S         Result 6S
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- Signals -->
+<!-- ========================= -->
+
+<h5 class="text-info mt-4">
+  Signals to Observe
+</h5>
+
+<ul>
+
+  <li>clk</li>
+
+  <li>reset</li>
+
+  <li>valid_in</li>
+
+  <li>data_in</li>
+
+  <li>valid_3s</li>
+
+  <li>result_3s</li>
+
+  <li>valid_6s</li>
+
+  <li>result_6s</li>
+
+</ul>
+
+
+<!-- ========================= -->
+<!-- Expected Behavior -->
+<!-- ========================= -->
+
+<h5 class="text-info mt-4">
+  Expected Behavior
+</h5>
+
+<pre><code>
+3-Stage:
+
+Input → S1 → S2 → S3 → Output
+
+
+6-Stage:
+
+Input → S1 → S2 → S3 → S4 → S5 → S6 → Output
+</code></pre>
+
+<p>
+  The 6-stage pipeline has more stages, so its first result appears
+  later in terms of clock cycles.
+</p>
+
+<p>
+  However, after both pipelines are filled, each pipeline can
+  potentially produce one result per cycle.
+</p>
+
+
+<!-- ========================= -->
+<!-- Verification -->
+<!-- ========================= -->
+
+<h5 class="text-info mt-4">
+  Verification Checklist
+</h5>
+
+<ul>
+
+  <li>
+    Verify that both pipelines receive the same input transactions.
+  </li>
+
+  <li>
+    Verify that the 3-stage pipeline produces its first result earlier.
+  </li>
+
+  <li>
+    Verify that the 6-stage pipeline has greater cycle latency.
+  </li>
+
+  <li>
+    Verify that transaction ordering is preserved.
+  </li>
+
+  <li>
+    Verify valid-signal propagation.
+  </li>
+
+  <li>
+    Verify that no transaction is lost or duplicated.
+  </li>
+
+</ul>
+
+
+<!-- ========================= -->
+<!-- Main Observation -->
+<!-- ========================= -->
+
+<div class="card feature-card mt-4">
+
+  <div class="card-body">
+
+    <h5 class="text-info">
+      Main Observation
+    </h5>
+
+    <p>
+      A deeper pipeline does not automatically mean that every
+      transaction completes faster.
+    </p>
+
+    <p class="mb-0">
+      The deeper pipeline can potentially support a higher clock
+      frequency, but it also introduces additional cycle latency and
+      greater control complexity.
+    </p>
+
+  </div>
+
+</div>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  A deeper pipeline can improve frequency and
+                  potentially throughput, but it can also increase
+                  latency, control complexity, power, area and
+                  branch-recovery penalties.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                Good pipeline design is therefore a balance between
+                performance, implementation cost and verification
+                complexity.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
+     
+
+<!-- ========================= -->
 <!-- Bootstrap JS -->
 <!-- ========================= -->
 
