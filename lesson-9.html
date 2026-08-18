@@ -12538,7 +12538,750 @@ Input → S1 → S2 → S3 → S4 → S5 → S6 → Output
 
 </section>
 
-     
+ <!-- ========================= -->
+<!-- Step 22 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+
+    <h2 class="fw-bold text-info">
+      22. Pipeline Hazards Review
+    </h2>
+
+    <p class="text-secondary">
+      Review data, control and structural hazards and understand
+      how forwarding, stalls, bubbles and flushes handle them.
+    </p>
+
+  </div>
+
+
+  <div class="row justify-content-center">
+
+    <div class="col-lg-10">
+
+      <div class="card feature-card">
+
+        <div class="card-body">
+
+
+          <!-- ========================= -->
+          <!-- Introduction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info">
+            What Is a Pipeline Hazard?
+          </h4>
+
+          <p>
+            A <strong>pipeline hazard</strong> is a condition that
+            prevents an instruction or transaction from proceeding
+            normally through the pipeline.
+          </p>
+
+          <p>
+            The three major categories of pipeline hazards are:
+          </p>
+
+
+          <pre><code>
+Pipeline Hazards
+      |
+      +---- Data Hazard
+      |
+      +---- Control Hazard
+      |
+      +---- Structural Hazard
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Data Hazard -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            1. Data Hazard
+          </h4>
+
+          <p>
+            A data hazard occurs when an instruction depends on data
+            produced by another instruction that has not yet completed.
+          </p>
+
+
+          <pre><code>
+Instruction 1:
+
+R1 = R2 + R3
+
+
+Instruction 2:
+
+R4 = R1 + R5
+          </code></pre>
+
+
+          <p>
+            Instruction 2 requires the value of
+            <strong>R1</strong> produced by Instruction 1.
+          </p>
+
+
+          <p>
+            Common techniques for handling data hazards include:
+          </p>
+
+
+          <ul>
+
+            <li>Forwarding</li>
+
+            <li>Stalling</li>
+
+            <li>Bubble insertion</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Forwarding -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            2. Forwarding
+          </h4>
+
+          <p>
+            Forwarding allows a result to be sent directly from a
+            pipeline stage to a dependent operation without waiting
+            for the normal register write-back path.
+          </p>
+
+
+          <pre><code>
+Producer
+   |
+   | Result
+   v
+Forwarding Path
+   |
+   v
+Consumer
+          </code></pre>
+
+
+          <p>
+            Forwarding can reduce unnecessary stalls and improve
+            pipeline throughput.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Stalling -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            3. Stalling
+          </h4>
+
+          <p>
+            If a dependency cannot be safely resolved by forwarding,
+            the pipeline may need to stop temporarily.
+          </p>
+
+
+          <pre><code>
+Normal:
+
+A → B → C → D
+
+
+With Stall:
+
+A → B → STALL → C → D
+          </code></pre>
+
+
+          <p>
+            A stall adds one or more cycles to the execution time.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Bubble -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            4. Bubble Insertion
+          </h4>
+
+          <p>
+            A bubble represents an empty or invalid pipeline slot
+            inserted to safely separate dependent operations.
+          </p>
+
+
+          <pre><code>
+Instruction A
+      ↓
+Instruction B
+      ↓
+   Bubble
+      ↓
+Instruction C
+          </code></pre>
+
+
+          <p>
+            Bubbles help maintain correctness but can reduce
+            performance.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Control Hazard -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            5. Control Hazard
+          </h4>
+
+          <p>
+            A control hazard occurs when the next instruction depends
+            on a control-flow decision such as a branch.
+          </p>
+
+
+          <pre><code>
+Branch
+  ↓
+Which instruction executes next?
+  ↓
+Branch Decision
+          </code></pre>
+
+
+          <p>
+            Until the branch direction or target is known, the
+            pipeline may not know which instructions should continue.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Branch Prediction -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            6. Branch Prediction
+          </h4>
+
+          <p>
+            Branch prediction attempts to predict the direction or
+            target of a branch so that instruction fetching can
+            continue without waiting for the final decision.
+          </p>
+
+
+          <pre><code>
+Branch
+  ↓
+Prediction
+  ↓
+Correct?
+ /     \
+Yes     No
+ |       |
+Continue Flush
+         |
+         ↓
+    Correct Path
+          </code></pre>
+
+
+          <p>
+            A correct prediction helps maintain pipeline flow.
+            A misprediction requires recovery.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Flush -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            7. Pipeline Flush
+          </h4>
+
+          <p>
+            A pipeline flush removes instructions that should no
+            longer continue through the pipeline.
+          </p>
+
+
+          <pre><code>
+Wrong Path
+    ↓
+Branch Resolution
+    ↓
+Misprediction
+    ↓
+Flush
+    ↓
+Correct Path
+          </code></pre>
+
+
+          <p>
+            Flushing ensures that incorrect-path instructions do not
+            produce incorrect architectural results.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- Structural Hazard -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            8. Structural Hazard
+          </h4>
+
+          <p>
+            A structural hazard occurs when multiple pipeline
+            operations require the same hardware resource at the same
+            time.
+          </p>
+
+
+          <pre><code>
+Request A ──┐
+            |
+            +──→ Shared Hardware Resource
+            |
+Request B ──┘
+          </code></pre>
+
+
+          <p>
+            Possible solutions include:
+          </p>
+
+
+          <ul>
+
+            <li>Duplicate the resource</li>
+
+            <li>Reschedule the operation</li>
+
+            <li>Stall one operation</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Hazard Comparison -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            9. Three Major Hazard Types
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered text-center align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Hazard</th>
+                  <th>Cause</th>
+                  <th>Typical Solution</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Data</td>
+                  <td>Instruction dependency</td>
+                  <td>Forwarding / Stall</td>
+                </tr>
+
+                <tr>
+                  <td>Control</td>
+                  <td>Branch or control-flow change</td>
+                  <td>Prediction / Flush</td>
+                </tr>
+
+                <tr>
+                  <td>Structural</td>
+                  <td>Resource conflict</td>
+                  <td>Duplicate / Stall</td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- Performance Impact -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            10. Performance Impact
+          </h4>
+
+
+          <pre><code>
+Hazard
+   ↓
+Stall / Bubble / Flush
+   ↓
+Additional Cycles
+   ↓
+Higher CPI
+   ↓
+Lower Performance
+          </code></pre>
+
+
+          <p>
+            Therefore, hazard handling is important not only for
+            correctness but also for pipeline performance.
+          </p>
+
+
+          <!-- ========================= -->
+          <!-- DV Perspective -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            11. Design Verification Perspective
+          </h4>
+
+          <p>
+            A Design Verification engineer should verify more than
+            just the final output.
+          </p>
+
+
+          <ul>
+
+            <li>Hazard detection</li>
+
+            <li>Forwarding selection</li>
+
+            <li>Stall generation</li>
+
+            <li>Bubble insertion</li>
+
+            <li>Flush generation</li>
+
+            <li>Valid propagation</li>
+
+            <li>Transaction ordering</li>
+
+            <li>Recovery after a stall</li>
+
+            <li>Recovery after a flush</li>
+
+            <li>No transaction loss</li>
+
+            <li>No duplicate transactions</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Mindset -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            12. Verification Mindset
+          </h4>
+
+
+          <p>
+            For every hazard scenario, ask three questions:
+          </p>
+
+
+          <ol>
+
+            <li>
+              Was the hazard detected correctly?
+            </li>
+
+            <li>
+              Was the correct recovery mechanism applied?
+            </li>
+
+            <li>
+              Did the pipeline produce the correct result afterward?
+            </li>
+
+          </ol>
+
+
+          <pre><code>
+Hazard
+  ↓
+Detection
+  ↓
+Recovery
+  ↓
+Pipeline Resume
+  ↓
+Correct Result
+          </code></pre>
+
+
+          <!-- ========================= -->
+          <!-- Review Table -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-4">
+            13. Quick Review
+          </h4>
+
+
+          <div class="table-responsive">
+
+            <table class="table table-dark table-bordered align-middle">
+
+              <thead>
+
+                <tr>
+                  <th>Concept</th>
+                  <th>Remember</th>
+                </tr>
+
+              </thead>
+
+              <tbody>
+
+                <tr>
+                  <td>Data Hazard</td>
+                  <td>
+                    Dependency between instructions.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Forwarding</td>
+                  <td>
+                    Sends an available result directly to a consumer.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Stall</td>
+                  <td>
+                    Temporarily stops pipeline progress.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Bubble</td>
+                  <td>
+                    Empty or invalid pipeline slot.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Control Hazard</td>
+                  <td>
+                    Caused by control-flow decisions.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Flush</td>
+                  <td>
+                    Removes incorrect-path pipeline work.
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>Structural Hazard</td>
+                  <td>
+                    Multiple operations compete for a resource.
+                  </td>
+                </tr>
+
+              </tbody>
+
+            </table>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Playground -->
+          <!-- ========================= -->
+
+          <h4 class="text-info mt-5">
+            14. EDA Playground — Pipeline Hazards Review
+          </h4>
+
+
+          <p>
+            Now combine the hazard concepts in an RTL simulation.
+            The exercise will demonstrate hazard-related pipeline
+            behavior and allow you to inspect the signals in a
+            waveform viewer.
+          </p>
+
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body text-center">
+
+              <h5 class="text-info">
+                Hands-on Simulation
+              </h5>
+
+              <p>
+                Paste the Design and Testbench code into EDA Playground,
+                run the simulation and inspect the console and
+                waveform.
+              </p>
+
+
+              <a href="https://edaplayground.com/home"
+                 target="_blank"
+                 rel="noopener noreferrer"
+                 class="btn btn-info btn-lg">
+
+                ▶ Open EDA Playground
+
+              </a>
+
+            </div>
+
+          </div>
+
+
+          <!-- ========================= -->
+          <!-- EDA Signals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Signals to Observe
+          </h5>
+
+
+          <ul>
+
+            <li>clk</li>
+
+            <li>reset</li>
+
+            <li>valid_in</li>
+
+            <li>stall</li>
+
+            <li>flush</li>
+
+            <li>pipeline valid signals</li>
+
+            <li>pipeline data</li>
+
+            <li>result</li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Verification Goals -->
+          <!-- ========================= -->
+
+          <h5 class="text-info mt-4">
+            Verification Goals
+          </h5>
+
+
+          <ul>
+
+            <li>
+              Verify correct pipeline progression.
+            </li>
+
+            <li>
+              Verify stall behavior.
+            </li>
+
+            <li>
+              Verify bubble behavior.
+            </li>
+
+            <li>
+              Verify flush behavior.
+            </li>
+
+            <li>
+              Verify valid-signal propagation.
+            </li>
+
+            <li>
+              Verify transaction ordering.
+            </li>
+
+            <li>
+              Verify that no transaction is lost or duplicated.
+            </li>
+
+          </ul>
+
+
+          <!-- ========================= -->
+          <!-- Key Takeaway -->
+          <!-- ========================= -->
+
+          <div class="card feature-card mt-4">
+
+            <div class="card-body">
+
+              <h4 class="text-info">
+                Key Takeaway
+              </h4>
+
+              <p>
+                <strong>
+                  Pipeline hazards are conditions that prevent normal
+                  pipeline execution. Data hazards are commonly handled
+                  using forwarding or stalls, control hazards using
+                  prediction and flushes, and structural hazards using
+                  resource management or stalls.
+                </strong>
+              </p>
+
+              <p class="mb-0">
+                From a Design Verification perspective, always verify
+                both the hazard-handling mechanism and the final
+                correctness of the transaction flow.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>    
 
 <!-- ========================= -->
 <!-- Bootstrap JS -->
