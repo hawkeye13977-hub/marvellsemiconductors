@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Lesson 3 - Combinational Logic Design | SemiCore</title>
+
+<meta name="description"
+content="Learn Combinational Logic Design using Verilog HDL, including continuous assignments, logic equations, combinational circuits, examples and EDA Playground simulations.">
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+<a class="navbar-brand fw-bold text-info" href="index.html">
+⚡ SemiCore
+</a>
+
+<button class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+<ul class="navbar-nav ms-auto">
+
+<li class="nav-item">
+<a class="nav-link" href="index.html">Home</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="tutorials.html">Tutorials</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="news.html">News</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="about.html">About</a>
+</li>
+
+<li class="nav-item">
+<a class="nav-link" href="contact.html">Contact</a>
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</nav>
+
+<!-- ========================= -->
+<!-- Breadcrumb -->
+<!-- ========================= -->
+
+<section class="container pt-5 mt-5">
+
+<nav aria-label="breadcrumb">
+
+<ol class="breadcrumb">
+
+<li class="breadcrumb-item">
+<a href="index.html"
+class="text-info text-decoration-none">
+Home
+</a>
+</li>
+
+<li class="breadcrumb-item">
+<a href="tutorials.html"
+class="text-info text-decoration-none">
+Tutorials
+</a>
+</li>
+
+<li class="breadcrumb-item">
+<a href="rtl-design.html"
+class="text-info text-decoration-none">
+RTL Design
+</a>
+</li>
+
+<li class="breadcrumb-item active text-light">
+Lesson 3
+</li>
+
+</ol>
+
+</nav>
+
+</section>
+
+<!-- ========================= -->
+<!-- Hero -->
+<!-- ========================= -->
+
+<section class="course-hero">
+
+<div class="container text-center">
+
+<span class="badge bg-success fs-6 mb-3">
+
+Lesson 3
+
+</span>
+
+<h1>
+
+Combinational Logic Design
+
+</h1>
+
+<p>
+
+Learn how combinational circuits work and how to implement them using Verilog HDL.
+
+</p>
+
+<div class="mt-4">
+
+<div class="progress" style="height:10px;">
+
+<div class="progress-bar bg-info"
+role="progressbar"
+style="width:7.5%;">
+
+</div>
+
+</div>
+
+<small class="text-secondary">
+
+Course Progress: Lesson 3 of 40 (7.5%)
+
+</small>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Lesson Information -->
+<!-- ========================= -->
+
+<section class="container py-4">
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="row text-center">
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+📖 Lesson
+</h5>
+
+<p>
+3 of 40
+</p>
+
+</div>
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+⏱ Duration
+</h5>
+
+<p>
+30 Minutes
+</p>
+
+</div>
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+🎯 Level
+</h5>
+
+<p>
+Beginner
+</p>
+
+</div>
+
+<div class="col-md-3">
+
+<h5 class="text-info">
+📘 Prerequisite
+</h5>
+
+<p>
+Lesson 2
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Learning Objectives -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Learning Objectives
+
+</h2>
+
+<p class="text-secondary">
+
+After completing this lesson you will be able to:
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<ul>
+
+<li>Understand what combinational logic is.</li>
+
+<li>Differentiate combinational and sequential circuits.</li>
+
+<li>Understand how outputs depend on present inputs.</li>
+
+<li>Understand continuous assignments in Verilog.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<ul>
+
+<li>Write basic combinational Verilog designs.</li>
+
+<li>Use the <strong>assign</strong> statement.</li>
+
+<li>Build simple combinational circuits.</li>
+
+<li>Simulate designs using EDA Playground.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- What is Combinational Logic? -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+What is Combinational Logic?
+
+</h2>
+
+<p class="text-secondary">
+
+Digital circuits whose outputs depend only on their current inputs.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+<strong>Combinational logic</strong> is a type of digital logic in which
+the output depends only on the present values of the inputs.
+
+Unlike sequential logic, combinational circuits do not store previous
+input values or depend on past states.
+
+</p>
+
+<p>
+
+Whenever an input changes, the circuit produces the corresponding output
+after the propagation delay of the logic.
+
+</p>
+
+<p>
+
+Common examples of combinational circuits include:
+
+</p>
+
+<ul>
+
+<li>Logic gates</li>
+
+<li>Multiplexers</li>
+
+<li>Demultiplexers</li>
+
+<li>Encoders</li>
+
+<li>Decoders</li>
+
+<li>Comparators</li>
+
+<li>Adders and subtractors</li>
+
+</ul>
+
+<p>
+
+Combinational logic is one of the most important foundations of
+<strong>RTL Design</strong> because many hardware functions are implemented
+using these circuits.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- Combinational vs Sequential Logic -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Combinational vs Sequential Logic
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the key difference between the two major types of digital logic.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Combinational Logic
+
+</h4>
+
+<ul>
+
+<li>Output depends only on current inputs.</li>
+
+<li>Does not store previous values.</li>
+
+<li>Does not require a clock.</li>
+
+<li>Examples: MUX, Decoder, Encoder and Adder.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-5">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Sequential Logic
+
+</h4>
+
+<ul>
+
+<li>Output depends on current inputs and previous state.</li>
+
+<li>Contains memory elements.</li>
+
+<li>Usually operates with a clock.</li>
+
+<li>Examples: Flip-Flops, Registers and Counters.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row justify-content-center mt-4">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Combinational</th>
+
+<th>Sequential</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Depends on</td>
+
+<td>Current inputs</td>
+
+<td>Current inputs + previous state</td>
+
+</tr>
+
+<tr>
+
+<td>Memory</td>
+
+<td>No</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>Clock</td>
+
+<td>Not required</td>
+
+<td>Typically required</td>
+
+</tr>
+
+<tr>
+
+<td>Examples</td>
+
+<td>MUX, Decoder, Adder</td>
+
+<td>Flip-Flop, Register, Counter</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Combinational Logic Flow -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Combinational Logic Design Flow
+
+</h2>
+
+<p class="text-secondary">
+
+From inputs to logic equations and finally to the output.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<div class="row text-center g-4">
+
+<div class="col-md-4">
+
+<h4 class="text-info">
+1. Inputs
+</h4>
+
+<p>
+
+The circuit receives one or more binary input signals.
+
+</p>
+
+</div>
+
+<div class="col-md-4">
+
+<h4 class="text-info">
+2. Logic
+</h4>
+
+<p>
+
+Logic gates or Boolean equations process the input signals.
+
+</p>
+
+</div>
+
+<div class="col-md-4">
+
+<h4 class="text-info">
+3. Output
+</h4>
+
+<p>
+
+The circuit produces an output based on the current inputs.
+
+</p>
+
+</div>
+
+</div>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<p class="mb-0">
+
+<strong>Inputs → Logic Function → Output</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Continuous Assignment -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Continuous Assignment in Verilog
+
+</h2>
+
+<p class="text-secondary">
+
+Using the <strong>assign</strong> statement to describe combinational logic.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+In Verilog, combinational logic can be described using a
+<strong>continuous assignment</strong> statement.
+
+The <strong>assign</strong> keyword continuously drives a value onto a
+net based on an expression.
+
+</p>
+
+<p>
+
+Whenever a signal used in the expression changes, the output is
+automatically updated.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Basic Syntax
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>assign output_signal = expression;</code></pre>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module and_gate(
+
+input a,
+input b,
+
+output y
+
+);
+
+assign y = a &amp; b;
+
+endmodule</code></pre>
+
+<p class="mt-4">
+
+Here, the output <strong>y</strong> continuously follows the Boolean
+expression <strong>A AND B</strong>.
+
+</p>
+
+<ul>
+
+<li><strong>a</strong> and <strong>b</strong> are the inputs.</li>
+
+<li><strong>&amp;</strong> represents the AND operation.</li>
+
+<li><strong>y</strong> is continuously driven by the expression.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+  <!-- ========================= -->
+<!-- AND Gate Example -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+2-Input AND Gate
+
+</h2>
+
+<p class="text-secondary">
+
+A simple combinational circuit implemented using Verilog.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+AND Gate Truth Table
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center">
+
+<thead>
+
+<tr>
+
+<th>A</th>
+
+<th>B</th>
+
+<th>Y = A &amp; B</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>0</td>
+
+<td>1</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>0</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>1</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Verilog Design
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module and_gate(
+
+input a,
+input b,
+
+output y
+
+);
+
+assign y = a &amp; b;
+
+endmodule</code></pre>
+
+<p class="mt-4">
+
+The <strong>assign</strong> statement continuously evaluates the expression
+<strong>a &amp; b</strong> and drives the result to output <strong>y</strong>.
+
+</p>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Try It Yourself
+
+</h5>
+
+<p class="text-secondary">
+
+Run the AND gate design and verify all four possible input combinations.
+
+</p>
+
+<a href="https://edaplayground.com/x/CQYM"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Run on EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+Click the button above to open the project in EDA Playground. Modify the code, run the simulation, and observe the waveform.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
