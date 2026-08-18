@@ -3150,7 +3150,516 @@ the counter state changing with the clock.
 
 </section>
 
-  
+<!-- ========================= -->
+<!-- Hands-on Counter Practice -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Hands-on Counter Practice
+
+</h2>
+
+<p class="text-secondary">
+
+Test your understanding by designing a simple 4-bit counter.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Exercise: 4-bit Up Counter
+
+</h4>
+
+<p>
+
+Design a synchronous 4-bit up counter using Verilog.
+
+The counter should increment by one on every rising edge of the clock.
+
+</p>
+
+<h5 class="text-info mt-4">
+
+Requirements
+
+</h5>
+
+<ul>
+
+<li>Create a module named <strong>counter_4bit</strong>.</li>
+
+<li>Use an input named <strong>clk</strong>.</li>
+
+<li>Use a synchronous active-high <strong>reset</strong>.</li>
+
+<li>Create a 4-bit output named <strong>count</strong>.</li>
+
+<li>Reset the counter to <strong>0000</strong>.</li>
+
+<li>Increment the counter by one on every rising clock edge.</li>
+
+</ul>
+
+<h5 class="text-info mt-4">
+
+Expected Behavior
+
+</h5>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Edge</th>
+
+<th>Reset</th>
+
+<th>Count</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>1</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>0</td>
+
+<td>0001</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>0</td>
+
+<td>0010</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>0</td>
+
+<td>0011</td>
+
+</tr>
+
+<tr>
+
+<td>↑</td>
+
+<td>0</td>
+
+<td>0100</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h5 class="text-info mt-4">
+
+Bonus Challenge
+
+</h5>
+
+<p class="mb-0">
+
+Modify your counter so that it counts <strong>down</strong> instead of
+up.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Lesson Summary -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Lesson Summary
+
+</h2>
+
+<p class="text-secondary">
+
+The key concepts covered in Sequential Logic.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>
+Sequential logic can store information and depends on previous state.
+</li>
+
+<li>
+Flip-flops are basic sequential storage elements.
+</li>
+
+<li>
+A clock controls when synchronous sequential logic updates its state.
+</li>
+
+<li>
+A register is a group of flip-flops used to store multiple bits.
+</li>
+
+<li>
+A counter is a sequential circuit that updates its stored value according
+to a counting sequence.
+</li>
+
+<li>
+Synchronous reset is evaluated at the active clock edge.
+</li>
+
+<li>
+Asynchronous reset can affect the sequential element independently of the
+clock.
+</li>
+
+<li>
+Non-blocking assignment <strong>&lt;=</strong> is commonly used for
+clocked sequential logic in Verilog.
+</li>
+
+<li>
+Simulation and waveforms help verify sequential RTL behavior.
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Interview Questions -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Interview Questions
+
+</h2>
+
+<p class="text-secondary">
+
+Test your understanding of sequential logic and Verilog RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ol>
+
+<li class="mb-3">
+
+What is sequential logic?
+
+</li>
+
+<li class="mb-3">
+
+What is the difference between combinational and sequential logic?
+
+</li>
+
+<li class="mb-3">
+
+What is a flip-flop?
+
+</li>
+
+<li class="mb-3">
+
+Why is a clock used in sequential circuits?
+
+</li>
+
+<li class="mb-3">
+
+What is the difference between a register and a flip-flop?
+
+</li>
+
+<li class="mb-3">
+
+What is a counter?
+
+</li>
+
+<li class="mb-3">
+
+What is the difference between synchronous and asynchronous reset?
+
+</li>
+
+<li class="mb-3">
+
+Why is <strong>&lt;=</strong> commonly used in clocked sequential logic?
+
+</li>
+
+<li class="mb-3">
+
+What happens when a 4-bit counter reaches <strong>1111</strong> and
+increments again?
+
+</li>
+
+<li class="mb-3">
+
+Why does a register retain its value between clock edges?
+
+</li>
+
+<li class="mb-3">
+
+What is the purpose of reset in a sequential circuit?
+
+</li>
+
+<li class="mb-3">
+
+Why are waveforms useful when verifying sequential RTL?
+
+</li>
+
+</ol>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Key Takeaways -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Key Takeaways
+
+</h2>
+
+<p class="text-secondary">
+
+The most important ideas to remember from this lesson.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>
+Sequential logic stores information and depends on previous state.
+</li>
+
+<li>
+Flip-flops are the fundamental storage elements used in sequential
+circuits.
+</li>
+
+<li>
+The clock determines when synchronous sequential logic updates.
+</li>
+
+<li>
+Registers combine multiple flip-flops to store multi-bit data.
+</li>
+
+<li>
+Counters update their stored state according to a counting sequence.
+</li>
+
+<li>
+Synchronous reset acts at the active clock edge.
+</li>
+
+<li>
+Asynchronous reset can act independently of the clock.
+</li>
+
+<li>
+Non-blocking assignment <strong>&lt;=</strong> is commonly used for
+clocked sequential logic.
+</li>
+
+<li>
+Simulation and waveform analysis are essential for verifying sequential
+RTL behavior.
+</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section> 
+
+<!-- ========================= -->
+<!-- Coming Next -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h3 class="text-info">
+
+Coming Next
+
+</h3>
+
+<p class="mb-0">
+
+In <strong>Lesson 5</strong>, you'll learn
+<strong>Verilog Procedural Blocks and Coding Styles</strong>,
+including <strong>always blocks, blocking vs non-blocking assignments,
+and how to write clean synthesizable RTL.</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Lesson Navigation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="d-flex justify-content-between align-items-center">
+
+<a href="lesson-3.html"
+class="btn btn-outline-light">
+
+← Previous Lesson
+
+</a>
+
+<a href="lesson-5.html"
+class="btn btn-info">
+
+Next Lesson →
+
+</a>
+
+</div>
+
+</section>    
 
 </body>
 
