@@ -1,0 +1,10103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Lesson 9 | Pipeline Hazards and Stalls | SemiCore</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+
+<body>
+
+
+<!-- ========================= -->
+<!-- Navigation -->
+<!-- ========================= -->
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+<div class="container">
+
+
+<a class="navbar-brand fw-bold text-info" href="index.html">
+
+⚡ SemiCore
+
+</a>
+
+
+<button
+class="navbar-toggler"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#navbarNav"
+aria-controls="navbarNav"
+aria-expanded="false"
+aria-label="Toggle navigation">
+
+<span class="navbar-toggler-icon"></span>
+
+</button>
+
+
+<div class="collapse navbar-collapse" id="navbarNav">
+
+
+<ul class="navbar-nav ms-auto">
+
+
+<li class="nav-item">
+
+<a class="nav-link" href="index.html">
+
+Home
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link" href="news.html">
+
+News
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link active" href="tutorials.html">
+
+Tutorials
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link" href="about.html">
+
+About
+
+</a>
+
+</li>
+
+
+<li class="nav-item">
+
+<a class="nav-link" href="contact.html">
+
+Contact
+
+</a>
+
+</li>
+
+
+</ul>
+
+
+</div>
+
+</div>
+
+</nav>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Hero -->
+<!-- ========================= -->
+
+<section class="hero">
+
+<div class="container text-center">
+
+
+<h1>
+
+Lesson 9: Pipeline Hazards and Stalls
+
+</h1>
+
+
+
+<!-- ========================= -->
+<!-- Breadcrumb -->
+<!-- ========================= -->
+
+<nav aria-label="breadcrumb">
+
+<ol class="breadcrumb justify-content-center">
+
+
+<li class="breadcrumb-item">
+
+<a href="index.html" class="text-info">
+
+Home
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item">
+
+<a href="tutorials.html" class="text-info">
+
+Tutorials
+
+</a>
+
+</li>
+
+
+<li class="breadcrumb-item">
+
+<a href="rtl-design.html" class="text-info">
+
+RTL Design
+
+</a>
+
+</li>
+
+
+<li
+class="breadcrumb-item active text-light"
+aria-current="page">
+
+Lesson 9
+
+</li>
+
+
+</ol>
+
+</nav>
+
+
+
+<p>
+
+Understand data hazards, stalls, bubbles, forwarding and
+pipeline control.
+
+</p>
+
+
+<p class="mt-3 text-info">
+
+RTL Design • Pipelining • Verification
+
+</p>
+
+
+</div>
+
+</section>
+
+
+
+<!-- ========================= -->
+<!-- Lesson Introduction -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+
+<div class="row justify-content-center">
+
+
+<div class="col-lg-10">
+
+
+<div class="card feature-card">
+
+
+<div class="card-body">
+
+
+<h2 class="text-info">
+
+Lesson Overview
+
+</h2>
+
+
+<p>
+
+In the previous lesson, we learned how pipelining divides a
+computation into multiple stages and allows different transactions
+to be processed simultaneously.
+
+</p>
+
+
+<p>
+
+In this lesson, we will study what happens when a pipeline cannot
+continue normally.
+
+We will learn about pipeline hazards, data dependencies, stalls,
+bubbles, forwarding and hazard handling techniques.
+
+</p>
+
+
+
+<h4 class="text-info mt-4">
+
+What You Will Learn
+
+</h4>
+
+
+<ul>
+
+
+<li>
+
+Pipeline hazards
+
+</li>
+
+
+<li>
+
+Data hazards
+
+</li>
+
+
+<li>
+
+RAW dependencies
+
+</li>
+
+
+<li>
+
+Structural hazards
+
+</li>
+
+
+<li>
+
+Control hazards
+
+</li>
+
+
+<li>
+
+Pipeline stalls
+
+</li>
+
+
+<li>
+
+Pipeline bubbles
+
+</li>
+
+
+<li>
+
+Forwarding and bypassing
+
+</li>
+
+
+<li>
+
+Hazard detection
+
+</li>
+
+
+<li>
+
+RTL implementation
+
+</li>
+
+
+<li>
+
+Simulation and waveform analysis
+
+</li>
+
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Prerequisite
+
+</h4>
+
+
+<p>
+
+Before starting this lesson, you should understand the basic
+concepts of pipeline stages, pipeline registers, latency,
+throughput and pipeline timing diagrams covered in Lesson 8.
+
+</p>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 1 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+1. What Are Pipeline Hazards?
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding why a pipeline sometimes cannot continue normally.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Pipeline Hazard?
+
+</h4>
+
+<p>
+
+A <strong>pipeline hazard</strong> is a situation that prevents an
+instruction or data transaction from progressing through the pipeline
+during the expected clock cycle.
+
+</p>
+
+<p>
+
+In an ideal pipeline, a new transaction enters the pipeline every
+clock cycle and each transaction advances one stage at every clock
+edge.
+
+Real designs can introduce dependencies, resource conflicts or
+control-flow changes that prevent this ideal behavior.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Ideal Pipeline
+
+</h4>
+
+<pre><code>
+Cycle 1:
+
+A → Stage 1
+
+
+Cycle 2:
+
+A → Stage 2
+B → Stage 1
+
+
+Cycle 3:
+
+A → Stage 3
+B → Stage 2
+C → Stage 1
+
+
+Cycle 4:
+
+A → Output
+B → Stage 3
+C → Stage 2
+D → Stage 1
+</code></pre>
+
+
+<p>
+
+This is the ideal case where every stage can continue operating
+without interruption.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+When Does a Hazard Occur?
+
+</h4>
+
+<p>
+
+A hazard occurs when the next operation cannot safely proceed at the
+expected time.
+
+For example, a later operation may need a value that an earlier
+operation has not produced yet.
+
+</p>
+
+
+<pre><code>
+Operation A
+     |
+     | Produces Data
+     v
+Operation B
+     |
+     | Needs Data
+     v
+Result
+</code></pre>
+
+
+<p>
+
+If Operation B reaches the required pipeline stage before the data
+from Operation A is available, the pipeline needs a mechanism to
+handle the situation.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Three Major Types of Pipeline Hazards
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Hazard</th>
+
+<th>Cause</th>
+
+<th>Typical Handling</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Data Hazard</td>
+
+<td>Dependency between operations</td>
+
+<td>Forwarding or Stall</td>
+
+</tr>
+
+<tr>
+
+<td>Structural Hazard</td>
+
+<td>Shared hardware resource conflict</td>
+
+<td>Resource management or Stall</td>
+
+</tr>
+
+<tr>
+
+<td>Control Hazard</td>
+
+<td>Change in program/control flow</td>
+
+<td>Flush, Stall or Prediction</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+1. Data Hazard
+
+</h4>
+
+<p>
+
+A <strong>data hazard</strong> occurs when one operation depends on a
+value produced or modified by another operation.
+
+</p>
+
+
+<pre><code>
+Instruction A:
+
+R1 = R2 + R3
+
+
+Instruction B:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction B requires the new value of R1 produced by Instruction A.
+
+Because both instructions can overlap inside the pipeline, the
+required value may not yet be available.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+2. Structural Hazard
+
+</h4>
+
+<p>
+
+A <strong>structural hazard</strong> occurs when two pipeline
+operations require the same hardware resource at the same time.
+
+</p>
+
+
+<pre><code>
+Instruction A
+      |
+      v
++-------------+
+|   Shared    |
+|   Resource  |
++-------------+
+      ^
+      |
+Instruction B
+</code></pre>
+
+
+<p>
+
+For example, if two pipeline stages require access to a single
+resource that can serve only one request at a time, one operation may
+have to wait.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+3. Control Hazard
+
+</h4>
+
+<p>
+
+A <strong>control hazard</strong> occurs when the pipeline does not
+immediately know which operation should execute next because of a
+control-flow decision.
+
+Branches are a common example.
+
+</p>
+
+
+<pre><code>
+             Branch
+                |
+          +-----+-----+
+          |           |
+        Path A       Path B
+</code></pre>
+
+
+<p>
+
+Until the branch decision is resolved, the pipeline may have already
+started processing operations from the wrong path.
+
+Those operations may need to be discarded.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+What is a Pipeline Stall?
+
+</h4>
+
+<p>
+
+A <strong>stall</strong> temporarily prevents part of the pipeline
+from advancing.
+
+The pipeline waits until the condition causing the hazard has been
+resolved.
+
+</p>
+
+
+<pre><code>
+Normal:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → C
+Cycle 4 → D
+
+
+With Stall:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → Stall
+Cycle 4 → C
+Cycle 5 → D
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+What is a Bubble?
+
+</h4>
+
+<p>
+
+A <strong>bubble</strong> is an empty slot introduced into the
+pipeline.
+
+It represents a cycle in which useful work is not progressing through
+a particular pipeline stage.
+
+</p>
+
+
+<pre><code>
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → Bubble
+Cycle 4 → C
+</code></pre>
+
+
+<p>
+
+Stalls and bubbles reduce the ideal throughput of the pipeline, but
+they can be necessary to maintain correct behavior.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why Hazard Handling Is Important
+
+</h4>
+
+<p>
+
+A pipeline must always produce the correct result.
+
+Performance is important, but correctness comes first.
+
+The design therefore needs to detect situations where normal pipeline
+operation could produce incorrect data or incorrect control flow.
+
+</p>
+
+
+<pre><code>
+Pipeline Hazard
+       |
+       v
+Can pipeline continue safely?
+       |
+   +---+---+
+   |       |
+  YES      NO
+   |       |
+   v       v
+Continue  Handle Hazard
+             |
+       +-----+-----+
+       |           |
+   Forward       Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+Not every pipeline requires the same hazard-handling mechanisms.
+
+The required solution depends on the architecture, pipeline depth,
+available hardware resources and timing requirements.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Pipeline hazards are conditions that prevent ideal pipeline
+execution. The three major categories are data hazards, structural
+hazards and control hazards.
+
+</strong>
+
+<br><br>
+
+Hazards may require techniques such as forwarding, stalling, bubble
+insertion, resource management or pipeline flushing.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 2 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+2. Data Hazards
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding hazards caused by dependencies between pipeline operations.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Data Hazard?
+
+</h4>
+
+<p>
+
+A <strong>data hazard</strong> occurs when one operation depends on
+data produced or modified by another operation.
+
+In a pipelined design, multiple operations overlap in time. This can
+cause a later operation to reach a stage before the data it requires
+is available.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Example
+
+</h4>
+
+<pre><code>
+Operation 1:
+
+R1 = R2 + R3
+
+
+Operation 2:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Operation 2 needs the new value of <strong>R1</strong> produced by
+Operation 1.
+
+Therefore, Operation 2 depends on Operation 1.
+
+</p>
+
+
+<pre><code>
+Operation 1
+     |
+     | Produces R1
+     v
+Operation 2
+     |
+     | Reads R1
+     v
+Result
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Does Pipelining Create the Problem?
+
+</h4>
+
+<p>
+
+Without pipelining, Operation 1 could finish before Operation 2
+starts.
+
+With pipelining, both operations can be active at the same time.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Operation 1 → Stage 1
+
+
+Cycle 2:
+
+Operation 1 → Stage 2
+Operation 2 → Stage 1
+
+
+Cycle 3:
+
+Operation 1 → Stage 3
+Operation 2 → Stage 2
+</code></pre>
+
+
+<p>
+
+At this point, Operation 2 may need a value that Operation 1 has not
+yet written back.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Read-After-Write Dependency
+
+</h4>
+
+<p>
+
+The most common data hazard in a simple pipeline is the
+<strong>Read-After-Write (RAW)</strong> dependency.
+
+It occurs when a later operation tries to read a value before an
+earlier operation has completed writing that value.
+
+</p>
+
+
+<pre><code>
+Instruction A:
+
+R1 = R2 + R3
+
+
+Instruction B:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction A writes R1.
+
+Instruction B reads R1.
+
+Therefore, Instruction B must receive the correct result from
+Instruction A.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Example
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Cycle</th>
+
+<th>Instruction A</th>
+
+<th>Instruction B</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>Execute</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Next Stage</td>
+
+<td>Execute</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>Next Stage</td>
+
+<td>Next Stage</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<p>
+
+If Instruction B requires R1 during Cycle 2, but Instruction A does
+not produce R1 until a later stage, a hazard exists.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+How Can We Handle a Data Hazard?
+
+</h4>
+
+<p>
+
+There are two fundamental approaches commonly used in pipelines:
+
+</p>
+
+
+<ul>
+
+<li>
+
+<strong>Forwarding:</strong>
+
+Send the required result directly from a later pipeline stage to the
+stage that needs it.
+
+</li>
+
+
+<li>
+
+<strong>Stalling:</strong>
+
+Temporarily stop the dependent operation until the required data is
+available.
+
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding Concept
+
+</h4>
+
+<pre><code>
+Instruction A
+     |
+     v
+Pipeline Stage
+     |
+     | Result
+     |
+     +------------------+
+                        |
+                        v
+                   Forwarding
+                        |
+                        v
+Instruction B
+</code></pre>
+
+
+<p>
+
+Forwarding can allow a dependent operation to use a result as soon as
+the result becomes available, without waiting for the normal
+write-back path.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Stall Concept
+
+</h4>
+
+<p>
+
+If forwarding cannot provide the required value in time, the pipeline
+may need to stall.
+
+</p>
+
+
+<pre><code>
+Normal:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → C
+
+
+With Stall:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → Bubble
+Cycle 4 → C
+</code></pre>
+
+
+<p>
+
+The bubble gives the earlier operation additional time to produce the
+required value.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Data Hazard vs Data Dependency
+
+</h4>
+
+<p>
+
+A dependency describes a relationship between operations.
+
+A hazard occurs when that dependency creates a timing problem in the
+pipeline.
+
+</p>
+
+
+<pre><code>
+Data Dependency
+       |
+       v
+Does timing cause a conflict?
+       |
+    +--+--+
+    |     |
+   No    Yes
+    |     |
+    v     v
+No      Data Hazard
+Hazard
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important RTL Perspective
+
+</h4>
+
+<p>
+
+At the RTL level, pipeline registers define when values become
+available to subsequent stages.
+
+For example:
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    stage1 &lt;= a + b;
+
+    stage2 &lt;= stage1 + c;
+
+end
+</code></pre>
+
+
+<p>
+
+Because these are nonblocking assignments,
+<strong>stage2</strong> receives the previous value of
+<strong>stage1</strong>.
+
+This clock-cycle separation is fundamental to understanding pipeline
+data hazards.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A data hazard occurs when overlapping pipeline operations have a data
+dependency that cannot be satisfied at the required time.
+
+</strong>
+
+<br><br>
+
+The most important case to understand is the RAW dependency, which
+can be handled using techniques such as forwarding or stalling.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 3 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+3. RAW (Read-After-Write) Hazard
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the most common data hazard in a pipelined processor.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a RAW Hazard?
+
+</h4>
+
+<p>
+
+<strong>RAW</strong> stands for
+<strong>Read-After-Write</strong>.
+
+A RAW hazard occurs when a later instruction needs to read a value
+that an earlier instruction has not yet written.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Basic Example
+
+</h4>
+
+<pre><code>
+Instruction 1:
+
+R1 = R2 + R3
+
+
+Instruction 2:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction 1 produces the new value of <strong>R1</strong>.
+
+Instruction 2 requires that new value of <strong>R1</strong>.
+
+Therefore, Instruction 2 cannot safely use an old value of R1.
+
+</p>
+
+
+<pre><code>
+Instruction 1
+     |
+     | Writes R1
+     v
+    R1
+     ^
+     |
+     | Reads R1
+     |
+Instruction 2
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Does RAW Become a Hazard?
+
+</h4>
+
+<p>
+
+In a pipelined processor, instructions overlap.
+
+The instruction that produces the value may still be somewhere inside
+the pipeline when the dependent instruction needs to read it.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Instruction 1 → Stage 1
+
+
+Cycle 2:
+
+Instruction 1 → Stage 2
+Instruction 2 → Stage 1
+
+
+Cycle 3:
+
+Instruction 1 → Stage 3
+Instruction 2 → Stage 2
+
+
+Cycle 4:
+
+Instruction 1 → Write Result
+Instruction 2 → Needs Result
+</code></pre>
+
+
+<p>
+
+If the result of Instruction 1 is not available to Instruction 2 at
+the required time, a RAW hazard exists.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+RAW Dependency Diagram
+
+</h4>
+
+<pre><code>
+Producer
+Instruction 1
+     |
+     | Produces R1
+     v
++-------------+
+| Pipeline    |
+| Registers   |
++-------------+
+     |
+     v
+Consumer
+Instruction 2
+     |
+     | Requires R1
+     v
+    Result
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+RAW Hazard in a Simple Pipeline
+
+</h4>
+
+<p>
+
+Consider a simple five-stage processor pipeline:
+
+</p>
+
+
+<pre><code>
+IF → ID → EX → MEM → WB
+</code></pre>
+
+
+<p>
+
+Where:
+
+</p>
+
+
+<ul>
+
+<li><strong>IF</strong> — Instruction Fetch</li>
+
+<li><strong>ID</strong> — Instruction Decode / Register Read</li>
+
+<li><strong>EX</strong> — Execute</li>
+
+<li><strong>MEM</strong> — Memory Access</li>
+
+<li><strong>WB</strong> — Write Back</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Example Timing
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Instruction</th>
+
+<th>Cycle 1</th>
+
+<th>Cycle 2</th>
+
+<th>Cycle 3</th>
+
+<th>Cycle 4</th>
+
+<th>Cycle 5</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Instruction 1</td>
+
+<td>IF</td>
+
+<td>ID</td>
+
+<td>EX</td>
+
+<td>MEM</td>
+
+<td>WB</td>
+
+</tr>
+
+<tr>
+
+<td>Instruction 2</td>
+
+<td>—</td>
+
+<td>IF</td>
+
+<td>ID</td>
+
+<td>EX</td>
+
+<td>MEM</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<p>
+
+Instruction 2 may need the value produced by Instruction 1 while
+Instruction 1 has not yet completed its write-back operation.
+
+This creates a dependency that must be handled by the processor
+pipeline.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Method 1 — Forwarding
+
+</h4>
+
+<p>
+
+One common solution is <strong>forwarding</strong>, also called
+<strong>bypassing</strong>.
+
+Instead of waiting for the result to be written back to the register
+file, the result can be forwarded directly from a pipeline stage to
+the stage that needs it.
+
+</p>
+
+
+<pre><code>
+             Result
+               |
+               v
+Instruction 1
+     |
+     v
++---------+
+|   EX    |
++---------+
+     |
+     | Forward
+     +--------------------+
+                          |
+                          v
+                    +---------+
+                    |   EX    |
+                    | Instr 2 |
+                    +---------+
+</code></pre>
+
+
+<p>
+
+Forwarding can reduce or eliminate many unnecessary stalls.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Method 2 — Stalling
+
+</h4>
+
+<p>
+
+If the required value cannot be forwarded in time, the pipeline can
+insert a stall.
+
+</p>
+
+
+<pre><code>
+Cycle 1 → Instruction 1
+
+Cycle 2 → Instruction 2
+
+Cycle 3 → STALL / BUBBLE
+
+Cycle 4 → Instruction 2 continues
+</code></pre>
+
+
+<p>
+
+The stall gives the producer instruction additional time to make its
+result available.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding vs Stalling
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Technique</th>
+
+<th>How It Works</th>
+
+<th>Performance</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Forwarding</td>
+
+<td>Routes a result directly to the dependent stage.</td>
+
+<td>Usually reduces stalls.</td>
+
+</tr>
+
+<tr>
+
+<td>Stalling</td>
+
+<td>Pauses pipeline progress until the value is available.</td>
+
+<td>Introduces bubbles.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+RAW Hazard in RTL Thinking
+
+</h4>
+
+<p>
+
+At the RTL level, a dependency can appear between registered values.
+
+For example:
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    result1 &lt;= a + b;
+
+    result2 &lt;= result1 + c;
+
+end
+</code></pre>
+
+
+<p>
+
+Because these are nonblocking assignments,
+<strong>result2</strong> uses the previous value of
+<strong>result1</strong>.
+
+This behavior creates a clock-cycle dependency between the two
+operations.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+A RAW dependency itself is not necessarily a problem.
+
+It becomes a <strong>RAW hazard</strong> when the pipeline timing
+causes the consumer to require the value before the producer has made
+it available.
+
+</p>
+
+
+<pre><code>
+Dependency:
+
+Producer → Consumer
+
+
+Timing Safe?
+
+     |
+ +---+---+
+ |       |
+Yes      No
+ |       |
+ v       v
+No      RAW
+Hazard  Hazard
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A RAW hazard occurs when a later instruction needs to read a value
+before an earlier instruction has made the new value available.
+
+</strong>
+
+<br><br>
+
+Forwarding can often resolve the dependency without a stall, while a
+stall may be required when forwarding cannot provide the value in
+time.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 4 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+4. Pipeline Stalls and Bubbles
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how a pipeline pauses and how bubbles are introduced to maintain correctness.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Pipeline Stall?
+
+</h4>
+
+<p>
+
+A <strong>pipeline stall</strong> occurs when a pipeline temporarily
+stops advancing an instruction or transaction because the required
+condition for safe execution has not yet been satisfied.
+
+</p>
+
+<p>
+
+A stall is commonly used when a dependent instruction needs data that
+is not yet available.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why Do We Need a Stall?
+
+</h4>
+
+<p>
+
+Consider two dependent operations:
+
+</p>
+
+
+<pre><code>
+Instruction A:
+
+R1 = R2 + R3
+
+
+Instruction B:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction B needs the new value of R1.
+
+If that value is not available when Instruction B reaches the required
+pipeline stage, allowing it to continue could produce an incorrect
+result.
+
+The pipeline therefore needs to wait.
+
+</p>
+
+
+<pre><code>
+Instruction A
+     |
+     | Produces R1
+     v
+   R1
+     ^
+     |
+     | Requires R1
+     |
+Instruction B
+
+        ↓
+
+      STALL
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+What is a Bubble?
+
+</h4>
+
+<p>
+
+A <strong>bubble</strong> is an empty slot introduced into the
+pipeline.
+
+It represents a cycle in which a particular pipeline stage does not
+perform useful work for a new transaction.
+
+</p>
+
+
+<pre><code>
+Normal Pipeline:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → C
+Cycle 4 → D
+
+
+With Bubble:
+
+Cycle 1 → A
+Cycle 2 → B
+Cycle 3 → Bubble
+Cycle 4 → C
+Cycle 5 → D
+</code></pre>
+
+
+<p>
+
+The bubble effectively creates additional time for the earlier
+operation to complete.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Stall vs Bubble
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Term</th>
+
+<th>Meaning</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Stall</td>
+
+<td>Temporarily prevents normal pipeline progress.</td>
+
+</tr>
+
+<tr>
+
+<td>Bubble</td>
+
+<td>An empty pipeline slot created as a result of the stall.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Example Pipeline
+
+</h4>
+
+<p>
+
+Consider a simple three-stage pipeline:
+
+</p>
+
+
+<pre><code>
+Stage 1 → Stage 2 → Stage 3
+</code></pre>
+
+
+<p>
+
+Normally, transactions move through the pipeline as follows:
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+A → Stage 1
+
+
+Cycle 2:
+
+B → Stage 1
+A → Stage 2
+
+
+Cycle 3:
+
+C → Stage 1
+B → Stage 2
+A → Stage 3
+</code></pre>
+
+
+<p>
+
+Now suppose B depends on a value produced by A and that the value
+cannot be forwarded immediately.
+
+The pipeline may need to insert a bubble.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+A → Stage 1
+
+
+Cycle 2:
+
+A → Stage 2
+B → Stage 1
+
+
+Cycle 3:
+
+A → Stage 3
+B → STALL
+
+
+Cycle 4:
+
+B → Stage 2
+C → Stage 1
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Effect of a Stall on Throughput
+
+</h4>
+
+<p>
+
+A stall introduces an empty cycle into the pipeline.
+
+Therefore, stalls can reduce the ideal throughput of the design.
+
+</p>
+
+
+<pre><code>
+Without Stall:
+
+A → B → C → D → E
+
+
+With Stall:
+
+A → B → Bubble → C → D → E
+</code></pre>
+
+
+<p>
+
+The more frequently stalls occur, the further the actual throughput
+can move away from the ideal throughput.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Control During a Stall
+
+</h4>
+
+<p>
+
+A practical pipeline needs control logic to determine which registers
+should hold their current values and where a bubble should be inserted.
+
+</p>
+
+
+<pre><code>
+Hazard Detection
+       |
+       v
+Hazard Found?
+       |
+   +---+---+
+   |       |
+  No      Yes
+   |       |
+   v       v
+Continue  Stall
+             |
+             v
+          Bubble
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Basic RTL Concept
+
+</h4>
+
+<p>
+
+A simplified stall mechanism can be represented by holding a pipeline
+register when a stall condition is active.
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        stage1 &lt;= 8'b0;
+
+    end
+
+    else if (stall) begin
+
+        stage1 &lt;= stage1;
+
+    end
+
+    else begin
+
+        stage1 &lt;= new_data;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+In synthesizable RTL, the explicit self-assignment is often
+unnecessary because omitting the assignment in a clocked block also
+holds the register.
+
+The important concept is that the register retains its previous
+value when the pipeline is stalled.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Bubble Insertion
+
+</h4>
+
+<p>
+
+A bubble can also be created by preventing valid data from advancing
+into the next stage.
+
+This is commonly handled using a valid signal.
+
+</p>
+
+
+<pre><code>
+Data     → Stage 1 → Stage 2
+
+Valid    →    1    →    0
+</code></pre>
+
+
+<p>
+
+Here, the stage may contain a value, but the valid bit indicates that
+the value should not be treated as a valid transaction.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Stall Example with Valid Signal
+
+</h4>
+
+
+<pre><code>
+Cycle 1:
+
+Data A
+Valid = 1
+
+
+Cycle 2:
+
+Data B
+Valid = 1
+
+
+Cycle 3:
+
+Bubble
+Valid = 0
+
+
+Cycle 4:
+
+Data C
+Valid = 1
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Not Always Stall?
+
+</h4>
+
+<p>
+
+Stalls maintain correctness, but they can reduce performance.
+
+Therefore, good pipeline architectures try to avoid unnecessary
+stalls.
+
+Techniques such as forwarding can allow dependent operations to
+continue when the required value is already available.
+
+</p>
+
+
+<pre><code>
+Dependency
+    |
+    v
+Can value be forwarded?
+    |
+ +--+--+
+ |     |
+Yes    No
+ |     |
+ v     v
+Forward Stall
+         |
+         v
+       Bubble
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+A stall is not an error.
+
+It is a deliberate control action used to prevent incorrect pipeline
+execution.
+
+The design should stall only when necessary and allow normal
+execution whenever it is safe.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A pipeline stall temporarily prevents normal progress, while a
+bubble represents the empty slot created in the pipeline.
+
+</strong>
+
+<br><br>
+
+Stalls may reduce throughput, but they are an important mechanism for
+maintaining correct operation when a hazard cannot be resolved
+immediately.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 5 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+5. Forwarding and Bypassing
+
+</h2>
+
+<p class="text-secondary">
+
+Learn how a pipeline can provide a recently generated result directly
+to a dependent operation without waiting for normal write-back.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<!-- ========================= -->
+<!-- What is Forwarding -->
+<!-- ========================= -->
+
+<h4 class="text-info">
+
+What is Forwarding?
+
+</h4>
+
+<p>
+
+<strong>Forwarding</strong>, also called
+<strong>bypassing</strong>, is a technique used to resolve certain
+data hazards by sending a result directly from one pipeline stage to
+another stage that needs it.
+
+</p>
+
+<p>
+
+Instead of waiting for the result to travel through the normal
+write-back path, the value is taken from an intermediate pipeline
+stage and forwarded to the dependent operation.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Why Forwarding -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Why Do We Need Forwarding?
+
+</h4>
+
+<p>
+
+Consider two dependent instructions:
+
+</p>
+
+
+<pre><code>
+Instruction 1:
+
+R1 = R2 + R3
+
+
+Instruction 2:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+Instruction 2 needs the new value of R1 produced by Instruction 1.
+
+Without forwarding, Instruction 2 may have to wait until the value is
+written back to the register file.
+
+With forwarding, the result can potentially be sent directly to the
+stage where Instruction 2 needs it.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Without Forwarding -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Without Forwarding
+
+</h4>
+
+
+<pre><code>
+Instruction 1
+     |
+     v
+   Execute
+     |
+     v
+   Memory
+     |
+     v
+ Write Back
+     |
+     v
+ Register R1
+     |
+     v
+Instruction 2
+</code></pre>
+
+
+<p>
+
+The dependent instruction may have to wait for the producer's result
+to reach the register file.
+
+This can introduce one or more pipeline stalls depending on the
+pipeline architecture.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- With Forwarding -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+With Forwarding
+
+</h4>
+
+
+<pre><code>
+             Result
+               |
+               |
+               +------------------+
+                                  |
+                                  v
+Instruction 1                Instruction 2
+     |                            |
+     v                            v
+   Execute ------------------> Execute
+              Forward
+</code></pre>
+
+
+<p>
+
+The result from the producer can bypass the normal register
+write-back path and be supplied directly to the consumer.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Basic Pipeline Example -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Basic Pipeline Example
+
+</h4>
+
+<p>
+
+Consider a simplified three-stage pipeline:
+
+</p>
+
+
+<pre><code>
+Stage 1 → Stage 2 → Stage 3
+</code></pre>
+
+
+<p>
+
+Suppose Instruction A produces a value that Instruction B immediately
+needs.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+Instruction A → Stage 1
+
+
+Cycle 2:
+
+Instruction A → Stage 2
+Instruction B → Stage 1
+
+
+Cycle 3:
+
+Instruction A → Stage 3
+Instruction B → Stage 2
+</code></pre>
+
+
+<p>
+
+If the result produced by Instruction A is available at the required
+point, forwarding can send it directly toward Instruction B.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Forwarding Path -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Forwarding Path
+
+</h4>
+
+
+<pre><code>
+                 +----------------------+
+                 |                      |
+                 |      Forward         |
+                 |                      |
+                 v                      |
+Stage 1 → Stage 2 → Stage 3
+             |
+             |
+             +------> Dependent Stage
+</code></pre>
+
+
+<p>
+
+The exact forwarding path depends on the processor or datapath
+architecture.
+
+There may be multiple possible forwarding sources and destinations.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Forwarding Sources -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Possible Forwarding Sources
+
+</h4>
+
+<p>
+
+A practical pipeline can have several possible sources for a required
+operand.
+
+For example:
+
+</p>
+
+
+<ul>
+
+<li>Register file output</li>
+
+<li>Result from an earlier execution stage</li>
+
+<li>Result from a later pipeline stage</li>
+
+<li>Specialized execution-unit result</li>
+
+</ul>
+
+
+<pre><code>
+Register File
+      |
+      |
+      v
+    +-----+
+    |     |
+    | MUX | ----> ALU Input
+    |     |
+    +-----+
+      ^
+      |
+      +-------- Forward Source 1
+      |
+      +-------- Forward Source 2
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- Forwarding Multiplexer -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Forwarding Multiplexer
+
+</h4>
+
+<p>
+
+A multiplexer is commonly used to select the correct operand source.
+
+The control logic determines whether the ALU should receive the
+normal register value or a forwarded value.
+
+</p>
+
+
+<pre><code>
+Register Value
+      |
+      v
+   +------+
+   |      |
+   | MUX  |------> ALU Input
+   |      |
+   +------+
+      ^
+      |
+Forwarded Value
+</code></pre>
+
+
+<p>
+
+The multiplexer selection is controlled by forwarding logic.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Conceptual RTL -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Conceptual RTL Example
+
+</h4>
+
+
+<pre><code>
+always @(*) begin
+
+    if (forward_enable)
+
+        alu_input = forwarded_value;
+
+    else
+
+        alu_input = register_value;
+
+end
+</code></pre>
+
+
+<p>
+
+This is a simplified educational example.
+
+A real implementation may contain several forwarding conditions,
+multiple operands and multiple pipeline stages.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Two Operand Forwarding -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Forwarding for Two Operands
+
+</h4>
+
+<p>
+
+Many arithmetic operations require two source operands.
+
+For example:
+
+</p>
+
+
+<pre><code>
+R4 = R1 + R2
+</code></pre>
+
+
+<p>
+
+Both R1 and R2 may potentially require forwarding.
+
+Therefore, the pipeline may require independent forwarding control for
+each operand.
+
+</p>
+
+
+<pre><code>
+                Source A
+                   |
+                   v
+                +-----+
+                | MUX |------> ALU Input A
+                +-----+
+                   ^
+                   |
+             Forward A
+
+
+                Source B
+                   |
+                   v
+                +-----+
+                | MUX |------> ALU Input B
+                +-----+
+                   ^
+                   |
+             Forward B
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- Forwarding vs Stalling -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Forwarding vs Stalling
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Forwarding</th>
+
+<th>Stalling</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+
+Passes an available result directly to the consumer.
+
+</td>
+
+<td>
+
+Temporarily stops pipeline progress.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+Can reduce pipeline bubbles.
+
+</td>
+
+<td>
+
+Introduces bubbles.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+Usually improves throughput when applicable.
+
+</td>
+
+<td>
+
+Can reduce throughput.
+
+</td>
+
+</tr>
+
+<tr>
+
+<td>
+
+Requires additional datapaths and control logic.
+
+</td>
+
+<td>
+
+Requires stall control logic.
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<!-- ========================= -->
+<!-- When Forwarding Is Not Enough -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+When Forwarding Is Not Enough
+
+</h4>
+
+<p>
+
+Forwarding cannot solve every possible dependency.
+
+Sometimes the required value simply does not exist yet.
+
+For example, if a previous operation is waiting for a memory access to
+complete, the value may not be available when the dependent operation
+needs it.
+
+In such cases, a stall may still be required.
+
+</p>
+
+
+<pre><code>
+Can the required value be forwarded?
+
+             |
+        +----+----+
+        |         |
+       Yes        No
+        |         |
+        v         v
+    Forward      Stall
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- Forwarding and Correctness -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Forwarding and Correctness
+
+</h4>
+
+<p>
+
+Forwarding is not simply a performance optimization.
+
+The forwarding control must select the correct value for the correct
+transaction.
+
+Incorrect forwarding can produce subtle functional bugs.
+
+</p>
+
+
+<pre><code>
+Producer Result
+      |
+      v
+Forwarding Logic
+      |
+      v
+Correct Operand
+      |
+      v
+Consumer
+      |
+      v
+Correct Result
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- Verification -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Verification of Forwarding
+
+</h4>
+
+<p>
+
+When verifying forwarding logic, the testbench should intentionally
+create dependent operations.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Producer:
+
+R1 = R2 + R3
+
+
+Consumer:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+The testbench should verify that the consumer receives the
+<strong>new</strong> value of R1 rather than an old value.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Verification
+
+</h4>
+
+<p>
+
+Waveform analysis is particularly useful for debugging forwarding
+logic.
+
+Observe:
+
+</p>
+
+
+<ul>
+
+<li>Producer result</li>
+
+<li>Consumer source operand</li>
+
+<li>Forwarding control</li>
+
+<li>Forwarded data</li>
+
+<li>Pipeline valid signals</li>
+
+<li>Final result</li>
+
+</ul>
+
+
+<pre><code>
+Producer Result
+      |
+      v
+Forwarding Control
+      |
+      v
+Forwarded Data
+      |
+      v
+Consumer
+      |
+      v
+Correct Result
+</code></pre>
+
+
+<!-- ========================= -->
+<!-- Important Observation -->
+<!-- ========================= -->
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+Forwarding reduces the number of stalls required by allowing data to
+move through a shorter path.
+
+However, forwarding does not remove the need for hazard detection.
+
+The control logic must still determine when forwarding is required
+and which value should be selected.
+
+</p>
+
+
+<!-- ========================= -->
+<!-- Key Idea -->
+<!-- ========================= -->
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p>
+
+<strong>
+
+Forwarding allows a recently generated result to bypass the normal
+write-back path and reach a dependent pipeline stage directly.
+
+</strong>
+
+</p>
+
+<p class="mb-0">
+
+It can eliminate unnecessary stalls, but forwarding itself requires
+additional datapaths and control logic. When the value is not yet
+available, a stall may still be necessary.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 6 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+6. Forwarding Paths and Hazard Detection
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how control logic detects dependencies and selects the correct forwarding path.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Why Do We Need Hazard Detection?
+
+</h4>
+
+<p>
+
+Forwarding hardware can provide a result to a dependent instruction,
+but the pipeline must first determine <strong>when forwarding is
+required</strong> and <strong>where the required value is
+located</strong>.
+
+This is the job of <strong>hazard detection and forwarding control
+logic</strong>.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Basic Concept
+
+</h4>
+
+<pre><code>
+Producer Instruction
+        |
+        | Produces Result
+        v
+Pipeline Register
+        |
+        v
+Hazard Detection
+        |
+        v
+Is Consumer Dependent?
+        |
+     +--+--+
+     |     |
+    No    Yes
+     |     |
+     v     v
+ Normal   Forward
+ Path     or Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+What Does Hazard Detection Compare?
+
+</h4>
+
+<p>
+
+In a processor pipeline, the hazard detection logic can compare the
+registers used by the current instruction with registers that previous
+instructions are producing.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Producer:
+
+R1 = R2 + R3
+
+
+Consumer:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+The detection logic recognizes that:
+
+</p>
+
+
+<pre><code>
+Producer Destination = R1
+
+Consumer Source      = R1
+</code></pre>
+
+
+<p>
+
+Because the consumer needs the value being produced by the previous
+instruction, a dependency exists.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding Decision
+
+</h4>
+
+<p>
+
+If the producer's result is already available in a pipeline stage,
+the forwarding unit can select that result instead of the older value
+from the register file.
+
+</p>
+
+
+<pre><code>
+Register File Value
+        |
+        v
+      +-----+
+      |     |
+      | MUX | → ALU Input
+      |     |
+      +-----+
+        ^
+        |
+Forwarded Result
+</code></pre>
+
+
+<p>
+
+The multiplexer chooses the correct source based on forwarding
+control signals.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual Forwarding Conditions
+
+</h4>
+
+<p>
+
+A simplified forwarding decision can be expressed conceptually as:
+
+</p>
+
+
+<pre><code>
+If:
+
+Producer destination == Consumer source
+
+and
+
+Producer result is available
+
+then:
+
+Forward producer result
+</code></pre>
+
+
+<p>
+
+The actual comparison logic depends on the processor architecture and
+pipeline organization.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Multiple Forwarding Sources
+
+</h4>
+
+<p>
+
+A practical pipeline may have more than one possible forwarding
+source.
+
+For example, a consumer may receive an operand from:
+
+</p>
+
+
+<ul>
+
+<li>Normal register-file output</li>
+
+<li>Result from an earlier pipeline stage</li>
+
+<li>Result from a later pipeline stage</li>
+
+<li>Another specialized execution path</li>
+
+</ul>
+
+
+<pre><code>
+                 +------------------+
+                 | Register File    |
+                 +------------------+
+                          |
+                          v
+                       +-----+
+                       |     |
+Forward Source 1 ----> |     |
+                       | MUX | ----> ALU
+Forward Source 2 ----> |     |
+                       |     |
+                 ----> +-----+
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Is a Priority Needed?
+
+</h4>
+
+<p>
+
+Sometimes more than one pipeline stage may contain a value associated
+with the same destination register.
+
+The newest applicable value must be selected.
+
+Therefore, forwarding logic may require priority between different
+forwarding sources.
+
+</p>
+
+
+<pre><code>
+Forward Source 1
+       |
+       | Higher priority
+       v
+Forward Source 2
+       |
+       v
+Register File
+</code></pre>
+
+
+<p>
+
+The exact priority depends on the pipeline architecture.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+When Should the Pipeline Stall?
+
+</h4>
+
+<p>
+
+Forwarding works only when the required result is available soon
+enough.
+
+If the producer has not generated the value yet, forwarding cannot
+magically create it.
+
+The pipeline must then stall.
+
+</p>
+
+
+<pre><code>
+Dependency Detected
+       |
+       v
+Is Result Available?
+       |
+    +--+--+
+    |     |
+   Yes    No
+    |     |
+    v     v
+Forward  Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding vs Hazard Detection
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Logic</th>
+
+<th>Purpose</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Hazard Detection</td>
+
+<td>Identifies whether a dependency creates a pipeline problem.</td>
+
+</tr>
+
+<tr>
+
+<td>Forwarding Unit</td>
+
+<td>Selects and routes an available result to the dependent stage.</td>
+
+</tr>
+
+<tr>
+
+<td>Stall Control</td>
+
+<td>Stops or delays pipeline progress when the value is not available.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual RTL
+
+</h4>
+
+<p>
+
+A simplified forwarding decision can be represented using
+combinational logic.
+
+</p>
+
+
+<pre><code>
+always @(*) begin
+
+    forward_enable = 1'b0;
+
+    if (producer_valid &&
+        (producer_rd == consumer_rs)) begin
+
+        forward_enable = 1'b1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+This is a simplified educational example.
+
+A real implementation must consider register validity, instruction
+types, multiple source operands, pipeline stages and architecture
+specific rules.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Two Source Operands
+
+</h4>
+
+<p>
+
+Many operations require two source operands.
+
+For example:
+
+</p>
+
+
+<pre><code>
+R4 = R1 + R2
+</code></pre>
+
+
+<p>
+
+Both R1 and R2 may potentially require forwarding.
+
+Therefore, a practical forwarding unit may independently control two
+operand paths.
+
+</p>
+
+
+<pre><code>
+             Source A
+                |
+                v
+             +-----+
+             | MUX | ----> ALU Input A
+             +-----+
+                ^
+                |
+          Forward Path A
+
+
+             Source B
+                |
+                v
+             +-----+
+             | MUX | ----> ALU Input B
+             +-----+
+                ^
+                |
+          Forward Path B
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Hazard Detection and Pipeline Control
+
+</h4>
+
+<p>
+
+Hazard detection is not limited to forwarding.
+
+The detection logic can also generate control signals that cause the
+pipeline to hold or insert a bubble.
+
+</p>
+
+
+<pre><code>
+                 Hazard Detection
+                        |
+              +---------+---------+
+              |                   |
+          Forward?             Stall?
+              |                   |
+              v                   v
+        Forward Control      Pipeline Control
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Verification
+
+</h4>
+
+<p>
+
+To verify hazard detection and forwarding, the testbench should
+intentionally create dependent operations.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Instruction 1:
+
+R1 = R2 + R3
+
+
+Instruction 2:
+
+R4 = R1 + R5
+</code></pre>
+
+
+<p>
+
+The testbench should verify that Instruction 2 receives the correct
+new value of R1 rather than an old value.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Observation
+
+</h4>
+
+<p>
+
+During waveform analysis, observe:
+
+</p>
+
+
+<ul>
+
+<li>Producer destination register</li>
+
+<li>Consumer source register</li>
+
+<li>Hazard detection signal</li>
+
+<li>Forwarding control signal</li>
+
+<li>Forwarded data</li>
+
+<li>Pipeline valid signals</li>
+
+<li>Stall signal, if required</li>
+
+<li>Final result</li>
+
+</ul>
+
+
+<pre><code>
+Producer Result
+      |
+      v
+Forward Control
+      |
+      v
+Forwarded Data
+      |
+      v
+Consumer
+      |
+      v
+Correct Result
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Hazard detection identifies dependencies, while forwarding logic
+selects an available result and routes it to the dependent operation.
+
+</strong>
+
+<br><br>
+
+If the required value is not available in time, the control logic must
+stall the pipeline instead.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 7 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+7. Structural Hazards
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding hazards caused by competing hardware resources.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Structural Hazard?
+
+</h4>
+
+<p>
+
+A <strong>structural hazard</strong> occurs when two or more
+pipeline operations require the same hardware resource at the same
+time, but the resource cannot support all of those requests
+simultaneously.
+
+</p>
+
+<p>
+
+Unlike a data hazard, which is caused by a dependency between
+operations, a structural hazard is caused by a limitation in the
+available hardware resources.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Example
+
+</h4>
+
+<p>
+
+Suppose a processor has only one memory interface, but two pipeline
+operations need to access memory during the same clock cycle.
+
+</p>
+
+
+<pre><code>
+Instruction A
+      |
+      v
++----------------+
+| Shared Memory  |
+|    Interface   |
++----------------+
+      ^
+      |
+Instruction B
+</code></pre>
+
+
+<p>
+
+Both operations want to use the same resource.
+
+If the resource can handle only one request per cycle, one operation
+must wait.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Example
+
+</h4>
+
+<p>
+
+Consider a simple pipeline:
+
+</p>
+
+
+<pre><code>
+IF → ID → EX → MEM → WB
+</code></pre>
+
+
+<p>
+
+The MEM stage may need access to memory.
+
+If the instruction-fetch stage also uses the same memory during the
+same cycle, a resource conflict can occur.
+
+</p>
+
+
+<pre><code>
+Instruction Fetch
+       |
+       v
++----------------+
+|     Memory     |
++----------------+
+       ^
+       |
+Data Memory Access
+</code></pre>
+
+
+<p>
+
+Both operations are competing for the same resource.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why Does This Happen?
+
+</h4>
+
+<p>
+
+Structural hazards generally occur because the hardware contains
+fewer resources than the pipeline would ideally like to use
+simultaneously.
+
+</p>
+
+
+<pre><code>
+Required Resources:
+
+Request A ──┐
+            |
+Request B ──┼──> Shared Resource
+            |
+Request C ──┘
+
+Resource Capacity = 1 request/cycle
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Common Examples
+
+</h4>
+
+<ul>
+
+<li>
+
+A single memory being used for both instruction fetch and data access.
+
+</li>
+
+<li>
+
+A single arithmetic unit being requested by multiple pipeline
+operations.
+
+</li>
+
+<li>
+
+A shared bus being requested by multiple transactions.
+
+</li>
+
+<li>
+
+A limited number of register-file or memory ports.
+
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+How Can Structural Hazards Be Handled?
+
+</h4>
+
+<p>
+
+There are several possible solutions.
+
+</p>
+
+
+<h5 class="text-info mt-4">
+
+1. Duplicate the Resource
+
+</h5>
+
+<p>
+
+One solution is to provide additional hardware resources so that
+multiple operations can execute simultaneously.
+
+</p>
+
+
+<pre><code>
+Request A ──> Resource 1
+
+Request B ──> Resource 2
+</code></pre>
+
+
+<p>
+
+This can remove the resource conflict, but it increases hardware
+area and potentially power consumption.
+
+</p>
+
+
+<h5 class="text-info mt-4">
+
+2. Add More Resource Ports
+
+</h5>
+
+<p>
+
+A resource such as memory can sometimes be designed with multiple
+ports.
+
+</p>
+
+
+<pre><code>
+Request A ──> Port 1
+Request B ──> Port 2
+
+             |
+             v
+       Shared Memory
+</code></pre>
+
+
+<p>
+
+This allows multiple accesses to occur simultaneously when supported
+by the hardware.
+
+</p>
+
+
+<h5 class="text-info mt-4">
+
+3. Stall the Pipeline
+
+</h5>
+
+<p>
+
+If additional hardware is not practical, the pipeline can stall one
+operation until the resource becomes available.
+
+</p>
+
+
+<pre><code>
+Cycle 1 → Instruction A
+Cycle 2 → Instruction B
+Cycle 3 → STALL
+Cycle 4 → Instruction B continues
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Resource Duplication vs Stalling
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Approach</th>
+
+<th>Advantage</th>
+
+<th>Trade-Off</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Duplicate Resource</td>
+
+<td>Higher parallelism</td>
+
+<td>More area and power</td>
+
+</tr>
+
+<tr>
+
+<td>Multiple Ports</td>
+
+<td>Multiple accesses</td>
+
+<td>Additional hardware complexity</td>
+
+</tr>
+
+<tr>
+
+<td>Stall</td>
+
+<td>Less hardware</td>
+
+<td>Lower throughput</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Structural Hazard vs Data Hazard
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Hazard</th>
+
+<th>Cause</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Data Hazard</td>
+
+<td>Dependency between operations.</td>
+
+</tr>
+
+<tr>
+
+<td>Structural Hazard</td>
+
+<td>Insufficient hardware resources.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+RTL Perspective
+
+</h4>
+
+<p>
+
+At the RTL level, structural hazards are often reflected in resource
+sharing.
+
+For example, if multiple operations are mapped to one hardware unit,
+the design may need arbitration or scheduling logic to determine
+which operation gets access.
+
+</p>
+
+
+<pre><code>
+Request A ──┐
+            |
+Request B ──┼──> Arbitration
+            |
+Request C ──┘
+                 |
+                 v
+           Shared Resource
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Verification
+
+</h4>
+
+<p>
+
+A testbench should intentionally create situations where multiple
+pipeline operations request the same resource.
+
+The verification environment should check that:
+
+</p>
+
+
+<ul>
+
+<li>The resource is never used incorrectly.</li>
+
+<li>Requests are handled according to the design rules.</li>
+
+<li>Stalls occur when required.</li>
+
+<li>No transaction is lost.</li>
+
+<li>Results remain correct.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Observation
+
+</h4>
+
+<p>
+
+When debugging a structural hazard, observe signals such as:
+
+</p>
+
+
+<ul>
+
+<li>Resource request signals</li>
+
+<li>Resource grant signals</li>
+
+<li>Busy signals</li>
+
+<li>Stall signals</li>
+
+<li>Pipeline valid signals</li>
+
+<li>Transaction identifiers</li>
+
+</ul>
+
+
+<pre><code>
+Request
+   |
+   v
+Grant
+   |
+   v
+Resource
+   |
+   v
+Result
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A structural hazard occurs when multiple pipeline operations
+compete for a hardware resource that cannot serve all requests
+simultaneously.
+
+</strong>
+
+<br><br>
+
+The conflict can be handled by adding resources, increasing resource
+capacity, scheduling access, or stalling the pipeline.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 8 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+8. Control Hazards
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding pipeline problems caused by branches and changes in control flow.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Control Hazard?
+
+</h4>
+
+<p>
+
+A <strong>control hazard</strong> occurs when the pipeline does not
+know which instruction or operation should execute next because the
+next path depends on a control decision.
+
+</p>
+
+<p>
+
+Branches, jumps and other control-flow operations are common causes
+of control hazards.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple Example
+
+</h4>
+
+<pre><code>
+if (condition)
+
+    execute Path A;
+
+else
+
+    execute Path B;
+</code></pre>
+
+
+<p>
+
+Until the condition is evaluated, the processor may not know whether
+the next instruction should come from Path A or Path B.
+
+</p>
+
+
+<pre><code>
+                 Branch
+                    |
+             +------+------+
+             |             |
+             v             v
+          Path A         Path B
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Does This Affect a Pipeline?
+
+</h4>
+
+<p>
+
+A pipeline normally fetches and processes instructions before the
+previous instruction has completely finished.
+
+Therefore, when the processor encounters a branch, it may already
+have fetched instructions from a path that eventually turns out to be
+incorrect.
+
+</p>
+
+
+<pre><code>
+Cycle 1 → Instruction A
+
+Cycle 2 → Branch
+
+Cycle 3 → Instruction from Path A
+
+Cycle 4 → Instruction from Path A
+</code></pre>
+
+
+<p>
+
+If the branch later determines that Path B should have been taken,
+the instructions from Path A are no longer useful.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Wrong-Path Instructions
+
+</h4>
+
+<pre><code>
+                 Branch
+                    |
+                    v
+              Decision Made
+                    |
+          +---------+---------+
+          |                   |
+       Correct              Wrong
+        Path                 Path
+          |                   |
+          v                   v
+      Continue              Flush
+</code></pre>
+
+
+<p>
+
+Instructions that entered the pipeline from the wrong path may need
+to be removed.
+
+This process is commonly called a <strong>pipeline flush</strong>.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Flush
+
+</h4>
+
+<p>
+
+A pipeline flush invalidates instructions that should not continue
+through the pipeline.
+
+For example:
+
+</p>
+
+
+<pre><code>
+Before Branch Resolution:
+
+Stage 1 → Correct/Wrong
+Stage 2 → Correct/Wrong
+Stage 3 → Branch
+
+
+After Branch Resolution:
+
+Wrong-path instructions
+        ↓
+      FLUSH
+        ↓
+Pipeline continues with
+correct target
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Example Timing
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Cycle</th>
+
+<th>Stage 1</th>
+
+<th>Stage 2</th>
+
+<th>Stage 3</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>Branch</td>
+
+<td>—</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Next Instruction</td>
+
+<td>Branch</td>
+
+<td>—</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>Wrong Path</td>
+
+<td>Next Instruction</td>
+
+<td>Branch</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>Correct Target</td>
+
+<td>Flush</td>
+
+<td>Flush</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<p>
+
+The exact timing depends on where the branch decision is resolved in
+the processor pipeline.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Ways to Handle Control Hazards
+
+</h4>
+
+<p>
+
+Several techniques can be used to reduce the performance impact of
+control hazards.
+
+</p>
+
+
+<ul>
+
+<li>
+
+<strong>Stalling:</strong>
+
+Wait until the branch decision is known.
+
+</li>
+
+<li>
+
+<strong>Flushing:</strong>
+
+Remove instructions that entered the pipeline from the wrong path.
+
+</li>
+
+<li>
+
+<strong>Branch Prediction:</strong>
+
+Predict which path will be taken and continue fetching instructions
+from that path.
+
+</li>
+
+<li>
+
+<strong>Delayed Branch:</strong>
+
+Use architecture-specific scheduling to perform useful work while
+the branch decision is being resolved.
+
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Method 1 — Stall
+
+</h4>
+
+<pre><code>
+Branch
+   |
+   v
+Wait for Decision
+   |
+   v
+Correct Target
+</code></pre>
+
+
+<p>
+
+Stalling is simple conceptually, but waiting can reduce throughput.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Method 2 — Flush
+
+</h4>
+
+<pre><code>
+Branch
+   |
+   v
+Instructions Already in Pipeline
+   |
+   v
+Branch Decision
+   |
+   v
+Wrong Path?
+   |
+   v
+Flush Instructions
+</code></pre>
+
+
+<p>
+
+Flushing prevents wrong-path instructions from producing architectural
+results.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Method 3 — Branch Prediction
+
+</h4>
+
+<p>
+
+Instead of waiting for the branch result, the processor can predict
+the likely direction of the branch.
+
+</p>
+
+
+<pre><code>
+             Branch
+                |
+                v
+         Branch Predictor
+                |
+          +-----+-----+
+          |           |
+       Predict A   Predict B
+          |           |
+          v           v
+       Fetch A      Fetch B
+</code></pre>
+
+
+<p>
+
+If the prediction is correct, the pipeline can continue with little
+or no interruption.
+
+If the prediction is incorrect, the wrong-path instructions must be
+discarded and execution redirected to the correct target.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Branch Prediction Trade-Off
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Prediction</th>
+
+<th>Result</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Correct</td>
+
+<td>Pipeline continues efficiently.</td>
+
+</tr>
+
+<tr>
+
+<td>Incorrect</td>
+
+<td>Wrong-path instructions are flushed.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Control Hazard vs Data Hazard
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Hazard</th>
+
+<th>Cause</th>
+
+<th>Typical Handling</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Data Hazard</td>
+
+<td>Data dependency</td>
+
+<td>Forwarding / Stall</td>
+
+</tr>
+
+<tr>
+
+<td>Structural Hazard</td>
+
+<td>Resource conflict</td>
+
+<td>Resource management / Stall</td>
+
+</tr>
+
+<tr>
+
+<td>Control Hazard</td>
+
+<td>Control-flow uncertainty</td>
+
+<td>Prediction / Flush / Stall</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+RTL Perspective
+
+</h4>
+
+<p>
+
+At the RTL level, control hazards are commonly represented using
+control signals that determine whether pipeline registers should
+capture valid data or whether instructions should be invalidated.
+
+</p>
+
+
+<pre><code>
+if (flush) begin
+
+    valid_stage1 &lt;= 1'b0;
+    valid_stage2 &lt;= 1'b0;
+
+end
+</code></pre>
+
+
+<p>
+
+The exact implementation depends on the processor architecture and
+the location where the control decision is resolved.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Verification
+
+</h4>
+
+<p>
+
+A verification environment should test both taken and not-taken
+branches.
+
+It should also verify that wrong-path instructions do not modify
+architectural state.
+
+</p>
+
+
+<ul>
+
+<li>Test branch taken.</li>
+
+<li>Test branch not taken.</li>
+
+<li>Check pipeline flush behavior.</li>
+
+<li>Check correct target instruction.</li>
+
+<li>Check that wrong-path operations do not produce valid results.</li>
+
+<li>Check branch prediction behavior if implemented.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Observation
+
+</h4>
+
+<p>
+
+Useful signals to observe include:
+
+</p>
+
+
+<ul>
+
+<li>Branch instruction</li>
+
+<li>Branch condition</li>
+
+<li>Branch taken signal</li>
+
+<li>Branch target</li>
+
+<li>Prediction signal</li>
+
+<li>Flush signal</li>
+
+<li>Pipeline valid signals</li>
+
+<li>Program counter</li>
+
+</ul>
+
+
+<pre><code>
+Branch Condition
+       |
+       v
+Branch Taken
+       |
+       v
+Flush
+       |
+       v
+Correct Target
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A control hazard occurs when the pipeline cannot immediately know
+which instruction should execute next.
+
+</strong>
+
+<br><br>
+
+Branches can cause wrong-path instructions to enter the pipeline.
+These instructions may need to be flushed, while techniques such as
+branch prediction can reduce the performance penalty.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 9 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+9. Hazard Handling Comparison
+
+</h2>
+
+<p class="text-secondary">
+
+Compare the major pipeline hazards and the techniques used to handle them.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Three Major Pipeline Hazards
+
+</h4>
+
+<p>
+
+Pipeline hazards can be broadly divided into three categories:
+<strong>data hazards, structural hazards and control hazards</strong>.
+
+Each type has a different cause and therefore requires a different
+handling strategy.
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Hazard</th>
+
+<th>Cause</th>
+
+<th>Example</th>
+
+<th>Possible Handling</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>
+
+<strong>Data Hazard</strong>
+
+</td>
+
+<td>
+
+Dependency between operations
+
+</td>
+
+<td>
+
+Consumer needs a producer's result
+
+</td>
+
+<td>
+
+Forwarding / Stall
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+
+<strong>Structural Hazard</strong>
+
+</td>
+
+<td>
+
+Hardware resource conflict
+
+</td>
+
+<td>
+
+Two operations need the same resource
+
+</td>
+
+<td>
+
+Resource duplication / Scheduling / Stall
+
+</td>
+
+</tr>
+
+
+<tr>
+
+<td>
+
+<strong>Control Hazard</strong>
+
+</td>
+
+<td>
+
+Uncertain control flow
+
+</td>
+
+<td>
+
+Branch changes the execution path
+
+</td>
+
+<td>
+
+Prediction / Flush / Stall
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+1. Data Hazard Handling
+
+</h4>
+
+<p>
+
+Data hazards are caused by dependencies between operations.
+
+The primary techniques are:
+
+</p>
+
+
+<ul>
+
+<li>
+
+<strong>Forwarding:</strong>
+
+Send an available result directly to the dependent stage.
+
+</li>
+
+<li>
+
+<strong>Stalling:</strong>
+
+Wait until the required result becomes available.
+
+</li>
+
+</ul>
+
+
+<pre><code>
+Producer
+   |
+   v
+Result Available?
+   |
+ +--+--+
+ |     |
+Yes    No
+ |     |
+ v     v
+Forward Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+2. Structural Hazard Handling
+
+</h4>
+
+<p>
+
+Structural hazards occur when hardware resources cannot support all
+requests at the same time.
+
+Possible solutions include:
+
+</p>
+
+
+<ul>
+
+<li>Duplicate the resource.</li>
+
+<li>Increase the number of resource ports.</li>
+
+<li>Schedule resource access.</li>
+
+<li>Stall one of the competing operations.</li>
+
+</ul>
+
+
+<pre><code>
+Request A ──┐
+            |
+Request B ──┼──> Resource
+            |
+Request C ──┘
+
+If Resource Capacity is insufficient:
+
+        ↓
+
+Schedule or Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+3. Control Hazard Handling
+
+</h4>
+
+<p>
+
+Control hazards occur when the pipeline does not know which path
+should be executed.
+
+Common techniques include:
+
+</p>
+
+
+<ul>
+
+<li>Stalling until the decision is known.</li>
+
+<li>Flushing incorrect instructions.</li>
+
+<li>Predicting the branch direction.</li>
+
+</ul>
+
+
+<pre><code>
+Branch
+  |
+  v
+Prediction
+  |
+  v
+Continue Execution
+  |
+  v
+Correct Prediction?
+  |
+ +--+--+
+ |     |
+Yes    No
+ |     |
+ v     v
+Continue Flush
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Performance Impact
+
+</h4>
+
+<p>
+
+Different hazard-handling techniques have different performance and
+hardware costs.
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Technique</th>
+
+<th>Main Benefit</th>
+
+<th>Possible Cost</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Forwarding</td>
+
+<td>Reduces data stalls</td>
+
+<td>Extra datapaths and control logic</td>
+
+</tr>
+
+<tr>
+
+<td>Stalling</td>
+
+<td>Simple correctness mechanism</td>
+
+<td>Pipeline bubbles and lower throughput</td>
+
+</tr>
+
+<tr>
+
+<td>Resource Duplication</td>
+
+<td>Reduces structural conflicts</td>
+
+<td>More area and power</td>
+
+</tr>
+
+<tr>
+
+<td>Branch Prediction</td>
+
+<td>Reduces control-flow waiting</td>
+
+<td>Prediction hardware and misprediction penalty</td>
+
+</tr>
+
+<tr>
+
+<td>Pipeline Flush</td>
+
+<td>Removes wrong-path operations</td>
+
+<td>Lost pipeline work</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Hazard Handling Decision Flow
+
+</h4>
+
+
+<pre><code>
+Pipeline Operation
+        |
+        v
+Is there a hazard?
+        |
+    +---+---+
+    |       |
+   No      Yes
+    |       |
+    v       v
+Continue  Identify Type
+              |
+       +------+------+ 
+       |      |      |
+      Data  Structural Control
+       |      |      |
+       v      v      v
+   Forward  Resource  Predict /
+   or Stall  Manage   Flush /
+                       Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Correctness vs Performance
+
+</h4>
+
+<p>
+
+The primary objective of hazard handling is to preserve correct
+behavior.
+
+Once correctness is guaranteed, the design can be optimized to reduce
+the performance penalty.
+
+</p>
+
+
+<pre><code>
+Correctness
+    |
+    v
+Hazard Detection
+    |
+    v
+Safe Execution
+    |
+    v
+Performance Optimization
+    |
+    +----> Forwarding
+    |
+    +----> Prediction
+    |
+    +----> Resource Optimization
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Verification Perspective
+
+</h4>
+
+<p>
+
+A verification environment should not test only the normal,
+hazard-free path.
+
+It should intentionally create situations that exercise each hazard
+type.
+
+</p>
+
+
+<ul>
+
+<li>
+
+Create dependent operations to exercise data hazards.
+
+</li>
+
+<li>
+
+Create simultaneous resource requests to exercise structural hazards.
+
+</li>
+
+<li>
+
+Create taken and not-taken branches to exercise control hazards.
+
+</li>
+
+<li>
+
+Check stalls and bubbles.
+
+</li>
+
+<li>
+
+Check forwarding decisions.
+
+</li>
+
+<li>
+
+Check flush behavior.
+
+</li>
+
+<li>
+
+Verify that the final result remains correct.
+
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Debugging
+
+</h4>
+
+<p>
+
+Waveforms are particularly useful when debugging pipeline hazards.
+
+For data hazards, observe forwarding and stall signals.
+
+For structural hazards, observe resource requests and grants.
+
+For control hazards, observe branch decisions and flush signals.
+
+</p>
+
+
+<pre><code>
+Hazard Detection
+      |
+      +----> Forward
+      |
+      +----> Stall
+      |
+      +----> Flush
+      |
+      +----> Resource Control
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Different pipeline hazards require different handling techniques.
+Data hazards are commonly addressed using forwarding or stalls,
+structural hazards through resource management, and control hazards
+through techniques such as prediction, flushing or stalling.
+
+</strong>
+
+<br><br>
+
+A good pipeline design first guarantees correctness and then minimizes
+the performance cost of hazard handling.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 10 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+10. Pipeline Flush and Recovery
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how incorrect or invalid pipeline operations are removed and how execution resumes correctly.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Pipeline Flush?
+
+</h4>
+
+<p>
+
+A <strong>pipeline flush</strong> is the process of removing or
+invalidating operations that should no longer continue through the
+pipeline.
+
+It is commonly required when the pipeline has already started
+processing instructions that are later determined to be invalid or
+on the wrong execution path.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why is a Flush Required?
+
+</h4>
+
+<p>
+
+Consider a branch instruction.
+
+Before the branch decision is known, the processor may fetch
+instructions from one possible path.
+
+If the branch is later determined to take another path, those
+previously fetched instructions must not be allowed to modify the
+architectural state.
+
+</p>
+
+
+<pre><code>
+                 Branch
+                    |
+                    v
+              Branch Decision
+                    |
+          +---------+---------+
+          |                   |
+       Correct              Wrong
+        Path                 Path
+          |                   |
+          v                   v
+      Continue              Flush
+                           / Discard
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Wrong-Path Instructions
+
+</h4>
+
+<p>
+
+Suppose the pipeline contains:
+
+</p>
+
+
+<pre><code>
+Stage 1 → Instruction A
+
+Stage 2 → Instruction B
+
+Stage 3 → Branch
+</code></pre>
+
+
+<p>
+
+If the branch determines that Instruction A and Instruction B belong
+to the wrong path, those instructions must be invalidated.
+
+</p>
+
+
+<pre><code>
+Before Resolution:
+
+Stage 1 → Wrong Instruction
+Stage 2 → Wrong Instruction
+Stage 3 → Branch
+
+
+After Resolution:
+
+Stage 1 → FLUSH
+Stage 2 → FLUSH
+Stage 3 → Branch
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Flush Does Not Mean Resetting the Entire Processor
+
+</h4>
+
+<p>
+
+A pipeline flush normally does not mean that the entire processor is
+reset.
+
+Instead, the control logic invalidates the affected pipeline
+operations and redirects execution to the correct location.
+
+</p>
+
+
+<pre><code>
+Pipeline Flush
+
+      ↓
+
+Invalidate affected stages
+
+      ↓
+
+Update control flow
+
+      ↓
+
+Fetch correct operation
+
+      ↓
+
+Resume execution
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Valid Bits and Flushing
+
+</h4>
+
+<p>
+
+A common way to represent whether a pipeline entry contains a real
+operation is with a <strong>valid</strong> bit.
+
+When a pipeline entry must be flushed, its valid bit can be cleared.
+
+</p>
+
+
+<pre><code>
+Before Flush:
+
+Stage 1 Valid = 1
+Stage 2 Valid = 1
+Stage 3 Valid = 1
+
+
+After Flush:
+
+Stage 1 Valid = 0
+Stage 2 Valid = 0
+Stage 3 Valid = 1
+</code></pre>
+
+
+<p>
+
+The exact stages that are invalidated depend on where the control
+decision is made.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Flush and Bubble
+
+</h4>
+
+<p>
+
+A flushed pipeline entry effectively becomes a bubble because it no
+longer represents a valid transaction.
+
+</p>
+
+
+<pre><code>
+Valid Pipeline:
+
+A → B → C → D
+
+
+After Flush:
+
+A → B → Bubble → D
+</code></pre>
+
+
+<p>
+
+The bubble represents an empty or invalid pipeline slot.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Branch Recovery
+
+</h4>
+
+<p>
+
+After flushing incorrect instructions, the processor must resume
+execution from the correct branch target.
+
+This process is commonly referred to as
+<strong>branch recovery</strong>.
+
+</p>
+
+
+<pre><code>
+Branch
+  |
+  v
+Determine Target
+  |
+  v
+Flush Wrong Path
+  |
+  v
+Update Program Counter
+  |
+  v
+Fetch Correct Target
+  |
+  v
+Resume Pipeline
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<p>
+
+Suppose the processor encounters a branch:
+
+</p>
+
+
+<pre><code>
+Branch → Target Address = 100
+</code></pre>
+
+
+<p>
+
+But the pipeline has already fetched instructions from address 50 and
+60.
+
+If the branch is taken, those instructions are no longer valid.
+
+</p>
+
+
+<pre><code>
+Wrong Path:
+
+50 → 60 → Branch
+
+
+Branch Taken
+
+        ↓
+
+Flush 50 and 60
+
+
+        ↓
+
+Jump to 100
+
+
+        ↓
+
+Continue from Target
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Recovery Sequence
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Step</th>
+
+<th>Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>Detect control-flow change.</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>Determine correct target.</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>Identify wrong-path pipeline entries.</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>Invalidate or flush those entries.</td>
+
+</tr>
+
+<tr>
+
+<td>5</td>
+
+<td>Redirect execution to the correct target.</td>
+
+</tr>
+
+<tr>
+
+<td>6</td>
+
+<td>Resume normal pipeline execution.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual RTL
+
+</h4>
+
+<p>
+
+A simplified pipeline control example can use a flush signal.
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        valid_stage1 &lt;= 1'b0;
+        valid_stage2 &lt;= 1'b0;
+
+    end
+
+    else if (flush) begin
+
+        valid_stage1 &lt;= 1'b0;
+        valid_stage2 &lt;= 1'b0;
+
+    end
+
+    else begin
+
+        valid_stage1 &lt;= next_valid_stage1;
+        valid_stage2 &lt;= valid_stage1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+This is a simplified educational example.
+
+A real processor may have several pipeline registers, control
+signals and recovery mechanisms.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Why Recovery Matters
+
+</h4>
+
+<p>
+
+Flushing is essential for maintaining correctness.
+
+If wrong-path instructions were allowed to update registers, memory or
+other architectural state, the processor could produce incorrect
+results.
+
+</p>
+
+
+<pre><code>
+Wrong Instruction
+       |
+       v
+Must NOT update
+architectural state
+       |
+       v
+Flush / Invalidate
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Performance Cost
+
+</h4>
+
+<p>
+
+A flush removes useful work that was already started in the pipeline.
+
+Therefore, frequent flushes can reduce performance.
+
+</p>
+
+
+<pre><code>
+Correct Prediction:
+
+Fetch → Execute → Continue
+
+
+Incorrect Prediction:
+
+Fetch → Execute
+          |
+          v
+        Flush
+          |
+          v
+       Restart
+</code></pre>
+
+
+<p>
+
+This is one reason modern processors use techniques such as branch
+prediction to reduce the frequency and cost of pipeline flushes.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Verification Considerations
+
+</h4>
+
+<p>
+
+A verification environment should confirm that flushed operations do
+not produce visible architectural effects.
+
+Test scenarios should include:
+
+</p>
+
+
+<ul>
+
+<li>Branch taken.</li>
+
+<li>Branch not taken.</li>
+
+<li>Wrong-path instructions already in the pipeline.</li>
+
+<li>Multiple consecutive control-flow changes.</li>
+
+<li>Correct target recovery.</li>
+
+<li>Pipeline valid signals after the flush.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Debugging
+
+</h4>
+
+<p>
+
+When debugging a pipeline flush, observe:
+
+</p>
+
+
+<ul>
+
+<li>Branch condition</li>
+
+<li>Branch taken signal</li>
+
+<li>Target address</li>
+
+<li>Flush signal</li>
+
+<li>Pipeline valid signals</li>
+
+<li>Program counter</li>
+
+<li>Instruction information</li>
+
+</ul>
+
+
+<pre><code>
+Branch Taken
+     |
+     v
+Flush
+     |
+     v
+Valid = 0
+     |
+     v
+Correct Target
+     |
+     v
+Pipeline Recovery
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A pipeline flush removes or invalidates operations that should no
+longer execute. After the flush, the pipeline redirects execution to
+the correct target and resumes normal processing.
+
+</strong>
+
+<br><br>
+
+Flushing protects correctness, while effective branch prediction and
+control-flow design can reduce its performance cost.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 11 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+11. Pipeline Control Signals
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding the control signals that manage stalls, bubbles, forwarding and flushing.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Why Do We Need Control Signals?
+
+</h4>
+
+<p>
+
+Pipeline datapath signals carry the actual data, while
+<strong>control signals</strong> determine how that data should move
+through the pipeline.
+
+When a hazard occurs, control logic can use these signals to decide
+whether the pipeline should continue, stall, forward data or flush
+invalid operations.
+
+</p>
+
+
+<pre><code>
+             Control Logic
+                  |
+        +---------+---------+
+        |         |         |
+        v         v         v
+      Stall    Forward    Flush
+        |         |         |
+        v         v         v
+              Pipeline
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Pipeline Control Signals
+
+</h4>
+
+<p>
+
+A practical pipeline can contain many control signals. Common
+examples include:
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Signal</th>
+
+<th>Purpose</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td><strong>valid</strong></td>
+
+<td>Indicates whether a pipeline entry contains valid data.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>stall</strong></td>
+
+<td>Prevents pipeline progress when a hazard requires waiting.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>flush</strong></td>
+
+<td>Invalidates pipeline entries that should not continue.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>forward_enable</strong></td>
+
+<td>Enables forwarding of an available result.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>ready</strong></td>
+
+<td>Indicates that a stage or downstream logic can accept data.</td>
+
+</tr>
+
+<tr>
+
+<td><strong>enable</strong></td>
+
+<td>Controls whether a pipeline register captures new data.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Valid Signal
+
+</h4>
+
+<p>
+
+The <strong>valid</strong> signal indicates whether the data stored in
+a pipeline stage represents a real transaction.
+
+</p>
+
+
+<pre><code>
+valid = 1
+
+→ Pipeline entry contains valid data.
+
+
+valid = 0
+
+→ Pipeline entry is empty or invalid.
+</code></pre>
+
+
+<p>
+
+This is particularly useful when inserting bubbles or flushing the
+pipeline.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Stall Signal
+
+</h4>
+
+<p>
+
+A <strong>stall</strong> signal tells the pipeline that normal
+progress must temporarily stop.
+
+For example:
+
+</p>
+
+
+<pre><code>
+if (stall)
+
+    hold pipeline register;
+
+else
+
+    capture new data;
+</code></pre>
+
+
+<p>
+
+During a stall, some pipeline registers may hold their current
+values while other stages may receive a bubble.
+
+The exact behavior depends on the pipeline architecture.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Enable Signal
+
+</h4>
+
+<p>
+
+An <strong>enable</strong> signal can control whether a sequential
+element captures a new value.
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (enable)
+
+        stage1 &lt;= next_stage1;
+
+end
+</code></pre>
+
+
+<p>
+
+If <strong>enable</strong> is low, the register retains its previous
+value.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Flush Signal
+
+</h4>
+
+<p>
+
+A <strong>flush</strong> signal invalidates pipeline entries that
+should no longer continue.
+
+</p>
+
+
+<pre><code>
+if (flush)
+
+    valid_stage1 &lt;= 1'b0;
+</code></pre>
+
+
+<p>
+
+This is commonly used for branch recovery and other situations where
+already-fetched operations must be discarded.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding Control
+
+</h4>
+
+<p>
+
+Forwarding control determines whether a pipeline operand should come
+from the normal register path or from a forwarding path.
+
+</p>
+
+
+<pre><code>
+if (forward_enable)
+
+    operand = forwarded_value;
+
+else
+
+    operand = register_value;
+</code></pre>
+
+
+<p>
+
+The actual implementation may use a multiplexer controlled by
+multiple forwarding-selection signals.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Control Signal Interaction
+
+</h4>
+
+<p>
+
+Pipeline control signals do not always operate independently.
+
+For example, a detected dependency may result in either forwarding or
+stalling depending on whether the required value is available.
+
+</p>
+
+
+<pre><code>
+Dependency Detected
+        |
+        v
+Is Result Available?
+        |
+    +---+---+
+    |       |
+   Yes      No
+    |       |
+    v       v
+ Forward   Stall
+</code></pre>
+
+
+<p>
+
+Similarly, a branch decision can generate a flush signal.
+
+</p>
+
+
+<pre><code>
+Branch Taken
+     |
+     v
+   Flush
+     |
+     v
+Invalidate Wrong Path
+     |
+     v
+Fetch Correct Target
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Valid, Stall and Flush
+
+</h4>
+
+<p>
+
+These three signals are particularly important when thinking about
+pipeline control.
+
+</p>
+
+
+<pre><code>
+VALID
+
+1 → Valid transaction
+0 → Bubble / invalid entry
+
+
+STALL
+
+1 → Hold selected pipeline state
+0 → Normal progress
+
+
+FLUSH
+
+1 → Invalidate affected pipeline entries
+0 → No flush
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual Pipeline Control
+
+</h4>
+
+<pre><code>
+                 +------------------+
+                 |  Hazard / Branch |
+                 |     Detection    |
+                 +------------------+
+                          |
+          +---------------+---------------+
+          |               |               |
+          v               v               v
+       Forward          Stall           Flush
+          |               |               |
+          +---------------+---------------+
+                          |
+                          v
+                    Pipeline Control
+                          |
+                          v
+                 Pipeline Registers
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Example RTL
+
+</h4>
+
+<p>
+
+A simplified pipeline register can use reset, flush and enable
+conditions.
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        valid_stage1 &lt;= 1'b0;
+
+    end
+
+    else if (flush) begin
+
+        valid_stage1 &lt;= 1'b0;
+
+    end
+
+    else if (enable) begin
+
+        valid_stage1 &lt;= next_valid;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+The priority between reset, flush, stall and normal operation must be
+defined carefully by the architecture.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Verification of Control Signals
+
+</h4>
+
+<p>
+
+A testbench should verify not only the final output, but also whether
+control signals behave correctly.
+
+</p>
+
+
+<ul>
+
+<li>Check valid propagation.</li>
+
+<li>Check stall generation.</li>
+
+<li>Check forwarding selection.</li>
+
+<li>Check flush behavior.</li>
+
+<li>Check register enable behavior.</li>
+
+<li>Check that invalid data does not produce a valid result.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Debugging
+
+</h4>
+
+<p>
+
+When debugging a hazard-controlled pipeline, place the control
+signals next to the datapath signals in the waveform viewer.
+
+For example:
+
+</p>
+
+
+<pre><code>
+clk
+reset
+
+valid_stage1
+valid_stage2
+
+stall
+flush
+
+forward_enable
+
+stage1_data
+stage2_data
+result
+</code></pre>
+
+
+<p>
+
+This makes it much easier to understand why a particular transaction
+advanced, stopped or was discarded.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Control signals tell the pipeline how to behave when normal data flow
+is affected by hazards or control-flow changes.
+
+</strong>
+
+<br><br>
+
+Signals such as valid, stall, flush, enable and forwarding controls
+work together to maintain correct pipeline operation.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 12 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+12. Pipeline Valid and Ready Handshake
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how valid and ready signals control the movement of data
+through a pipeline.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Why Do We Need Valid and Ready?
+
+</h4>
+
+<p>
+
+In many RTL pipelines, a stage should transfer data only when the
+current data is valid and the receiving stage is ready to accept it.
+
+This is commonly represented using two signals:
+
+<strong>valid</strong> and <strong>ready</strong>.
+
+</p>
+
+
+<pre><code>
+VALID
+  |
+  v
+"I have valid data."
+
+
+READY
+  |
+  v
+"I can accept data."
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Basic Handshake Rule
+
+</h4>
+
+<p>
+
+A transfer occurs when both <strong>valid</strong> and
+<strong>ready</strong> are high on the active clock edge.
+
+</p>
+
+
+<pre><code>
+Transfer = VALID && READY
+</code></pre>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>VALID</th>
+
+<th>READY</th>
+
+<th>Transfer?</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>No</td>
+
+</tr>
+
+<tr>
+
+<td>0</td>
+
+<td>1</td>
+
+<td>No</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>No</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>1</td>
+
+<td><strong>Yes</strong></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Example
+
+</h4>
+
+<pre><code>
+Stage 1
+  |
+  | valid
+  v
++----------------+
+|   Stage 2      |
+|                |
+| ready          |
++----------------+
+</code></pre>
+
+
+<p>
+
+If Stage 2 is not ready, Stage 1 must retain its transaction instead
+of losing it.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+When READY is Low
+
+</h4>
+
+<p>
+
+Suppose Stage 1 contains valid data but Stage 2 cannot accept it.
+
+</p>
+
+
+<pre><code>
+VALID = 1
+READY = 0
+
+Transfer = 0
+</code></pre>
+
+
+<p>
+
+The data must remain available until the receiving stage becomes
+ready.
+
+</p>
+
+
+<pre><code>
+Cycle 1:
+
+VALID = 1
+READY = 0
+Data = A
+
+
+Cycle 2:
+
+VALID = 1
+READY = 0
+Data = A
+
+
+Cycle 3:
+
+VALID = 1
+READY = 1
+Data = A
+
+Transfer occurs.
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Backpressure
+
+</h4>
+
+<p>
+
+When a downstream stage cannot accept more data, it can propagate
+that condition backward through the pipeline.
+
+This is called <strong>backpressure</strong>.
+
+</p>
+
+
+<pre><code>
+Stage 1 → Stage 2 → Stage 3
+
+
+Stage 3 not ready
+        |
+        v
+     READY = 0
+        |
+        v
+Stage 2 cannot advance
+        |
+        v
+Stage 1 may also need to stop
+</code></pre>
+
+
+<p>
+
+Backpressure prevents data from being overwritten or lost when a
+downstream stage becomes temporarily unavailable.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Valid and Ready Relationship
+
+</h4>
+
+<pre><code>
+Producer                    Consumer
+
+VALID --------------------> VALID
+                              |
+                              v
+                           Consumer
+                            READY
+                              |
+                              |
+READY &lt;-----------------------+
+</code></pre>
+
+
+<p>
+
+The producer indicates whether data is available, while the consumer
+indicates whether it can accept the data.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple RTL Example
+
+</h4>
+
+<pre><code>
+assign transfer = valid && ready;
+</code></pre>
+
+
+<p>
+
+A simple sequential implementation can look like this:
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        valid &lt;= 1'b0;
+
+    end
+
+    else if (ready) begin
+
+        valid &lt;= new_valid;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+The exact implementation depends on whether the stage is empty,
+occupied, receiving new data or forwarding an existing transaction.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Stage Behavior
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Current Valid</th>
+
+<th>Ready</th>
+
+<th>Behavior</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>0</td>
+
+<td>0</td>
+
+<td>Stage is empty.</td>
+
+</tr>
+
+<tr>
+
+<td>0</td>
+
+<td>1</td>
+
+<td>Stage can accept new data.</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>0</td>
+
+<td>Hold current data.</td>
+
+</tr>
+
+<tr>
+
+<td>1</td>
+
+<td>1</td>
+
+<td>Transfer current data.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Valid/Ready vs Stall
+
+</h4>
+
+<p>
+
+A valid/ready interface provides a structured way of expressing
+pipeline flow control.
+
+When READY is low, the producer effectively experiences
+backpressure and must hold the valid transaction.
+
+</p>
+
+
+<pre><code>
+READY = 0
+   |
+   v
+Cannot Transfer
+   |
+   v
+Hold Data
+   |
+   v
+Wait for READY = 1
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why This Is Important in SoC Design
+
+</h4>
+
+<p>
+
+Valid/ready handshakes are widely used in hardware interfaces and
+internal datapaths where different blocks may operate at different
+rates.
+
+They help prevent:
+
+</p>
+
+
+<ul>
+
+<li>Data loss</li>
+
+<li>Data overwrite</li>
+
+<li>Incorrect transaction timing</li>
+
+<li>Pipeline overflow</li>
+
+<li>Uncontrolled backpressure</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Verification
+
+</h4>
+
+<p>
+
+The testbench should verify all four combinations of VALID and READY.
+
+It should also test situations where READY changes dynamically.
+
+</p>
+
+
+<ul>
+
+<li>VALID = 0, READY = 0</li>
+
+<li>VALID = 0, READY = 1</li>
+
+<li>VALID = 1, READY = 0</li>
+
+<li>VALID = 1, READY = 1</li>
+
+</ul>
+
+
+<p>
+
+Most importantly, verify that data is not lost while READY remains
+low.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Observation
+
+</h4>
+
+<p>
+
+During simulation, observe:
+
+</p>
+
+
+<ul>
+
+<li>Clock</li>
+
+<li>Reset</li>
+
+<li>Valid</li>
+
+<li>Ready</li>
+
+<li>Transfer</li>
+
+<li>Data</li>
+
+</ul>
+
+
+<pre><code>
+CLK
+
+VALID   ────████████████────
+
+READY   ────────████████────
+
+TRANSFER───────████████────
+
+DATA    ---- A ---- B ----
+</code></pre>
+
+
+<p>
+
+The key point to observe is that a transaction is transferred only
+when VALID and READY are both high at the active clock edge.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+A valid/ready transfer occurs when both VALID and READY are high.
+When READY is low, the producer must preserve the valid transaction
+until the consumer can accept it.
+
+</strong>
+
+<br><br>
+
+This handshake mechanism provides reliable flow control and enables
+backpressure in pipelines and SoC interfaces.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Step 13 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+13. Pipeline Backpressure
+
+</h2>
+
+<p class="text-secondary">
+
+Understand how a slow downstream stage can temporarily stop upstream
+pipeline stages.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is Backpressure?
+
+</h4>
+
+<p>
+
+<strong>Backpressure</strong> occurs when a downstream pipeline stage
+cannot accept new data and causes upstream stages to temporarily stop
+or hold their transactions.
+
+</p>
+
+<p>
+
+Backpressure is commonly associated with
+<strong>valid/ready handshaking</strong>.
+
+</p>
+
+
+<pre><code>
+Stage 1 → Stage 2 → Stage 3
+
+                     ↓
+                Cannot Accept
+                     ↓
+                 Backpressure
+                     ↓
+              Stage 2 must wait
+                     ↓
+              Stage 1 may wait
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why is Backpressure Needed?
+
+</h4>
+
+<p>
+
+Imagine that Stage 3 is processing data more slowly than Stage 2.
+
+If Stage 2 continues sending data without checking whether Stage 3
+can accept it, transactions could be overwritten or lost.
+
+</p>
+
+
+<pre><code>
+Fast Producer
+     |
+     v
+Stage 2
+     |
+     v
+Slow Consumer
+     |
+     v
+Cannot accept more data
+</code></pre>
+
+
+<p>
+
+Backpressure prevents the faster stages from overwhelming the slower
+stage.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Backpressure Using READY
+
+</h4>
+
+<p>
+
+The downstream stage can indicate whether it is able to accept data
+using a <strong>READY</strong> signal.
+
+</p>
+
+
+<pre><code>
+Stage 2                     Stage 3
+
+VALID --------------------> VALID
+                              |
+                              v
+                            READY
+                              |
+                              |
+READY &lt;-----------------------+
+</code></pre>
+
+
+<p>
+
+If Stage 3 deasserts READY, Stage 2 must not transfer a new
+transaction into Stage 3.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+
+<pre><code>
+Cycle 1:
+
+VALID = 1
+READY = 1
+
+→ Transaction transfers
+
+
+Cycle 2:
+
+VALID = 1
+READY = 0
+
+→ No transfer
+
+
+Cycle 3:
+
+VALID = 1
+READY = 0
+
+→ Data must remain stable
+
+
+Cycle 4:
+
+VALID = 1
+READY = 1
+
+→ Transaction transfers
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Backpressure Propagation
+
+</h4>
+
+<p>
+
+In a multi-stage pipeline, backpressure can propagate toward the
+input.
+
+</p>
+
+
+<pre><code>
+Input
+  |
+  v
+Stage 1
+  |
+  v
+Stage 2
+  |
+  v
+Stage 3
+  |
+  v
+Output
+
+
+Output not ready
+       |
+       v
+Stage 3 cannot advance
+       |
+       v
+Stage 2 may need to stop
+       |
+       v
+Stage 1 may need to stop
+       |
+       v
+Input must wait
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Why Data Must Be Held
+
+</h4>
+
+<p>
+
+When READY is low while VALID is high, the producer must preserve the
+transaction until the receiving stage can accept it.
+
+</p>
+
+
+<pre><code>
+VALID = 1
+READY = 0
+
+        ↓
+
+Hold:
+
+Data
+Control
+Transaction information
+</code></pre>
+
+
+<p>
+
+Changing the data while VALID remains asserted and READY is low can
+cause the receiver to observe inconsistent transaction information.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Backpressure and Pipeline Stalls
+
+</h4>
+
+<p>
+
+Backpressure can result in pipeline stalls.
+
+However, the reason for the stall is different from a data hazard.
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Situation</th>
+
+<th>Reason for Waiting</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Data Hazard</td>
+
+<td>Required data is not available.</td>
+
+</tr>
+
+<tr>
+
+<td>Structural Hazard</td>
+
+<td>Hardware resource is unavailable.</td>
+
+</tr>
+
+<tr>
+
+<td>Backpressure</td>
+
+<td>Downstream stage cannot accept data.</td>
+
+</tr>
+
+<tr>
+
+<td>Control Hazard</td>
+
+<td>Next execution path is uncertain.</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline with Backpressure
+
+</h4>
+
+
+<pre><code>
++---------+      +---------+      +---------+
+| Stage 1 | ---> | Stage 2 | ---> | Stage 3 |
++---------+      +---------+      +---------+
+     |                |                |
+   VALID            VALID            VALID
+     |                |                |
+     |                |                |
+   READY            READY            READY
+                                      |
+                                      v
+                                   Output
+</code></pre>
+
+
+<p>
+
+Each stage can use a valid/ready interface to determine whether a
+transaction can move forward.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual Transfer Rule
+
+</h4>
+
+<pre><code>
+transfer = valid && ready;
+</code></pre>
+
+
+<p>
+
+If transfer is false, the current transaction must remain safe.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simple RTL Concept
+
+</h4>
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        valid_stage2 &lt;= 1'b0;
+
+    end
+
+    else if (ready_stage2) begin
+
+        valid_stage2 &lt;= valid_stage1;
+
+        if (valid_stage1)
+
+            data_stage2 &lt;= data_stage1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+This is a simplified educational example.
+
+A complete ready/valid pipeline must carefully handle cases where a
+stage is empty, occupied, transferring, or blocked.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Backpressure and Throughput
+
+</h4>
+
+<p>
+
+Backpressure can reduce the effective throughput of a pipeline when a
+downstream stage frequently becomes unavailable.
+
+</p>
+
+
+<pre><code>
+Ideal:
+
+A → B → C → D → E
+
+
+With Backpressure:
+
+A → B → WAIT → C → D → WAIT → E
+</code></pre>
+
+
+<p>
+
+Good pipeline design attempts to minimize unnecessary blocking while
+ensuring that no transaction is lost.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Verification
+
+</h4>
+
+<p>
+
+A verification environment should intentionally make downstream
+stages slow or temporarily unavailable.
+
+</p>
+
+
+<ul>
+
+<li>Drive READY low for multiple cycles.</li>
+
+<li>Keep VALID asserted with stable data.</li>
+
+<li>Verify that data is not lost.</li>
+
+<li>Verify that data is not overwritten.</li>
+
+<li>Restore READY and verify that the transaction transfers.</li>
+
+<li>Send multiple transactions during backpressure.</li>
+
+<li>Verify ordering is preserved.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Debugging
+
+</h4>
+
+<p>
+
+When debugging backpressure, observe:
+
+</p>
+
+
+<ul>
+
+<li>Clock</li>
+
+<li>Valid signals</li>
+
+<li>Ready signals</li>
+
+<li>Transfer signals</li>
+
+<li>Pipeline data</li>
+
+<li>Stall signals</li>
+
+</ul>
+
+
+<pre><code>
+VALID
+  |
+  |████████████████
+  |
+READY
+  |      ██████████
+  |
+TRANSFER
+  |            ███████
+  |
+DATA
+  |------ A ------ A ------ A ------>
+</code></pre>
+
+
+<p>
+
+The important observation is that the transaction remains stable while
+VALID is asserted and READY is low.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Backpressure allows a slower downstream stage to control the flow of
+data from upstream stages.
+
+</strong>
+
+<br><br>
+
+When READY is low, a valid transaction must be preserved until the
+receiver can accept it. This prevents data loss and enables reliable
+flow control in pipelines.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 14 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+14. Pipeline Hazard Detection RTL
+
+</h2>
+
+<p class="text-secondary">
+
+Implementing basic hazard detection and control logic using RTL.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+Why Implement Hazard Detection in RTL?
+
+</h4>
+
+<p>
+
+The concepts of hazards, forwarding and stalls become useful only
+when they are converted into actual hardware logic.
+
+At the RTL level, hazard detection logic examines pipeline state and
+generates control signals that determine whether data should be
+forwarded, the pipeline should stall, or normal execution can
+continue.
+
+</p>
+
+
+<pre><code>
+Pipeline State
+      |
+      v
+Hazard Detection Logic
+      |
+      +--------+---------+
+      |        |         |
+      v        v         v
+  Forward    Stall    Normal
+  Control    Control   Flow
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Basic Hazard Detection
+
+</h4>
+
+<p>
+
+Consider a simplified producer and consumer relationship.
+
+</p>
+
+
+<pre><code>
+Producer:
+
+Destination Register = R1
+
+
+Consumer:
+
+Source Register = R1
+</code></pre>
+
+
+<p>
+
+The hazard detector compares the producer destination with the
+consumer source.
+
+</p>
+
+
+<pre><code>
+producer_rd == consumer_rs
+          |
+          v
+   Dependency Found
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Simple RTL Example
+
+</h4>
+
+<pre><code>
+always @(*) begin
+
+    hazard_detected = 1'b0;
+
+    if (producer_valid &&
+        (producer_rd == consumer_rs)) begin
+
+        hazard_detected = 1'b1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+This is a simplified educational example.
+
+A real hazard detector must consider which instruction fields are
+actually used, whether the producer will write a result, pipeline
+stage timing, and whether forwarding can resolve the dependency.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Detecting Two Source Dependencies
+
+</h4>
+
+<p>
+
+An instruction may have two source operands.
+
+For example:
+
+</p>
+
+
+<pre><code>
+R4 = R1 + R2
+</code></pre>
+
+
+<p>
+
+The hazard detector may need to check both R1 and R2.
+
+</p>
+
+
+<pre><code>
+Producer Destination
+        |
+        +----------> Compare with Source A
+        |
+        +----------> Compare with Source B
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual RTL
+
+</h4>
+
+<pre><code>
+always @(*) begin
+
+    hazard_a = 1'b0;
+    hazard_b = 1'b0;
+
+    if (producer_valid) begin
+
+        if (producer_rd == source_a)
+
+            hazard_a = 1'b1;
+
+        if (producer_rd == source_b)
+
+            hazard_b = 1'b1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+The actual comparison should also account for whether each source
+operand is valid for the current operation.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Forward or Stall?
+
+</h4>
+
+<p>
+
+Detecting a dependency does not automatically mean that the pipeline
+must stall.
+
+The control logic must determine whether the required value is
+already available for forwarding.
+
+</p>
+
+
+<pre><code>
+Dependency Detected
+        |
+        v
+Is Result Available?
+        |
+     +--+--+
+     |     |
+    Yes    No
+     |     |
+     v     v
+ Forward  Stall
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual Forwarding Control
+
+</h4>
+
+<pre><code>
+always @(*) begin
+
+    forward_enable = 1'b0;
+
+    if (producer_valid &&
+        (producer_rd == consumer_rs)) begin
+
+        forward_enable = 1'b1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+In a real implementation, the forwarding decision may depend on
+which pipeline stage contains the newest usable result.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual Stall Control
+
+</h4>
+
+<p>
+
+If the required result cannot be forwarded in time, the hazard
+detector can generate a stall signal.
+
+</p>
+
+
+<pre><code>
+always @(*) begin
+
+    stall = 1'b0;
+
+    if (hazard_detected &&
+        !forward_available) begin
+
+        stall = 1'b1;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+This separates the two concepts:
+
+</p>
+
+
+<ul>
+
+<li>
+
+<strong>Hazard detection:</strong>
+
+Identifies the dependency.
+
+</li>
+
+<li>
+
+<strong>Forwarding logic:</strong>
+
+Determines whether an available result can satisfy the dependency.
+
+</li>
+
+<li>
+
+<strong>Stall logic:</strong>
+
+Stops pipeline progress when the dependency cannot yet be resolved.
+
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Pipeline Register Control
+
+</h4>
+
+<p>
+
+Once a stall is generated, pipeline registers need appropriate
+control.
+
+A simplified example is:
+
+</p>
+
+
+<pre><code>
+always @(posedge clk) begin
+
+    if (reset) begin
+
+        valid_stage1 &lt;= 1'b0;
+
+    end
+
+    else if (!stall) begin
+
+        valid_stage1 &lt;= next_valid;
+
+    end
+
+end
+</code></pre>
+
+
+<p>
+
+When the stall is active, the register holds its current state.
+
+The exact stall behavior depends on the pipeline architecture.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Using a Bubble
+
+</h4>
+
+<p>
+
+A pipeline may also insert a bubble into a downstream stage while
+holding the dependent instruction upstream.
+
+</p>
+
+
+<pre><code>
+Before Stall:
+
+Producer → Consumer → Next
+
+
+Hazard Detected:
+
+Producer → Consumer → Bubble
+
+
+After Data Available:
+
+Producer → Consumer → Next
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Combining Valid and Hazard Signals
+
+</h4>
+
+<p>
+
+Hazard detection should normally consider whether the pipeline entries
+are valid.
+
+An invalid pipeline entry should not create a false dependency.
+
+</p>
+
+
+<pre><code>
+if (producer_valid &&
+    consumer_valid &&
+    dependency_exists)
+
+    hazard_detected = 1'b1;
+</code></pre>
+
+
+<p>
+
+This is an important principle in pipeline control.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Simplified Hazard Detection Module
+
+</h4>
+
+<pre><code>
+module hazard_detector (
+
+    input  wire       producer_valid,
+    input  wire [4:0] producer_rd,
+
+    input  wire       consumer_valid,
+    input  wire [4:0] consumer_rs,
+
+    output reg        hazard_detected
+
+);
+
+always @(*) begin
+
+    hazard_detected = 1'b0;
+
+    if (producer_valid &&
+        consumer_valid &&
+        (producer_rd == consumer_rs)) begin
+
+        hazard_detected = 1'b1;
+
+    end
+
+end
+
+endmodule
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Limitation
+
+</h4>
+
+<p>
+
+The module above is intentionally simplified.
+
+It detects a register-number dependency, but it does not determine
+whether the dependency is actually hazardous based on pipeline timing.
+
+A production-quality hazard detector would need additional
+information such as:
+
+</p>
+
+
+<ul>
+
+<li>Whether the producer writes the destination register.</li>
+
+<li>Whether the consumer actually reads the source register.</li>
+
+<li>Which pipeline stage contains the producer.</li>
+
+<li>Whether forwarding is available.</li>
+
+<li>Whether the producer result is already usable.</li>
+
+<li>Whether the pipeline entry is valid.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Verification Strategy
+
+</h4>
+
+<p>
+
+The testbench should create both hazard and non-hazard situations.
+
+</p>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Test</th>
+
+<th>Producer</th>
+
+<th>Consumer</th>
+
+<th>Expected</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>1</td>
+
+<td>R1</td>
+
+<td>R1</td>
+
+<td>Hazard</td>
+
+</tr>
+
+<tr>
+
+<td>2</td>
+
+<td>R1</td>
+
+<td>R2</td>
+
+<td>No Hazard</td>
+
+</tr>
+
+<tr>
+
+<td>3</td>
+
+<td>R5</td>
+
+<td>R5</td>
+
+<td>Hazard</td>
+
+</tr>
+
+<tr>
+
+<td>4</td>
+
+<td>R3</td>
+
+<td>R4</td>
+
+<td>No Hazard</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Signals
+
+</h4>
+
+<p>
+
+When verifying the RTL, observe the following signals:
+
+</p>
+
+
+<ul>
+
+<li>producer_valid</li>
+
+<li>producer_rd</li>
+
+<li>consumer_valid</li>
+
+<li>consumer_rs</li>
+
+<li>hazard_detected</li>
+
+<li>forward_enable</li>
+
+<li>stall</li>
+
+</ul>
+
+
+<pre><code>
+producer_valid
+       |
+producer_rd
+       |
+       v
+Hazard Detector
+       |
+       +----> hazard_detected
+       |
+       +----> forward_enable
+       |
+       +----> stall
+</code></pre>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+RTL hazard detection compares pipeline state and generates control
+signals that allow the pipeline to forward data, stall safely, or
+continue normally.
+
+</strong>
+
+<br><br>
+
+The detector must consider valid state, register dependencies and
+pipeline timing rather than simply comparing register numbers.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 15 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+15. Designing a Hazard-Aware Pipeline
+
+</h2>
+
+<p class="text-secondary">
+
+Putting hazard detection, forwarding, stalls and pipeline control
+together into a practical design.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What is a Hazard-Aware Pipeline?
+
+</h4>
+
+<p>
+
+A <strong>hazard-aware pipeline</strong> is designed to recognize
+conditions that could prevent safe pipeline execution and respond
+appropriately.
+
+Instead of assuming that every transaction can advance every cycle,
+the pipeline contains control logic that determines whether to
+continue, forward, stall or flush.
+
+</p>
+
+
+<pre><code>
+                 Pipeline
+                    |
+                    v
+              Hazard Detection
+                    |
+          +---------+---------+
+          |         |         |
+          v         v         v
+      Continue   Forward    Stall /
+                           Flush
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Basic Architecture
+
+</h4>
+
+<p>
+
+A simplified hazard-aware pipeline can be represented as:
+
+</p>
+
+
+<pre><code>
+Input
+  |
+  v
++---------+
+| Stage 1 |
++---------+
+     |
+     v
++---------+
+| Stage 2 |
++---------+
+     |
+     v
++---------+
+| Stage 3 |
++---------+
+     |
+     v
+ Output
+
+
+       +----------------------+
+       | Hazard Control Logic |
+       +----------------------+
+          |      |       |
+          v      v       v
+      Forward  Stall   Flush
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Step 1 — Detect the Hazard
+
+</h4>
+
+<p>
+
+The first step is identifying whether the current pipeline state
+contains a condition that requires special handling.
+
+</p>
+
+
+<pre><code>
+Pipeline State
+      |
+      v
+Check Dependencies
+      |
+      v
+Check Resources
+      |
+      v
+Check Control Flow
+      |
+      v
+Hazard?
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Step 2 — Identify the Hazard Type
+
+</h4>
+
+<p>
+
+Once a hazard is detected, determine which category it belongs to.
+
+</p>
+
+
+<pre><code>
+              Hazard
+                 |
+       +---------+---------+
+       |         |         |
+       v         v         v
+      Data   Structural  Control
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Step 3 — Select the Appropriate Action
+
+</h4>
+
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Condition</th>
+
+<th>Possible Action</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Result already available</td>
+
+<td>Forward the result</td>
+
+</tr>
+
+<tr>
+
+<td>Result not yet available</td>
+
+<td>Stall the pipeline</td>
+
+</tr>
+
+<tr>
+
+<td>Resource unavailable</td>
+
+<td>Wait, arbitrate or stall</td>
+
+</tr>
+
+<tr>
+
+<td>Wrong control path</td>
+
+<td>Flush invalid operations</td>
+
+</tr>
+
+<tr>
+
+<td>No hazard</td>
+
+<td>Continue normally</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+<h4 class="text-info mt-4">
+
+Forwarding Path
+
+</h4>
+
+<p>
+
+When a producer has already generated the required value, forwarding
+can allow the consumer to continue without waiting for normal
+write-back.
+
+</p>
+
+
+<pre><code>
+Producer
+   |
+   v
+Result
+   |
+   +-------------------+
+                       |
+                       v
+                    Consumer
+                       |
+                       v
+                     ALU
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Stall Path
+
+</h4>
+
+<p>
+
+If the required value is not yet available, the control logic can
+prevent the dependent transaction from advancing.
+
+</p>
+
+
+<pre><code>
+Producer
+   |
+   v
+Result Not Ready
+   |
+   v
+  STALL
+   |
+   v
+Hold Transaction
+   |
+   v
+Resume When Safe
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Flush Path
+
+</h4>
+
+<p>
+
+If a control-flow decision makes pipeline entries invalid, those
+entries must be flushed.
+
+</p>
+
+
+<pre><code>
+Control Decision
+      |
+      v
+Wrong Path?
+      |
+      v
+    FLUSH
+      |
+      v
+Invalidate Entries
+      |
+      v
+Correct Target
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Control Priority
+
+</h4>
+
+<p>
+
+A practical design must define the priority of different control
+conditions.
+
+For example, reset normally has the highest priority because it
+initializes the pipeline.
+
+A simplified conceptual priority might be:
+
+</p>
+
+
+<pre><code>
+Reset
+  |
+  v
+Flush
+  |
+  v
+Stall
+  |
+  v
+Normal Operation
+</code></pre>
+
+
+<p>
+
+The actual priority must be defined according to the specific
+architecture.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Valid Data Must Remain Aligned
+
+</h4>
+
+<p>
+
+When a pipeline stalls or flushes, associated control information must
+remain aligned with the corresponding data.
+
+This includes information such as:
+
+</p>
+
+
+<ul>
+
+<li>Valid bits</li>
+
+<li>Instruction information</li>
+
+<li>Destination registers</li>
+
+<li>Control signals</li>
+
+<li>Transaction identifiers</li>
+
+<li>Exception information</li>
+
+</ul>
+
+
+<pre><code>
+Data
+ |
+ v
++---------+
+| Pipeline|
+| Register|
++---------+
+ |
+ +---- Valid
+ |
+ +---- Control
+ |
+ +---- Metadata
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Hazard-Aware Pipeline Flow
+
+</h4>
+
+
+<pre><code>
+                New Transaction
+                       |
+                       v
+                 Pipeline Stage
+                       |
+                       v
+                Hazard Detection
+                       |
+          +------------+------------+
+          |            |            |
+          v            v            v
+       No Hazard    Data Hazard   Control Hazard
+          |            |            |
+          v            v            v
+       Continue     Forward or     Flush /
+                    Stall          Redirect
+          |            |            |
+          +------------+------------+
+                       |
+                       v
+                Next Pipeline Stage
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Conceptual RTL Structure
+
+</h4>
+
+<pre><code>
+always @(*) begin
+
+    stall  = 1'b0;
+    flush  = 1'b0;
+    forward = 1'b0;
+
+    if (data_hazard) begin
+
+        if (forward_available)
+
+            forward = 1'b1;
+
+        else
+
+            stall = 1'b1;
+
+    end
+
+    if (control_hazard)
+
+        flush = 1'b1;
+
+end
+</code></pre>
+
+
+<p>
+
+This is a simplified educational structure.
+
+A real implementation requires carefully defined priorities and
+conditions for every pipeline stage.
+
+</p>
+
+
+<h4 class="text-info mt-4">
+
+Design Considerations
+
+</h4>
+
+<p>
+
+A hazard-aware pipeline must balance several competing requirements.
+
+</p>
+
+
+<ul>
+
+<li>
+
+<strong>Correctness:</strong>
+
+No transaction should produce an incorrect result.
+
+</li>
+
+<li>
+
+<strong>Performance:</strong>
+
+Avoid unnecessary stalls and flushes.
+
+</li>
+
+<li>
+
+<strong>Timing:</strong>
+
+Hazard-control logic must itself meet the required clock frequency.
+
+</li>
+
+<li>
+
+<strong>Area:</strong>
+
+Forwarding paths and additional resources consume hardware.
+
+</li>
+
+<li>
+
+<strong>Power:</strong>
+
+Additional switching and duplicated resources can increase power.
+
+</li>
+
+<li>
+
+<strong>Complexity:</strong>
+
+More pipeline stages and more forwarding paths increase control
+complexity.
+
+</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Verification Strategy
+
+</h4>
+
+<p>
+
+A hazard-aware pipeline should be verified using directed tests as
+well as randomized transactions.
+
+Important scenarios include:
+
+</p>
+
+
+<ul>
+
+<li>Normal hazard-free operation.</li>
+
+<li>RAW dependencies.</li>
+
+<li>Forwarding opportunities.</li>
+
+<li>Dependencies requiring stalls.</li>
+
+<li>Resource conflicts.</li>
+
+<li>Branch taken.</li>
+
+<li>Branch not taken.</li>
+
+<li>Pipeline flush.</li>
+
+<li>Backpressure.</li>
+
+<li>Reset during pipeline activity.</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Waveform Debugging Checklist
+
+</h4>
+
+<p>
+
+When a pipeline produces an unexpected result, inspect the waveform
+in this order:
+
+</p>
+
+
+<ol>
+
+<li>Check the clock.</li>
+
+<li>Check reset behavior.</li>
+
+<li>Check valid signals.</li>
+
+<li>Check pipeline register values.</li>
+
+<li>Check hazard detection.</li>
+
+<li>Check forwarding controls.</li>
+
+<li>Check stall signals.</li>
+
+<li>Check flush signals.</li>
+
+<li>Check final output.</li>
+
+</ol>
+
+
+<pre><code>
+Clock
+  ↓
+Reset
+  ↓
+Valid
+  ↓
+Pipeline Data
+  ↓
+Hazard Detection
+  ↓
+Forward / Stall / Flush
+  ↓
+Output
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Important Design Principle
+
+</h4>
+
+<p>
+
+Do not add forwarding, stalls or flushes simply because they are
+common techniques.
+
+First determine the actual dependency or resource conflict, then
+implement the minimum control required to maintain correctness.
+
+</p>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p>
+
+<strong>
+
+A hazard-aware pipeline combines datapath design with control logic
+that detects hazards and selects the correct response.
+
+</strong>
+
+</p>
+
+<p class="mb-0">
+
+The pipeline should continue when safe, forward data when possible,
+stall when necessary and flush invalid operations when control flow
+changes.
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 16 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+16. EDA Playground — Hazard Detection & Stall Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Simulate a simple pipeline hazard and observe the stall behavior using
+console output and waveforms.
+
+</p>
+
+</div>
+
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+
+<h4 class="text-info">
+
+What Will We Simulate?
+
+</h4>
+
+<p>
+
+In this simulation, we will model a simple pipeline where a consumer
+depends on a value produced by a previous operation.
+
+The testbench will intentionally create a dependency and demonstrate
+how the pipeline detects the hazard and stalls.
+
+</p>
+
+
+<pre><code>
+Producer
+   |
+   | Produces Data
+   v
+Pipeline Register
+   |
+   v
+Hazard Detection
+   |
+   v
+Consumer
+
+If data is not ready:
+
+        ↓
+
+      STALL
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Design Under Test
+
+</h4>
+
+<p>
+
+The RTL design contains:
+
+</p>
+
+<ul>
+
+<li>Clock</li>
+
+<li>Reset</li>
+
+<li>Producer valid signal</li>
+
+<li>Producer destination register</li>
+
+<li>Consumer valid signal</li>
+
+<li>Consumer source register</li>
+
+<li>Hazard detection</li>
+
+<li>Stall generation</li>
+
+</ul>
+
+
+<h4 class="text-info mt-4">
+
+Design Code
+
+</h4>
+
+<p>
+
+Create a Verilog design named
+<strong>hazard_detection</strong>:
+
+</p>
+
+
+<pre><code>
+module hazard_detection (
+
+    input  wire       clk,
+    input  wire       reset,
+
+    input  wire       producer_valid,
+    input  wire [4:0] producer_rd,
+
+    input  wire       consumer_valid,
+    input  wire [4:0] consumer_rs,
+
+    output reg        hazard_detected,
+    output reg        stall
+
+);
+
+
+always @(*) begin
+
+    hazard_detected = 1'b0;
+    stall = 1'b0;
+
+
+    if (producer_valid &&
+        consumer_valid &&
+        (producer_rd == consumer_rs)) begin
+
+        hazard_detected = 1'b1;
+
+        stall = 1'b1;
+
+    end
+
+end
+
+
+endmodule
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+What Does This Design Do?
+
+</h4>
+
+<p>
+
+The design compares the producer destination register with the
+consumer source register.
+
+If both pipeline entries are valid and the register numbers match,
+the design detects a dependency and asserts the stall signal.
+
+</p>
+
+
+<pre><code>
+producer_rd == consumer_rs
+          |
+          v
+    Hazard Detected
+          |
+          v
+       stall = 1
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Testbench Code
+
+</h4>
+
+<p>
+
+Create a testbench that applies several situations and prints the
+results to the console.
+
+</p>
+
+
+<pre><code>
+`timescale 1ns/1ps
+
+module tb_hazard_detection;
+
+
+reg clk;
+reg reset;
+
+reg       producer_valid;
+reg [4:0] producer_rd;
+
+reg       consumer_valid;
+reg [4:0] consumer_rs;
+
+wire hazard_detected;
+wire stall;
+
+
+hazard_detection dut (
+
+    .clk(clk),
+    .reset(reset),
+
+    .producer_valid(producer_valid),
+    .producer_rd(producer_rd),
+
+    .consumer_valid(consumer_valid),
+    .consumer_rs(consumer_rs),
+
+    .hazard_detected(hazard_detected),
+    .stall(stall)
+
+);
+
+
+initial begin
+
+    clk = 0;
+
+    forever #5 clk = ~clk;
+
+end
+
+
+initial begin
+
+    $dumpfile("dump.vcd");
+
+    $dumpvars(0, tb_hazard_detection);
+
+
+    reset = 1;
+
+    producer_valid = 0;
+    producer_rd = 0;
+
+    consumer_valid = 0;
+    consumer_rs = 0;
+
+
+    #12;
+
+    reset = 0;
+
+
+    // Test 1: No valid transactions
+
+    producer_valid = 0;
+    consumer_valid = 0;
+
+    #10;
+
+    $display("TEST 1: No valid transactions");
+    $display("hazard=%b stall=%b",
+             hazard_detected,
+             stall);
+
+
+    // Test 2: Different registers
+
+    producer_valid = 1;
+    producer_rd = 5'd1;
+
+    consumer_valid = 1;
+    consumer_rs = 5'd2;
+
+    #10;
+
+    $display("TEST 2: Different registers");
+    $display("producer_rd=%0d consumer_rs=%0d hazard=%b stall=%b",
+             producer_rd,
+             consumer_rs,
+             hazard_detected,
+             stall);
+
+
+    // Test 3: Matching registers
+
+    producer_valid = 1;
+    producer_rd = 5'd3;
+
+    consumer_valid = 1;
+    consumer_rs = 5'd3;
+
+    #10;
+
+    $display("TEST 3: RAW dependency detected");
+    $display("producer_rd=%0d consumer_rs=%0d hazard=%b stall=%b",
+             producer_rd,
+             consumer_rs,
+             hazard_detected,
+             stall);
+
+
+    // Test 4: Another matching dependency
+
+    producer_valid = 1;
+    producer_rd = 5'd10;
+
+    consumer_valid = 1;
+    consumer_rs = 5'd10;
+
+    #10;
+
+    $display("TEST 4: Another RAW dependency");
+    $display("producer_rd=%0d consumer_rs=%0d hazard=%b stall=%b",
+             producer_rd,
+             consumer_rs,
+             hazard_detected,
+             stall);
+
+
+    // Test 5: Consumer becomes invalid
+
+    producer_valid = 1;
+    producer_rd = 5'd7;
+
+    consumer_valid = 0;
+    consumer_rs = 5'd7;
+
+    #10;
+
+    $display("TEST 5: Consumer invalid");
+    $display("hazard=%b stall=%b",
+             hazard_detected,
+             stall);
+
+
+    $finish;
+
+end
+
+
+endmodule
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Expected Console Output
+
+</h4>
+
+
+<pre><code>
+TEST 1: No valid transactions
+hazard=0 stall=0
+
+
+TEST 2: Different registers
+producer_rd=1 consumer_rs=2 hazard=0 stall=0
+
+
+TEST 3: RAW dependency detected
+producer_rd=3 consumer_rs=3 hazard=1 stall=1
+
+
+TEST 4: Another RAW dependency
+producer_rd=10 consumer_rs=10 hazard=1 stall=1
+
+
+TEST 5: Consumer invalid
+hazard=0 stall=0
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+Waveform
+
+</h4>
+
+<p>
+
+The testbench includes VCD waveform dumping.
+
+After simulation, open the waveform viewer and add:
+
+</p>
+
+
+<ul>
+
+<li>clk</li>
+
+<li>reset</li>
+
+<li>producer_valid</li>
+
+<li>producer_rd</li>
+
+<li>consumer_valid</li>
+
+<li>consumer_rs</li>
+
+<li>hazard_detected</li>
+
+<li>stall</li>
+
+</ul>
+
+
+<pre><code>
+Producer RD ──────── 1 ──────── 3 ──────── 10 ─────
+
+Consumer RS ──────── 2 ──────── 3 ──────── 10 ─────
+
+Hazard      ───────── 0 ──────── 1 ──────── 1 ─────
+
+Stall       ───────── 0 ──────── 1 ──────── 1 ─────
+</code></pre>
+
+
+<h4 class="text-info mt-4">
+
+What to Observe
+
+</h4>
+
+<ol>
+
+<li>
+
+When the producer and consumer register numbers are different,
+<strong>hazard_detected = 0</strong>.
+
+</li>
+
+<li>
+
+When both register numbers match and both transactions are valid,
+<strong>hazard_detected = 1</strong>.
+
+</li>
+
+<li>
+
+When the hazard is detected,
+<strong>stall = 1</strong>.
+
+</li>
+
+<li>
+
+When the consumer is invalid, no hazard should be detected.
+
+</li>
+
+<li>
+
+The waveform should match the console output.
+
+</li>
+
+</ol>
+
+
+<h4 class="text-info mt-4">
+
+EDA Playground
+
+</h4>
+
+<p>
+
+Run the complete design and testbench in EDA Playground.
+
+Make sure both the console output and waveform are available.
+
+</p>
+
+
+<a href="https://edaplayground.com/x/Wqi_"
+   target="_blank"
+   class="btn btn-info btn-lg mt-3">
+
+▶ Open EDA Playground
+
+</a>
+
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Verification Goal
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Do not rely only on the printed results.
+
+Confirm that the hazard and stall signals change correctly in the
+waveform at the same time as the corresponding register dependencies.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+<!-- ========================= -->
+<!-- Bootstrap JS -->
+<!-- ========================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+</body>
+
+</html>
