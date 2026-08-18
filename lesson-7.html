@@ -4665,14 +4665,1186 @@ to verify the datapath operation.
 </section>  
 
 <!-- ========================= -->
+<!-- Step 15 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+15. Hands-on Datapath Exercise
+
+</h2>
+
+<p class="text-secondary">
+
+Design a small datapath using registers, a MUX and an ALU.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Exercise: 8-bit Arithmetic Datapath
+
+</h4>
+
+<p>
+
+Design an 8-bit synchronous datapath that can perform arithmetic
+operations on two input values and store the result in a register.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Requirements
+
+</h4>
+
+<ul>
+
+<li>Use an 8-bit register for operand A.</li>
+
+<li>Use an 8-bit register for operand B.</li>
+
+<li>Include an ALU.</li>
+
+<li>Include an 8-bit result register.</li>
+
+<li>Provide an ALU operation-select input.</li>
+
+<li>Provide an enable signal.</li>
+
+<li>Provide a reset signal.</li>
+
+<li>Use a clocked design.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Required Operations
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Operation</th>
+
+<th>Code</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>ADD</td>
+
+<td>000</td>
+
+</tr>
+
+<tr>
+
+<td>SUB</td>
+
+<td>001</td>
+
+</tr>
+
+<tr>
+
+<td>AND</td>
+
+<td>010</td>
+
+</tr>
+
+<tr>
+
+<td>OR</td>
+
+<td>011</td>
+
+</tr>
+
+<tr>
+
+<td>XOR</td>
+
+<td>100</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Your Tasks
+
+</h4>
+
+<ol>
+
+<li>Draw the datapath block diagram.</li>
+
+<li>Identify the sequential components.</li>
+
+<li>Identify the combinational components.</li>
+
+<li>Define the ALU operation encoding.</li>
+
+<li>Write the Verilog RTL.</li>
+
+<li>Write a testbench.</li>
+
+<li>Verify every ALU operation.</li>
+
+<li>Check reset behavior.</li>
+
+<li>Check enable behavior.</li>
+
+<li>Inspect the waveform.</li>
+
+</ol>
+
+<h4 class="text-info mt-4">
+
+Example Test Cases
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Input A</th>
+
+<th>Input B</th>
+
+<th>Operation</th>
+
+<th>Expected Result</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>10</td>
+
+<td>5</td>
+
+<td>ADD</td>
+
+<td>15</td>
+
+</tr>
+
+<tr>
+
+<td>20</td>
+
+<td>7</td>
+
+<td>SUB</td>
+
+<td>13</td>
+
+</tr>
+
+<tr>
+
+<td>8'hAA</td>
+
+<td>8'hCC</td>
+
+<td>AND</td>
+
+<td>8'h88</td>
+
+</tr>
+
+<tr>
+
+<td>8'hAA</td>
+
+<td>8'hCC</td>
+
+<td>OR</td>
+
+<td>8'hEE</td>
+
+</tr>
+
+<tr>
+
+<td>8'hAA</td>
+
+<td>8'hCC</td>
+
+<td>XOR</td>
+
+<td>8'h66</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Design Challenge
+
+</h4>
+
+<p>
+
+Try to design the datapath yourself before looking at the previous
+RTL example.
+
+Think about the following structure:
+
+</p>
+
+<pre><code>
+Input A ──> Register A ──┐
+                        │
+                        v
+                     +-----+
+                     | ALU | ──> Result Register
+                     +-----+
+                        ^
+                        │
+Input B ──> Register B ─┘
+
+             ALU Operation
+                    ^
+                    |
+               Control Input
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Challenge Question
+
+</h4>
+
+<p>
+
+What happens to the <strong>result register</strong> when
+<strong>enable = 0</strong>?
+
+</p>
+
+<p class="mb-0">
+
+Think about this before writing the RTL.
+
+The register should retain its previous value because no new value is
+being loaded.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 16 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+16. Lesson Summary
+
+</h2>
+
+<p class="text-secondary">
+
+Review the key datapath concepts covered in this lesson.
+
+</p>
+
+</div>
+
+<div class="row g-4">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🧠 Datapath Fundamentals
+
+</h4>
+
+<ul>
+
+<li>Datapath stores, moves and processes data.</li>
+
+<li>Datapath and control path have different responsibilities.</li>
+
+<li>Registers provide clocked storage.</li>
+
+<li>Combinational logic performs data processing.</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🔀 Datapath Components
+
+</h4>
+
+<ul>
+
+<li>Registers</li>
+
+<li>Multiplexers</li>
+
+<li>ALU</li>
+
+<li>Buses</li>
+
+<li>Control signals</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+⚡ Data Processing
+
+</h4>
+
+<ul>
+
+<li>Register-to-register data movement</li>
+
+<li>ALU operations</li>
+
+<li>MUX-based data selection</li>
+
+<li>Register enable and write control</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+⏱️ Timing & Architecture
+
+</h4>
+
+<ul>
+
+<li>Single-cycle datapaths</li>
+
+<li>Multi-cycle datapaths</li>
+
+<li>Register-to-register timing</li>
+
+<li>Critical paths</li>
+
+<li>Pipelining concept</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+💻 RTL Implementation
+
+</h4>
+
+<ul>
+
+<li>Synthesizable Verilog datapath design</li>
+
+<li>Sequential and combinational logic</li>
+
+<li>ALU operation selection</li>
+
+<li>Reset and enable handling</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+🔍 Verification
+
+</h4>
+
+<ul>
+
+<li>EDA Playground simulation</li>
+
+<li>Console output</li>
+
+<li>Waveform analysis</li>
+
+<li>Hands-on datapath exercise</li>
+
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Step 17 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+17. Datapath Interview Questions
+
+</h2>
+
+<p class="text-secondary">
+
+Test your understanding of datapath design and RTL implementation.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="accordion" id="datapathInterview">
+
+<!-- Question 1 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ1">
+
+1. What is a datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ1"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+A datapath is the part of a digital system responsible for storing,
+moving and processing data.
+
+It typically contains registers, multiplexers, ALUs and other
+data-processing components.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 2 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ2">
+
+2. What is the difference between a datapath and a control path?
+
+</button>
+
+</h2>
+
+<div id="dpQ2"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+The <strong>datapath</strong> stores, moves and processes data.
+
+The <strong>control path</strong> generates control signals that
+determine how and when the datapath operates.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 3 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ3">
+
+3. Why are registers used in a datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ3"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+Registers provide clocked storage for data.
+
+They store operands, intermediate values and results and create
+sequential boundaries between combinational datapath operations.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 4 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ4">
+
+4. Why is a multiplexer used in a datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ4"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+A multiplexer selects one of multiple data sources and connects the
+selected value to the next datapath stage.
+
+The selection is controlled by control signals.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 5 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ5">
+
+5. What is the role of an ALU?
+
+</button>
+
+</h2>
+
+<div id="dpQ5"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+An ALU performs arithmetic and logical operations such as addition,
+subtraction, AND, OR and XOR.
+
+The operation is selected using control signals.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 6 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ6">
+
+6. What is a register-to-register datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ6"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+It is a datapath in which data is launched from a source register,
+passes through combinational logic, and is captured by a destination
+register on a clock edge.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 7 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ7">
+
+7. What is a single-cycle datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ7"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+A single-cycle datapath completes the required operation within one
+clock cycle.
+
+The combinational logic between the source and destination registers
+must fit within the available clock period.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 8 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ8">
+
+8. What is a multi-cycle datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ8"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+A multi-cycle datapath divides a complex operation into multiple
+clock cycles.
+
+A control FSM can coordinate the datapath during each cycle.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 9 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ9">
+
+9. What is a critical path?
+
+</button>
+
+</h2>
+
+<div id="dpQ9"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+The critical path is the longest timing path through the relevant
+combinational logic between sequential elements.
+
+It often determines the minimum clock period and therefore the maximum
+operating frequency.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 10 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ10">
+
+10. Why is pipelining used in a datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ10"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+Pipelining divides a long combinational path into smaller stages by
+adding registers.
+
+This can reduce the amount of combinational work performed in each
+clock cycle and allow a shorter clock period.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 11 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ11">
+
+11. What happens when a register enable is 0?
+
+</button>
+
+</h2>
+
+<div id="dpQ11"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+The register does not capture new data at the active clock edge and
+retains its previous value.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- Question 12 -->
+
+<div class="accordion-item bg-dark text-light border-secondary">
+
+<h2 class="accordion-header">
+
+<button class="accordion-button collapsed bg-dark text-light"
+type="button"
+data-bs-toggle="collapse"
+data-bs-target="#dpQ12">
+
+12. How does an FSM work with a datapath?
+
+</button>
+
+</h2>
+
+<div id="dpQ12"
+class="accordion-collapse collapse"
+data-bs-parent="#datapathInterview">
+
+<div class="accordion-body">
+
+The FSM can act as the control path.
+
+It generates control signals that select datapath operations, control
+registers and determine the sequence in which operations occur.
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>  
+
+ <!-- ========================= -->
+<!-- Step 18 -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+18. Key Takeaways
+
+</h2>
+
+<p class="text-secondary">
+
+The most important concepts to remember from Lesson 7.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<ul>
+
+<li>
+A <strong>datapath</strong> stores, moves and processes data.
+</li>
+
+<li>
+The <strong>control path</strong> generates signals that control
+datapath operations.
+</li>
+
+<li>
+<strong>Registers</strong> provide clocked storage and separate
+sequential datapath stages.
+</li>
+
+<li>
+<strong>Multiplexers</strong> select which data source should be used.
+</li>
+
+<li>
+The <strong>ALU</strong> performs arithmetic and logical operations.
+</li>
+
+<li>
+Datapaths commonly use a combination of
+<strong>registers + combinational logic + registers</strong>.
+</li>
+
+<li>
+Register-to-register data movement is a fundamental concept in
+synchronous RTL design.
+</li>
+
+<li>
+Control signals determine which datapath operation occurs and when
+data is captured.
+</li>
+
+<li>
+A <strong>single-cycle datapath</strong> completes an operation within
+one clock cycle.
+</li>
+
+<li>
+A <strong>multi-cycle datapath</strong> divides an operation across
+multiple clock cycles.
+</li>
+
+<li>
+The <strong>critical path</strong> can determine the maximum operating
+frequency of a synchronous design.
+</li>
+
+<li>
+<strong>Pipelining</strong> can divide long combinational paths into
+smaller stages.
+</li>
+
+<li>
+FSMs can be used as the <strong>control path</strong> to coordinate
+complex datapath operations.
+</li>
+
+</ul>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Remember
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+
+Control tells the datapath what to do.
+The datapath performs the actual data operation.
+
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>     
+
+<!-- ========================= -->
+<!-- Coming Next -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="card feature-card">
+
+<div class="card-body text-center">
+
+<h3 class="text-info">
+
+Coming Next
+
+</h3>
+
+<p>
+
+In <strong>Lesson 8</strong>, we'll move deeper into RTL Design
+and learn about <strong>Pipeline Design</strong>, including
+pipeline stages, registers, latency, throughput and timing
+considerations.
+
+</p>
+
+<a href="lesson-8.html"
+   class="btn btn-info mt-3">
+
+Start Lesson 8 →
+
+</a>
+
+</div>
+
+</div>
+
+</section>
+
+
+<!-- ========================= -->
 <!-- Lesson Navigation -->
 <!-- ========================= -->
 
 <section class="container py-5">
 
-
 <div class="d-flex justify-content-between align-items-center">
-
 
 <a href="lesson-6.html"
    class="btn btn-outline-light">
@@ -4681,22 +5853,17 @@ to verify the datapath operation.
 
 </a>
 
-
-<a href="#"
+<a href="lesson-8.html"
    class="btn btn-info">
 
-Next Section →
+Lesson 8 →
 
 </a>
 
-
 </div>
 
-
 </section>
-
-
-
+      
 <!-- ========================= -->
 <!-- Bootstrap JS -->
 <!-- ========================= -->
