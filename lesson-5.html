@@ -1031,6 +1031,667 @@ update.
 
 </section>    
 
+<!-- ========================= -->
+<!-- Asynchronous Reset -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Asynchronous Reset
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how a reset can affect sequential logic independently of the clock.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+An <strong>asynchronous reset</strong> can change the state of a
+sequential element without waiting for a clock edge.
+
+The reset signal is therefore included in the sensitivity list.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk or posedge reset) begin
+
+    if (reset)
+        q &lt;= 1'b0;
+    else
+        q &lt;= d;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<ol>
+
+<li>
+If <strong>reset</strong> becomes active, <strong>q</strong> is
+cleared without waiting for the clock.
+</li>
+
+<li>
+When reset is inactive, the circuit waits for the rising edge of
+<strong>clk</strong>.
+</li>
+
+<li>
+At the rising edge, <strong>d</strong> is captured into
+<strong>q</strong>.
+</li>
+
+</ol>
+
+<h4 class="text-info mt-4">
+
+Synchronous vs Asynchronous Reset
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Feature</th>
+
+<th>Synchronous Reset</th>
+
+<th>Asynchronous Reset</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Reset in sensitivity list</td>
+
+<td>No</td>
+
+<td>Yes</td>
+
+</tr>
+
+<tr>
+
+<td>Waits for clock edge</td>
+
+<td>Yes</td>
+
+<td>No</td>
+
+</tr>
+
+<tr>
+
+<td>Example</td>
+
+<td>
+<code>always @(posedge clk)</code>
+</td>
+
+<td>
+<code>always @(posedge clk or posedge reset)</code>
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Point
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+Synchronous reset is evaluated at the clock edge, while asynchronous
+reset can take effect independently of the clock.
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+<!-- ========================= -->
+<!-- Two-Stage Pipeline -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Two-Stage Pipeline
+
+</h2>
+
+<p class="text-secondary">
+
+Understanding how sequential stages transfer data from one register to the next.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<p>
+
+A pipeline divides a data path into multiple sequential stages.
+Each stage is separated by a register.
+
+A simple two-stage pipeline can be described using two registers:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    stage1 &lt;= data;
+    stage2 &lt;= stage1;
+
+end</code></pre>
+
+<h4 class="text-info mt-4">
+
+How It Works
+
+</h4>
+
+<p>
+
+At every rising edge of the clock:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>
+data
+  ↓
+stage1
+  ↓
+stage2
+</code></pre>
+
+<p>
+
+The first stage captures the current input data, while the second
+stage captures the <strong>previous value</strong> of
+<strong>stage1</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Example
+
+</h4>
+
+<div class="table-responsive">
+
+<table class="table table-dark table-bordered text-center align-middle">
+
+<thead>
+
+<tr>
+
+<th>Clock Edge</th>
+
+<th>Data</th>
+
+<th>Stage 1</th>
+
+<th>Stage 2</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+<tr>
+
+<td>Initial</td>
+
+<td>1010</td>
+
+<td>0000</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 1</td>
+
+<td>1010</td>
+
+<td>1010</td>
+
+<td>0000</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 2</td>
+
+<td>0101</td>
+
+<td>0101</td>
+
+<td>1010</td>
+
+</tr>
+
+<tr>
+
+<td>↑ 3</td>
+
+<td>1111</td>
+
+<td>1111</td>
+
+<td>0101</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+<h4 class="text-info mt-4">
+
+Why Non-Blocking Assignment Matters
+
+</h4>
+
+<p>
+
+Both assignments use the non-blocking assignment operator:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>stage1 &lt;= data;
+stage2 &lt;= stage1;</code></pre>
+
+<p>
+
+The assignments are evaluated using the values that existed before
+the clocked update.
+
+Therefore, <strong>stage2</strong> receives the old value of
+<strong>stage1</strong>, while <strong>stage1</strong> receives the
+current value of <strong>data</strong>.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Pipeline Behavior
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>
+Clock 1:
+Data → Stage 1
+
+Clock 2:
+Data → Stage 1
+Stage 1(previous) → Stage 2
+
+Clock 3:
+Data → Stage 1
+Stage 1(previous) → Stage 2
+</code></pre>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+Each pipeline stage stores data for one clock cycle before passing it
+to the next stage.
+</strong>
+
+<br><br>
+
+This is one of the important reasons non-blocking assignments are used
+for clocked sequential RTL.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+ <!-- ========================= -->
+<!-- Blocking vs Non-Blocking Simulation -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Blocking vs Non-Blocking Simulation
+
+</h2>
+
+<p class="text-secondary">
+
+Observe how blocking and non-blocking assignments behave in sequential RTL.
+
+</p>
+
+</div>
+
+<div class="row justify-content-center">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Try It Yourself
+
+</h4>
+
+<p>
+
+Create two registers and update them using blocking and non-blocking
+assignments. Run the simulation and inspect the waveform.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Design Code
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module assignment_demo (
+
+    input clk,
+    input d,
+
+    output reg q_blocking,
+    output reg q_nonblocking
+
+);
+
+always @(posedge clk) begin
+
+    q_blocking = d;
+    q_nonblocking &lt;= d;
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+Testbench
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>module tb;
+
+reg clk;
+reg d;
+
+wire q_blocking;
+wire q_nonblocking;
+
+assignment_demo dut (
+
+    .clk(clk),
+    .d(d),
+
+    .q_blocking(q_blocking),
+    .q_nonblocking(q_nonblocking)
+
+);
+
+initial begin
+
+    clk = 0;
+
+    forever #5 clk = ~clk;
+
+end
+
+initial begin
+
+    d = 0;
+
+    #12;
+    d = 1;
+
+    #10;
+    d = 0;
+
+    #10;
+    d = 1;
+
+    #10;
+
+    $finish;
+
+end
+
+initial begin
+
+    $monitor(
+        "TIME=%0t CLK=%b D=%b BLOCKING=%b NONBLOCKING=%b",
+        $time,
+        clk,
+        d,
+        q_blocking,
+        q_nonblocking
+    );
+
+end
+
+endmodule</code></pre>
+
+<h4 class="text-info mt-4">
+
+What to Observe
+
+</h4>
+
+<ul>
+
+<li>Observe both outputs at every rising clock edge.</li>
+
+<li>Compare the simulation output of the two assignments.</li>
+
+<li>Inspect the waveform for <code>clk</code>, <code>d</code>,
+<code>q_blocking</code> and <code>q_nonblocking</code>.</li>
+
+<li>Pay particular attention to cases where multiple sequential
+registers depend on one another.</li>
+
+</ul>
+
+<h4 class="text-info mt-4">
+
+Important Observation
+
+</h4>
+
+<p>
+
+With a single independent register assignment, the difference may not
+be obvious from the final waveform.
+
+The difference becomes much more important when multiple sequential
+assignments interact.
+
+For example:
+
+</p>
+
+<pre class="text-light p-3 rounded"><code>always @(posedge clk) begin
+
+    stage1 &lt;= data;
+    stage2 &lt;= stage1;
+
+end</code></pre>
+
+<p>
+
+With non-blocking assignments, <strong>stage2</strong> receives the
+previous value of <strong>stage1</strong>, which correctly models
+two sequential pipeline stages.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+RTL Rule
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+For clocked sequential RTL, use non-blocking assignments
+(&lt;=) to model register state updates.
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+<hr class="my-4">
+
+<div class="text-center">
+
+<h5 class="text-info mb-3">
+
+▶ Run the Simulation
+
+</h5>
+
+<a href="https://edaplayground.com/"
+target="_blank"
+class="btn btn-info btn-lg">
+
+▶ Open EDA Playground
+
+</a>
+
+<p class="text-warning mt-3 mb-0">
+
+<strong>Note:</strong>
+Use the code above in EDA Playground and inspect both the console
+output and waveform.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>
+
+    
+
     
 <!-- ========================= -->
 <!-- Blocking Assignment -->
@@ -1407,6 +2068,283 @@ For clocked sequential logic, use
 </div>
 
 </section>
+
+<!-- ========================= -->
+<!-- Loop Practice -->
+<!-- ========================= -->
+
+<section class="container py-5">
+
+<div class="text-center mb-5">
+
+<h2 class="fw-bold text-info">
+
+Loop Practice
+
+</h2>
+
+<p class="text-secondary">
+
+Practice the four common Verilog loop constructs.
+
+</p>
+
+</div>
+
+<div class="row g-4 justify-content-center">
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+for Loop
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>integer i;
+
+initial begin
+
+    for (i = 0; i &lt; 5; i = i + 1) begin
+
+        $display("i = %0d", i);
+
+    end
+
+end</code></pre>
+
+<p class="mb-0">
+
+Use a <strong>for loop</strong> when the number of iterations is
+known or controlled by a loop condition.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+while Loop
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>integer i;
+
+initial begin
+
+    i = 0;
+
+    while (i &lt; 5) begin
+
+        $display("i = %0d", i);
+
+        i = i + 1;
+
+    end
+
+end</code></pre>
+
+<p class="mb-0">
+
+A <strong>while loop</strong> continues while its condition remains
+true.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+repeat Loop
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>initial begin
+
+    repeat (5) begin
+
+        $display("Hello");
+
+    end
+
+end</code></pre>
+
+<p class="mb-0">
+
+A <strong>repeat loop</strong> executes its block a fixed number of
+times.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card feature-card h-100">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+forever Loop
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>initial begin
+
+    forever begin
+
+        #5 clk = ~clk;
+
+    end
+
+end</code></pre>
+
+<p class="mb-0">
+
+A <strong>forever loop</strong> repeats continuously until the
+simulation is stopped.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="row justify-content-center mt-4">
+
+<div class="col-lg-10">
+
+<div class="card feature-card">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Clock Generation Example
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>initial begin
+
+    clk = 0;
+
+    forever #5 clk = ~clk;
+
+end</code></pre>
+
+<p>
+
+This creates a clock that changes state every 5 simulation time units.
+
+</p>
+
+<h4 class="text-info mt-4">
+
+Waiting for Clock Edges
+
+</h4>
+
+<pre class="text-light p-3 rounded"><code>initial begin
+
+    repeat (5) begin
+
+        @(posedge clk);
+
+        $display("Rising edge detected");
+
+    end
+
+    $finish;
+
+end</code></pre>
+
+<p>
+
+Here, the testbench waits for five rising edges before ending the
+simulation.
+
+</p>
+
+<div class="card feature-card mt-4">
+
+<div class="card-body">
+
+<h4 class="text-info">
+
+Key Idea
+
+</h4>
+
+<p class="mb-0">
+
+<strong>
+for → controlled iteration
+</strong>
+
+<br><br>
+
+<strong>
+while → condition-controlled iteration
+</strong>
+
+<br><br>
+
+<strong>
+repeat → fixed number of iterations
+</strong>
+
+<br><br>
+
+<strong>
+forever → continuous repetition
+</strong>
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</section>    
 
 <!-- ========================= -->
 <!-- if / else Statements -->
