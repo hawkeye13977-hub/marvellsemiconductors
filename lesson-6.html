@@ -27,73 +27,7 @@ href="style.css">
 <!-- Navigation -->
 <!-- ========================= -->
 
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-
-<div class="container">
-
-<a class="navbar-brand fw-bold text-info"
-href="index.html">
-
-⚡ SemiCore
-
-</a>
-
-<button class="navbar-toggler"
-type="button"
-data-bs-toggle="collapse"
-data-bs-target="#navbarNav">
-
-<span class="navbar-toggler-icon"></span>
-
-</button>
-
-<div class="collapse navbar-collapse"
-id="navbarNav">
-
-<ul class="navbar-nav ms-auto">
-
-<li class="nav-item">
-<a class="nav-link"
-href="index.html">
-Home
-</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link"
-href="tutorials.html">
-Tutorials
-</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link"
-href="news.html">
-News
-</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link"
-href="about.html">
-About
-</a>
-</li>
-
-<li class="nav-item">
-<a class="nav-link"
-href="contact.html">
-Contact
-</a>
-</li>
-
-</ul>
-
-</div>
-
-</div>
-
-</nav>
+<div id="navbar-placeholder"></div>
 
 
 <!-- ========================= -->
@@ -1347,6 +1281,8 @@ For example:
 
 <pre class="text-light p-3 rounded"><code>always @(*) begin
 
+    next_state = state;
+
     case (state)
 
         IDLE:
@@ -1992,7 +1928,7 @@ localparam ACTIVE = 2'b01;
 localparam DONE   = 2'b10;
 
 
-<!-- // State Register -->
+// State Register
 
 always @(posedge clk) begin
 
@@ -2004,7 +1940,7 @@ always @(posedge clk) begin
 end
 
 
-<!-- // Next-State Logic -->
+// Next-State Logic
 
 always @(*) begin
 
@@ -2047,7 +1983,7 @@ always @(*) begin
 end
 
 
-<!-- // Output Logic -->
+// Output Logic
 
 always @(*) begin
 
@@ -4349,7 +4285,8 @@ Next Lesson →
 <!-- ========================= -->
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script src="script.js"></script>
 
 </body>
 
-</html>  
+</html>
